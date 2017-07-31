@@ -1,12 +1,18 @@
-QT += qml quick
+QT += qml \
+      quick \
+      serialport
 
 CONFIG += c++11
 
-SOURCES += main.cpp \
-    src/cpp/main.cpp
+HEADERS += \
+    src/cpp/communicator.h \
+    src/cpp/constants.h
 
-RESOURCES += qml.qrc \
-    src/qml/qml.qrc \
+SOURCES += \
+    src/cpp/main.cpp \
+    src/cpp/communicator.cpp
+
+RESOURCES += \
     res/qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -38,5 +44,3 @@ DISTFILES += \
     src/qml/main.qml \
     res/qtquickcontrols2.conf
 
-HEADERS += \
-    src/cpp/communicator.h
