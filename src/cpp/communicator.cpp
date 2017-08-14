@@ -12,7 +12,10 @@ Communicator::Communicator()
 }
 
 Communicator::~Communicator()
-{}
+{
+    if (mSerialPort->isOpen())
+        mSerialPort->close();
+}
 
 /**
  * @brief Connect to the microcontroller.
@@ -25,7 +28,8 @@ void Communicator::connect()
 
     setConnectionStatus(Connecting);
 
-    qDebug() << "Connecting to ESP32... ";
+    qInfo() << "Connecting to ESP32... ";
+
     qDebug() << "List of all serial devices:";
     qDebug() << "---------------------------";
 
@@ -50,7 +54,7 @@ void Communicator::connect()
     }
 
     if(portToUse.isNull() || !portToUse.isValid()) {
-        qDebug() << "port is not valid:" << portToUse.portName();
+        qWarning() << "Serial port unknown or not valid:" << portToUse.portName();
         setConnectionStatus(Disconnected);
         return;
     }
@@ -63,17 +67,17 @@ void Communicator::connect()
     mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
     if (mSerialPort->open(QIODevice::ReadWrite)) {
-        qDebug() << "Connected to" << portToUse.description() << "on" << portToUse.portName();
+        qInfo() << "Connected to" << portToUse.description() << "on" << portToUse.portName();
         setConnectionStatus(Connected);
     }
     else {
-        qCritical() << "Could not open serial port: " << mSerialPort->errorString();
+        qWarning() << "Could not open serial port: " << mSerialPort->errorString();
         setConnectionStatus(Disconnected);
     }
 }
 
 
-Communicator::ConnectionStatus Communicator::getStatus()
+Communicator::ConnectionStatus Communicator::getConnectionStatus()
 {
     return mConnectionStatus;
 }
@@ -81,7 +85,7 @@ Communicator::ConnectionStatus Communicator::getStatus()
 /**
  * @brief Return the connection status in human-readable form
  */
-QString Communicator::getStatusString()
+QString Communicator::getConnectionStatusString()
 {
     switch (mConnectionStatus) {
         case Disconnected:
@@ -101,26 +105,42 @@ QString Communicator::devicePort()
     return mSerialPort->portName();
 }
 
+/**
+ * @brief Open or close a specific valve
+ * @param valveNumber The valve number, between 1 and 32
+ * @param open If true, valve will be opened; otherwise, valve will be closed
+ */
 void Communicator::setValve(int valveNumber, bool open)
 {
     qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
 
     Component c;
+    ValveStates state;
 
     if (valveNumber >= 1 && valveNumber <=32)
         c = (Component)(VALVE1 + valveNumber - 1);
 
     else {
-        qDebug() << "Unknown valve ID";
+        qWarning() << "Unknown valve ID: " << valveNumber;
         return;
     }
 
-    setComponentState(c, open);
+    state = (open ? OPEN : CLOSED);
+
+    setComponentState(c, state);
 }
 
+/**
+ * @brief Switch a given pump on or off.
+ * @param pumpNumber Either 1 or 2
+ * @param on If true, the pump will be turned on; otherwise, the pump will be turned off.
+ *
+ *
+ * Note: this functionality may be abandoned soon, as the pumps will be switched on and off automatically based on pressure requirements.
+ */
 void Communicator::setPump(int pumpNumber, bool on)
 {
-    qDebug() << "Communicator: setting pump" << pumpNumber << " " << (on ? "on" : "off");
+    qDebug() << "Communicator: setting pump" << pumpNumber << (on ? "on" : "off");
 
     Component c;
     PumpStates state;
@@ -130,7 +150,7 @@ void Communicator::setPump(int pumpNumber, bool on)
     else if (pumpNumber == 2)
         c = PUMP2;
     else {
-        qDebug() << "Unknown pump ID";
+        qWarning() << "Unknown pump ID: " << pumpNumber;
         return;
     }
 
@@ -139,7 +159,11 @@ void Communicator::setPump(int pumpNumber, bool on)
     setComponentState(c, state);
 }
 
-/* pressure : double between 0 and 1 */
+/**
+ * @brief Set the pressure setpoint of a given controller
+ * @param controllerNumber The controller number, between 1 and 3
+ * @param pressure A double between 0 and 1.0, with 0 being the minimum and 1 being the maximum pressures allowed by the controller
+ */
 void Communicator::setPressure(int controllerNumber, double pressure)
 {
     qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure << " psi";
@@ -157,12 +181,12 @@ void Communicator::setPressure(int controllerNumber, double pressure)
             c = PR3;
             break;
         default:
-            qDebug() << "Unknown pressure controller ID";
+            qWarning() << "Unknown pressure controller ID: " << controllerNumber;
             return;
     }
 
     if (pressure < 0 || pressure > 1) {
-        qDebug() << "Invalid pressure. Must be between 0 and 1.";
+        qWarning() << "Invalid pressure. Must be between 0 and 1.";
         return;
     }
 
@@ -178,7 +202,7 @@ void Communicator::refreshAll()
 void Communicator::handleSerialError(QSerialPort::SerialPortError error)
 {
     if (error != QSerialPort::NoError)
-        qDebug() << "Serial port error: " << mSerialPort->errorString();
+        qWarning() << "Serial port error: " << mSerialPort->errorString();
 }
 
 /**
@@ -193,7 +217,7 @@ void Communicator::onSerialReady()
 {
     QByteArray buffer = mSerialPort->readAll();
 
-    qDebug() << "Received " << buffer.size() << " bytes on serial port";
+    qDebug() << "Received" << buffer.size() << "bytes on serial port";
 
 
     for (int i(0); i < buffer.size() - 1; ++i) {
@@ -207,7 +231,7 @@ void Communicator::onSerialReady()
             emit pumpStateChanged(item - PUMP1 + 1, value == ON);
 
         else if (item == PR1 || item == PR2 || item == PR3) {
-            double pressure = (double)value/(double)PR_MAX_VALUE;
+            double pressure = double(value)/double(PR_MAX_VALUE);
             int index = 1;
             if (item == PR2)
                 index = 2;
@@ -218,7 +242,7 @@ void Communicator::onSerialReady()
         }
 
         else
-            qDebug() << "Unknown data received: " << item << " ; " << value;
+            qWarning() << "Unknown data received: " << item << " ; " << value;
     }
 }
 
@@ -226,12 +250,12 @@ void Communicator::onSerialReady()
 void Communicator::setConnectionStatus(ConnectionStatus status)
 {
     mConnectionStatus = status;
-    emit statusChanged(status);
+    emit connectionStatusChanged(status);
 }
 
 void Communicator::setComponentState(Component c, int val)
 {
-    qDebug() << "setState: setting component " << c << " to " << val;
+    qDebug() << "setComponentState: setting component" << c << "to" << val;
 
     char toSend[2] = {(uint8_t)c, (uint8_t)val};
     mSerialPort->write(toSend, 2);
