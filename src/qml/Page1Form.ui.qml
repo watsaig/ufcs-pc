@@ -21,4 +21,16 @@ Item {
             text: qsTr("Press Me")
         }
     }
+
+    Switch {
+        id: switch1
+        x: 246
+        y: 184
+        text: qsTr("Pump 1")
+    }
+
+    Connections {
+        target: switch1
+        onToggled: Backend.setPump(1, switch1.checked)
+    }
 }
