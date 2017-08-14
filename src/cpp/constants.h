@@ -45,12 +45,11 @@ enum Component : uint8_t {
     PR3,
     PUMP1,
     PUMP2,
-    ALL_COMPONENTS,
-    COMPONENTS_END // leave this as the last element, to allow iterating over the enum
+    ALL_COMPONENTS // leave this as the last element, to allow iterating over the enum
 };
 
 enum ValveStates : uint8_t {
-    OPEN = COMPONENTS_END+1,
+    OPEN = ALL_COMPONENTS+1,
     CLOSED
 };
 
