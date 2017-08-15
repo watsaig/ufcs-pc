@@ -51,6 +51,10 @@ public:
     void setPressure(int controllerNumber, double pressure);
     void refreshAll(); // request status of all components
 
+    int nValves() { return N_VALVES; }
+    int nPumps() { return N_PUMPS; }
+    int nPressureControllers() { return N_PRS; }
+
 signals:
     void valveStateChanged(int valveNumber, bool open);
     void pumpStateChanged(int pumpNumber, bool on);

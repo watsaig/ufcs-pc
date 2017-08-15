@@ -6,6 +6,10 @@
 
 #define PR_MAX_VALUE UINT8_MAX
 
+#define N_VALVES 32
+#define N_PRS 3
+#define N_PUMPS 2
+
 // this enum could also be split into valves/prs/pumps
 enum Component : uint8_t {
     VALVE1 = 0,
