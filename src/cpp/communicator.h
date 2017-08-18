@@ -22,8 +22,10 @@
  * The signals valveStateChanged, pumpStateChanged, and pressureChanged are emitted whenever the microcontroller communicates the current status of a component (valve, pump or pressure controller)
  *. Connect to these to know the current status of the hardware.
  *
- * Valves, pumps and pressure controllers are 1-indexed. I.e valveNumber will be between 1 and 32; pumpNumber between 1 and 2; controllerNumber between 1 and 3.
+ * In order to know how many components are available, and what pressures are supported by the pressure controllers,
+ * use the nValves, nPumps, nPressureControllers, minPressure and maxPressure functions.
  *
+ * Valves, pumps and pressure controllers are 1-indexed. I.e valveNumber will be between 1 and 32; pumpNumber between 1 and 2; controllerNumber between 1 and 3.
  *
  */
 class Communicator : public QObject {
@@ -54,6 +56,8 @@ public:
     int nValves() { return N_VALVES; }
     int nPumps() { return N_PUMPS; }
     int nPressureControllers() { return N_PRS; }
+    double minPressure(int controllerNumber);
+    double maxPressure(int controllerNumber);
 
 signals:
     void valveStateChanged(int valveNumber, bool open);

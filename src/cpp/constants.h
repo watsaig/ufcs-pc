@@ -10,6 +10,14 @@
 #define N_PRS 3
 #define N_PUMPS 2
 
+#define PR1_MIN_PRESSURE 0
+#define PR2_MIN_PRESSURE 0
+#define PR3_MIN_PRESSURE 0
+
+#define PR1_MAX_PRESSURE 15
+#define PR2_MAX_PRESSURE 50
+#define PR3_MAX_PRESSURE 12
+
 // this enum could also be split into valves/prs/pumps
 enum Component : uint8_t {
     VALVE1 = 0,

@@ -199,6 +199,33 @@ void Communicator::refreshAll()
     mSerialPort->write(toSend, 2);
 }
 
+/**
+ * @brief Return the minimum pressure supported by the given pressure controller.
+ */
+double Communicator::minPressure(int controllerNumber)
+{
+    switch(controllerNumber) {
+        case 1: return PR1_MIN_PRESSURE;
+        case 2: return PR2_MIN_PRESSURE;
+        case 3: return PR3_MIN_PRESSURE;
+    }
+
+    return 0; // TODO: throw exception
+}
+
+/**
+ * @brief Return the maximum pressure supported by the given pressure controller.
+ */
+double Communicator::maxPressure(int controllerNumber)
+{
+    switch(controllerNumber) {
+        case 1: return PR1_MAX_PRESSURE;
+        case 2: return PR2_MAX_PRESSURE;
+        case 3: return PR3_MAX_PRESSURE;
+    }
+    return 0; // TODO: throw exception
+}
+
 void Communicator::handleSerialError(QSerialPort::SerialPortError error)
 {
     if (error != QSerialPort::NoError)
