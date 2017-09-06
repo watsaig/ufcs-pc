@@ -7,12 +7,14 @@ CONFIG += c++11
 HEADERS += \
     src/cpp/communicator.h \
     src/cpp/constants.h \
-    src/cpp/applicationcontroller.h
+    src/cpp/applicationcontroller.h \
+    src/cpp/routinecontroller.h
 
 SOURCES += \
     src/cpp/main.cpp \
     src/cpp/communicator.cpp \
-    src/cpp/applicationcontroller.cpp
+    src/cpp/applicationcontroller.cpp \
+    src/cpp/routinecontroller.cpp
 
 RESOURCES += \
     res/qml.qrc
