@@ -43,21 +43,23 @@ public:
 
     void connect(); // No parameters yet; may change this to allow selecting what device we connect to
 
-    ConnectionStatus getConnectionStatus();
-    QString getConnectionStatusString();
+    ConnectionStatus getConnectionStatus() const;
 
-    QString devicePort();
+    QString getConnectionStatusString() const;
+
+    QString devicePort() const;
 
     void setValve(int valveNumber, bool open);
     void setPump(int pumpNumber, bool on);
     void setPressure(int controllerNumber, double pressure);
     void refreshAll(); // request status of all components
 
-    int nValves() { return N_VALVES; }
-    int nPumps() { return N_PUMPS; }
-    int nPressureControllers() { return N_PRS; }
-    double minPressure(int controllerNumber);
-    double maxPressure(int controllerNumber);
+    int nValves() const { return N_VALVES; }
+    int nPumps() const { return N_PUMPS; }
+    int nPressureControllers() const { return N_PRS; }
+    double minPressure(int controllerNumber) const;
+    double maxPressure(int controllerNumber) const;
+
 
 signals:
     void valveStateChanged(int valveNumber, bool open);

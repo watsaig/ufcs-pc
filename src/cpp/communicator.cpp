@@ -13,6 +13,7 @@ Communicator::Communicator()
 
 Communicator::~Communicator()
 {
+    qDebug() << "deleting communicator";
     if (mSerialPort->isOpen())
         mSerialPort->close();
 }
@@ -77,7 +78,7 @@ void Communicator::connect()
 }
 
 
-Communicator::ConnectionStatus Communicator::getConnectionStatus()
+Communicator::ConnectionStatus Communicator::getConnectionStatus() const
 {
     return mConnectionStatus;
 }
@@ -85,7 +86,7 @@ Communicator::ConnectionStatus Communicator::getConnectionStatus()
 /**
  * @brief Return the connection status in human-readable form
  */
-QString Communicator::getConnectionStatusString()
+QString Communicator::getConnectionStatusString() const
 {
     switch (mConnectionStatus) {
         case Disconnected:
@@ -100,7 +101,10 @@ QString Communicator::getConnectionStatusString()
 }
 
 
-QString Communicator::devicePort()
+/**
+ * @brief Return the name of the port to which the microcontroller is connected
+ */
+QString Communicator::devicePort() const
 {
     return mSerialPort->portName();
 }
@@ -117,7 +121,7 @@ void Communicator::setValve(int valveNumber, bool open)
     Component c;
     ValveStates state;
 
-    if (valveNumber >= 1 && valveNumber <=32)
+    if (valveNumber >= 1 && valveNumber <= 32)
         c = (Component)(VALVE1 + valveNumber - 1);
 
     else {
@@ -166,7 +170,7 @@ void Communicator::setPump(int pumpNumber, bool on)
  */
 void Communicator::setPressure(int controllerNumber, double pressure)
 {
-    qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure << " psi";
+    qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure;
 
     Component c;
 
@@ -202,7 +206,7 @@ void Communicator::refreshAll()
 /**
  * @brief Return the minimum pressure supported by the given pressure controller.
  */
-double Communicator::minPressure(int controllerNumber)
+double Communicator::minPressure(int controllerNumber) const
 {
     switch(controllerNumber) {
         case 1: return PR1_MIN_PRESSURE;
@@ -216,7 +220,7 @@ double Communicator::minPressure(int controllerNumber)
 /**
  * @brief Return the maximum pressure supported by the given pressure controller.
  */
-double Communicator::maxPressure(int controllerNumber)
+double Communicator::maxPressure(int controllerNumber) const
 {
     switch(controllerNumber) {
         case 1: return PR1_MAX_PRESSURE;
@@ -228,8 +232,19 @@ double Communicator::maxPressure(int controllerNumber)
 
 void Communicator::handleSerialError(QSerialPort::SerialPortError error)
 {
-    if (error != QSerialPort::NoError)
+    if (!mSerialPort)
+        return;
+
+    if (error != QSerialPort::NoError) {
         qWarning() << "Serial port error: " << mSerialPort->errorString();
+        mSerialPort->clearError();
+
+        // Currently assuming that any error means that the device disconnected -- there may be a better way of doing this
+        setConnectionStatus(Disconnected);
+
+        //TODO: set event listener for USB connections, to detect if & when USB is reconnected (if this is even possible)
+        // see https://github.com/wang-bin/qdevicewatcher
+    }
 }
 
 /**
@@ -276,12 +291,18 @@ void Communicator::onSerialReady()
 
 void Communicator::setConnectionStatus(ConnectionStatus status)
 {
-    mConnectionStatus = status;
-    emit connectionStatusChanged(status);
+    if (status != mConnectionStatus) {
+        mConnectionStatus = status;
+        emit connectionStatusChanged(status);
+    }
 }
 
 void Communicator::setComponentState(Component c, int val)
 {
+    if (mConnectionStatus == Disconnected) {
+        qWarning() << "Can't set requested component state: device is disconnected";
+        return; // TODO: (?) throw exception
+    }
     qDebug() << "setComponentState: setting component" << c << "to" << val;
 
     char toSend[2] = {(uint8_t)c, (uint8_t)val};

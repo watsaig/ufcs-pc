@@ -4,21 +4,23 @@ import QtQuick.Layouts 1.3
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
+    width: 1200
+    height: 1000
+    title: qsTr("Microfluidics control system")
 
     SwipeView {
         id: swipeView
+        padding: 20
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        Page1 {
+        BetterManualControl{
+            id: manualControlView
         }
 
         Page {
             Label {
-                text: qsTr("Second page")
+                text: qsTr("Routines will be loaded and executed from here")
                 anchors.centerIn: parent
             }
         }
@@ -28,10 +30,11 @@ ApplicationWindow {
         id: tabBar
         currentIndex: swipeView.currentIndex
         TabButton {
-            text: qsTr("First")
+            text: qsTr("Manual control")
         }
+
         TabButton {
-            text: qsTr("Second")
+            text: qsTr("Routines")
         }
     }
 }

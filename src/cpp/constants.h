@@ -6,10 +6,12 @@
 
 #define PR_MAX_VALUE UINT8_MAX
 
+/// Number of valves, pressure regulators, and pumps defined below
 #define N_VALVES 32
 #define N_PRS 3
 #define N_PUMPS 2
 
+/// The minimum and maximum pressure values (in PSI) supported by the pressure controllers.
 #define PR1_MIN_PRESSURE 0
 #define PR2_MIN_PRESSURE 0
 #define PR3_MIN_PRESSURE 0

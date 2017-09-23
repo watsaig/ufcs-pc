@@ -68,6 +68,7 @@ private:
     /// The raw contents of the routine file, including empty lines and comments
     QStringList mSteps;
 
+    /// Number of valid steps in the routine
     int mNumberOfSteps;
 
     Communicator * mCommunicator;
