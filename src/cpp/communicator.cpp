@@ -118,7 +118,7 @@ QString Communicator::devicePort() const
  */
 void Communicator::setValve(int valveNumber, bool open)
 {
-    qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
+    //qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
 
     Component c;
     ValveStates state;
@@ -172,7 +172,7 @@ void Communicator::setPump(int pumpNumber, bool on)
  */
 void Communicator::setPressure(int controllerNumber, double pressure)
 {
-    qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure;
+    //qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure;
 
     Component c;
 
@@ -261,7 +261,7 @@ void Communicator::onSerialReady()
 {
     QByteArray buffer = mSerialPort->readAll();
 
-    qDebug() << "Received" << buffer.size() << "bytes on serial port";
+    //qDebug() << "Received" << buffer.size() << "bytes on serial port";
 
 
     for (int i(0); i < buffer.size() - 1; i+=2) {
@@ -309,7 +309,7 @@ void Communicator::setComponentState(Component c, int val)
         qWarning() << "Can't set requested component state: device is disconnected";
         return; // TODO: (?) throw exception
     }
-    qDebug() << "setComponentState: setting component" << c << "to" << val;
+    //qDebug() << "setComponentState: setting component" << c << "to" << val;
 
     char toSend[2] = {(uint8_t)c, (uint8_t)val};
     mSerialPort->write(toSend, 2);

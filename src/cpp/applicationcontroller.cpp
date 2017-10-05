@@ -30,11 +30,12 @@ void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* ins
 {
     mQmlPressureControllers[controllerNumber] = instance;
 }
+
 void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance)
 {
     mQmlValveSwitches[valveNumber] = instance;
     if (mQmlValveSwitches.size() == 23) {
-        mCommunicator.refreshAll(); // shitty duct tape solution. do this properly, e.g. when the QML window is fully loaded and shown
+        mCommunicator.refreshAll(); // shitty duct tape solution. TODO: do this properly, e.g. when the QML window is fully loaded and shown
     }
 }
 
@@ -56,7 +57,9 @@ void ApplicationController::onPumpStateChanged(int pumpNumber, bool on)
 
 void ApplicationController::onPressureChanged(int controllerNumber, double pressure)
 {
-    qInfo() << "Measured pressure (normalized) on controller" << controllerNumber << ":" << pressure;
+    //qInfo() << "Measured pressure (normalized) on controller" << controllerNumber << ":" << pressure;
+    if (pressure < 0)
+        qDebug() << "pressure: " << pressure;
     if (mQmlPressureControllers.contains(controllerNumber))
         mQmlPressureControllers[controllerNumber]->setMeasuredValue(pressure);
 }

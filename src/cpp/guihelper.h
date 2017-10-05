@@ -6,11 +6,17 @@
 
 
 /*
- * Collection of helper classes, to provide a bidirectional interface between the C++ backend and QML gui
+ * Collection of helper classes, to provide a bidirectional interface between the C++ backend and QML gui elements
+ *
+ * They are intended to be used as attributes of QML elements. For example PCHelper is registered to QML in main.cpp,
+ * and should be instantiated within the actual graphical element in supports.
  */
 
 class ApplicationController;
 
+/**
+ * @brief Backend for pressure controller GUI elements
+ */
 class PCHelper : public QObject
 {
     Q_OBJECT
@@ -40,7 +46,7 @@ signals:
 private:
     double mSetPoint;
     double mMeasuredValue;
-    int mControllerNumber; // TODO: make this a property
+    int mControllerNumber;
 };
 
 

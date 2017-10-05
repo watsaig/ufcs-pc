@@ -20,6 +20,7 @@ class ApplicationController : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
+
 private:
     ApplicationController(QObject *parent = nullptr);
 

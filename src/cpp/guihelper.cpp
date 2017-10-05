@@ -1,6 +1,10 @@
 #include "guihelper.h"
 #include "applicationcontroller.h"
 
+/**
+ * @brief Set the controller's number
+ * @param controllerNumber This should correspond to the pins that the actual (physical) pressure controller is plugged into, on the PCB.
+ */
 void PCHelper::setControllerNumber(int controllerNumber)
 {
     mControllerNumber = controllerNumber;
@@ -38,19 +42,11 @@ double PCHelper::measuredValueInPsi() const
  */
 void PCHelper::setSetPoint(double val)
 {
-    qDebug() << "Setting pressure to " << val;
+    //qDebug() << "Setting pressure to " << val;
     mSetPoint = val;
 
     ApplicationController::appController()->setPressure(mControllerNumber, val);
     emit setPointChanged(val);
-
-
-    // for testing purposes only. Remove the following when done.
-    /*
-    double measured = double(qrand()) / double(RAND_MAX);
-    qDebug() << "simulated measured value: " << measured;
-    setMeasuredValue(measured);
-    */
 }
 
 /**
@@ -61,7 +57,6 @@ void PCHelper::setSetPoint(double val)
  */
 void PCHelper::setMeasuredValue(double val)
 {
-    qDebug() << "Setting measured value";
     if (mMeasuredValue != val) {
         mMeasuredValue = val;
         emit measuredValueChanged(val);
