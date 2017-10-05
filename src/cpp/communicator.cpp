@@ -43,12 +43,14 @@ void Communicator::connect()
                     "Serial number:" + info.serialNumber() + "\n"
                     "Vendor Identifier:" + (info.hasVendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString()) + "\n"
                     "Product Identifier:" + (info.hasProductIdentifier() ? QString::number(info.productIdentifier(), 16) : QString()) + "\n"
-                    "Busy:" + (info.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) + "\n";
+                    // The call to isBusy() takes a second or two; so only uncomment the following line for debug purposes
+                    //"Busy:" + (info.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) + "\n";
+                    ;
 
         qDebug().noquote() << s;
 
         // The following line may need to be customized depending on your specific ESP32 board.
-        if(!info.isBusy() && (info.description().contains("UART Bridge") || info.manufacturer().contains("Silicon Labs"))) {
+        if((info.description().contains("UART Bridge") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
             portToUse = info;
             break;
         }
