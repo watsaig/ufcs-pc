@@ -9,7 +9,7 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     GridLayout {
         //flow: width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
-        columns: 2
+        columns: 3
         Component.onCompleted: {
             console.log("width: " + width + "; height: " + height)
         }
@@ -35,7 +35,7 @@ Item {
                     spacing: 50
 
                     PressureController {
-                        controllerNumber: 2
+                        controllerNumber: 1
                     }
 
                     GridLayout {
@@ -116,7 +116,7 @@ Item {
 
 
                     PressureController {
-                        controllerNumber: 1
+                        controllerNumber: 2
                     }
 
                     GridLayout {
@@ -145,6 +145,28 @@ Item {
                             valveNumber: 23
                         }
                     }
+                }
+            }
+        }
+
+        Pane {
+            id: vacuumPane
+            Material.elevation: Style.card.elevation
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            padding: Style.card.padding
+
+            ColumnLayout {
+                spacing: 30
+
+                Label {
+                    text: qsTr("Vacuum")
+                    font.pointSize: Style.title.fontSize
+                    padding: Style.title.padding
+                }
+
+                PressureController {
+                    controllerNumber: 3
                 }
             }
         }

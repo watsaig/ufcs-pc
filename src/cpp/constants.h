@@ -16,9 +16,9 @@
 #define PR2_MIN_PRESSURE 0
 #define PR3_MIN_PRESSURE 0
 
-#define PR1_MAX_PRESSURE 15
-#define PR2_MAX_PRESSURE 50
-#define PR3_MAX_PRESSURE 12
+#define PR1_MAX_PRESSURE 50 // For control layer valves
+#define PR2_MAX_PRESSURE 15 // Flow layer valves
+#define PR3_MAX_PRESSURE -6.8 // Vacuum
 
 // this enum could also be split into valves/prs/pumps
 enum Component : uint8_t {
