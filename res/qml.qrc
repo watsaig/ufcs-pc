@@ -1,9 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>../src/qml/main.qml</file>
-        <file>../src/qml/ManualControlPage.ui.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>../src/qml/BetterManualControl.qml</file>
+        <file>../src/qml/ManualControl.qml</file>
         <file>../src/qml/PressureController.qml</file>
         <file>../src/qml/ValveSwitch.qml</file>
         <file>../src/qml/Style.qml</file>

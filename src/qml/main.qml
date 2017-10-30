@@ -14,7 +14,7 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        BetterManualControl{
+        ManualControl{
             id: manualControlView
         }
 
