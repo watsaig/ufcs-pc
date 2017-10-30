@@ -15,10 +15,10 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
     mCommunicator.connect();
 
-    connect(&mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
-    connect(&mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
-    //connect(&mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
-    connect(&mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+    QObject::connect(&mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
+    QObject::connect(&mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
+    //QObject::connect(&mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
+    QObject::connect(&mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 }
 
 QString ApplicationController::connectionStatus()

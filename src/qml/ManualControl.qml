@@ -224,6 +224,19 @@ Item {
                     padding: 12
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
+
+                Button {
+                    id: reconnectButton
+                    text: qsTr("Reconnect")
+                    onClicked: Backend.connect()
+                    padding: 12
+                    visible: Backend.connectionStatus == "Disconnected"
+                }
+
+                /*
+                Backend.onConnectionStatusChanged: {
+                }
+                */
             }
         }
     }

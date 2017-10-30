@@ -28,6 +28,8 @@ public:
     static ApplicationController* appController();
     virtual ~ApplicationController() {}
 
+    Q_INVOKABLE void connect() { mCommunicator.connect(); }
+
     Q_INVOKABLE void setValve(int valveNumber, bool open) { mCommunicator.setValve(valveNumber, open); }
     Q_INVOKABLE void setPump(int pumpNumber, bool on) { mCommunicator.setPump(pumpNumber, on); }
     Q_INVOKABLE void setPressure(int controllerNumber, double pressure) { mCommunicator.setPressure(controllerNumber, pressure); }

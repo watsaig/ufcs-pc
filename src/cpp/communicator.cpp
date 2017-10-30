@@ -244,6 +244,9 @@ void Communicator::handleSerialError(QSerialPort::SerialPortError error)
         // Currently assuming that any error means that the device disconnected -- there may be a better way of doing this
         setConnectionStatus(Disconnected);
 
+        if (mSerialPort->isOpen())
+            mSerialPort->close();
+
         //TODO: set event listener for USB connections, to detect if & when USB is reconnected (if this is even possible)
         // see https://github.com/wang-bin/qdevicewatcher
     }
