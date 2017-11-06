@@ -13,8 +13,6 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
-    mCommunicator.connect();
-
     QObject::connect(&mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(&mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
     //QObject::connect(&mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
@@ -26,6 +24,14 @@ QString ApplicationController::connectionStatus()
     return mCommunicator.getConnectionStatusString();
 }
 
+void ApplicationController::connect()
+{
+    mCommunicator.connect();
+    if (mCommunicator.getConnectionStatus() == mCommunicator.Connected)
+        mCommunicator.refreshAll();
+
+}
+
 void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* instance)
 {
     mQmlPressureControllers[controllerNumber] = instance;
@@ -34,9 +40,6 @@ void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* ins
 void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance)
 {
     mQmlValveSwitches[valveNumber] = instance;
-    if (mQmlValveSwitches.size() == 23) {
-        mCommunicator.refreshAll(); // shitty duct tape solution. TODO: do this properly, e.g. when the QML window is fully loaded and shown
-    }
 }
 
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)

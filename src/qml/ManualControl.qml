@@ -12,6 +12,7 @@ Item {
         columns: 3
         Component.onCompleted: {
             console.log("width: " + width + "; height: " + height)
+            Backend.connect()
         }
 
 
