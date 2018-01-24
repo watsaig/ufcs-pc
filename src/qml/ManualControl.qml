@@ -8,11 +8,24 @@ import org.example.ufcs 1.0 // for the Style singleton
 
 Item {
     GridLayout {
-        //flow: width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
-        columns: 3
+        anchors.fill: parent
+        anchors.margins: 20
+        rowSpacing: 20
+        columnSpacing: 20
+        flow: width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
         Component.onCompleted: {
             console.log("width: " + width + "; height: " + height)
+            console.log("width of panes: " + controlLayerPane.width + flowLayerPane.width)
             Backend.connect()
+        }
+
+        onWidthChanged: {
+            // this doesn't really have to be dynamic, it could be initialized once. It is useful for testing though. In real use, there probably won't be
+            // much resizing going on
+            if (width < controlLayerPane.width + flowLayerPane.width)
+                columns = 1
+            else
+                columns = 2
         }
 
 
@@ -20,8 +33,8 @@ Item {
         Pane {
             id: controlLayerPane
             Material.elevation: Style.card.elevation
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            //Layout.fillWidth: true
             padding: Style.card.padding
 
             ColumnLayout {
@@ -99,8 +112,8 @@ Item {
         Pane {
             id: flowLayerPane
             Material.elevation: Style.card.elevation
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            //Layout.fillWidth: true
             padding: Style.card.padding
 
             ColumnLayout {
@@ -153,8 +166,8 @@ Item {
         Pane {
             id: vacuumPane
             Material.elevation: Style.card.elevation
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            //Layout.fillWidth: true
             padding: Style.card.padding
 
             ColumnLayout {
@@ -175,8 +188,8 @@ Item {
         Pane {
             id: pumpPane
             Material.elevation: Style.card.elevation
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            //Layout.fillWidth: true
             padding: Style.card.padding
             ColumnLayout {
                 Label {
@@ -207,13 +220,13 @@ Item {
 
         Pane {
             id: statusPane
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            //Layout.fillHeight: true
+            //Layout.fillWidth: true
             Material.elevation: Style.card.elevation
             padding: Style.card.padding
 
             ColumnLayout {
-                Layout.fillWidth: true
+                //Layout.fillWidth: true
 
                 Label {
                     text: qsTr("Status")
