@@ -18,11 +18,8 @@ ApplicationWindow {
             id: manualControlView
         }
 
-        Page {
-            Label {
-                text: qsTr("Routines will be loaded and executed from here")
-                anchors.centerIn: parent
-            }
+        RoutineControl {
+            id: routineControlView
         }
     }
 

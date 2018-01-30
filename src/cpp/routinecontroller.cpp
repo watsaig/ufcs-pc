@@ -11,18 +11,20 @@ RoutineController::RoutineController(Communicator * communicator)
 /**
  * @brief Load and parse the routine stored in the specified file
  * @param fileUrl The URL of the text file containing the routine
- * @return True if the routine was loaded successfully, false otherwise.
+ *
  *
  * Note that the routine is not checked by this function, only loaded. Use the
  * verify() function for sanity checking.
  */
 bool RoutineController::loadFile(QString fileUrl)
 {
-    QFile file(fileUrl);
+    QUrl url(fileUrl);
+    QFile file(url.toLocalFile());
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical() << "Could not load file" << fileUrl << ":" << file.errorString();
-        return false; // TODO: throw exception ?
+        QString error = "Could not load file " + url.toLocalFile() + " : " + file.errorString();
+        qWarning() << error;
+        return false;
     }
 
     QTextStream stream(&file);
@@ -32,8 +34,12 @@ bool RoutineController::loadFile(QString fileUrl)
 
     file.close();
 
-    mRunStatus = Ready;
+    // TODO: polish this up a bit. remove the file extension,...
+    // TODO? have a few lines towards the beginning of the file that would specify the routine's name and description
+    mRoutineName = url.fileName();
 
+    mRunStatus = Ready;
+    emit runStatusChanged(Ready);
     return true;
 }
 
@@ -58,6 +64,10 @@ void RoutineController::begin()
     std::thread t([this] { run(false); });
     t.detach();
 }
+RoutineController::RunStatus RoutineController::status()
+{
+    return mRunStatus;
+}
 
 /**
  * @brief Return the index of the routine step currently being executed
@@ -81,13 +91,23 @@ const QStringList& RoutineController::steps()
     return mSteps;
 }
 
+int RoutineController::numberOfErrors()
+{
+    return mErrorCount;
+}
+
+const QStringList& RoutineController::errors()
+{
+    return mErrors;
+}
+
 /**
  * @brief Run the routine
  * @param dummyRun If true, all steps will be checked for errors but not executed.
  *
  * Errors found during execution are emitted by the error() signal (see the reportError function)
  *
- * This function can be run directly (recommended for error-checking) or in a thread (recommended for
+ * This function can be run directly (recommended for error-checking) or in a separate thread (recommended for
  * actual execution).
  *
  */
@@ -97,14 +117,17 @@ void RoutineController::run(bool dummyRun)
     int nValidSteps(0);
 
     mErrorCount = 0;
+    mErrors.clear();
     mCurrentStep = -1;
 
-    if (!dummyRun)
+    if (!dummyRun) {
         mRunStatus = Running;
+        emit runStatusChanged(Running);
+    }
 
     for (int i(0); i < mSteps.size(); ++i) {
         if (!dummyRun)
-            mCurrentStep = i;
+            setCurrentStep(i);
 
         QString line = mSteps[i];
         line.remove(QRegExp("#.*")); // remove hashes and all following characters.
@@ -164,12 +187,14 @@ void RoutineController::run(bool dummyRun)
             else if (pressure < mCommunicator->minPressure(controllerNumber) || pressure > mCommunicator->maxPressure(controllerNumber)) {
                 reportError("Line " + QString::number(i+1) + ": Pressure value out of bounds for this controller: " + list[2]);
                 continue;
-                // TODO: not make this an error, but just a warning?
             }
 
             nValidSteps++;
-            if (!dummyRun)
-                mCommunicator->setPressure(controllerNumber, pressure); // TODO: this expects a value between 0 and 1.0. Fix this.
+            if (!dummyRun) {
+                // TODO: fix this for negative values (vacuum controller).
+                double p = mCommunicator->minPressure(controllerNumber) + (pressure / mCommunicator->maxPressure(controllerNumber));
+                mCommunicator->setPressure(controllerNumber, p);
+            }
 
         }
 
@@ -202,6 +227,7 @@ void RoutineController::run(bool dummyRun)
 
             nValidSteps++;
             if (!dummyRun)
+                // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
                 std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
         }
     }
@@ -210,7 +236,7 @@ void RoutineController::run(bool dummyRun)
 
     if (!dummyRun) {
         mRunStatus = Finished;
-        emit finished();
+        emit runStatusChanged(Finished);
     }
 }
 
@@ -218,7 +244,14 @@ void RoutineController::run(bool dummyRun)
 void RoutineController::reportError(const QString &errorString)
 {
     emit error(errorString);
+    mErrors << errorString;
     mErrorCount++;
     // Errors could also be logged or output to terminal here, but beware of
     // race conditions due to run() being executed in a separate thread.
+}
+
+void RoutineController::setCurrentStep(int stepNumber)
+{
+    mCurrentStep = stepNumber;
+    emit currentStepChanged(stepNumber);
 }

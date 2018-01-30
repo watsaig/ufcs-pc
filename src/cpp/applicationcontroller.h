@@ -5,6 +5,8 @@
 #include <QQmlEngine>
 
 #include "communicator.h"
+#include "routinecontroller.h"
+
 /*
  *
  * Application controller interfaces between the GUI (QML) and the Communicator, which talks to the microcontroller.
@@ -42,6 +44,8 @@ public:
     void registerPCHelper(int controllerNumber, PCHelper* instance);
     void registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance);
 
+    RoutineController* routineController() { return mRoutineController; }
+
 signals:
     void connectionStatusChanged(QString newStatus);
 
@@ -55,6 +59,7 @@ private slots:
 private:
 
     Communicator mCommunicator;
+    RoutineController * mRoutineController;
 
     QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
     QMap<int, PCHelper*> mQmlPressureControllers; // To do (?): allow several instances of PCHelper* per controller number

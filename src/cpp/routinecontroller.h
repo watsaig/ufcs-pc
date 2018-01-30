@@ -29,37 +29,49 @@ class RoutineController : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int currentStep READ currentStep NOTIFY currentStepChanged)
+    Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
+
 public:
     enum RunStatus {
         NotReady,
         Ready,
         Running,
         Finished
-    };
+    }; Q_ENUM(RunStatus)
 
-    RoutineController(Communicator *communicator);
+    RoutineController(Communicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
     virtual ~RoutineController() {}
 
-    bool loadFile(QString fileUrl);
-    int verify();
-    void begin();
+    Q_INVOKABLE bool loadFile(QString fileUrl);
+    Q_INVOKABLE int verify();
+    Q_INVOKABLE void begin();
 
     RunStatus status();
 
     int currentStep();
-    int numberOfSteps();
-    const QStringList &steps();
+    Q_INVOKABLE int numberOfSteps();
+    Q_INVOKABLE int numberOfErrors();
+
+    Q_INVOKABLE const QStringList &steps();
+    Q_INVOKABLE const QStringList &errors();
+
+    Q_INVOKABLE QString routineName() { return mRoutineName; }
 
 signals:
     /// Emitted whenever an error is encountered
     void error(QString errorString);
 
-    /// Emitted when the execution of the routine is over
-    void finished();
+    /// Emitted when switching to a new step in the routine
+    void currentStepChanged(int newStepNumber);
+
+    /// Emitted when the status has changed
+    void runStatusChanged(RunStatus newStatus);
 
 private:
     void run(bool dummyRun);
     void reportError(const QString& errorString);
+    void setCurrentStep(int stepNumber);
 
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;
@@ -70,6 +82,12 @@ private:
 
     /// Number of valid steps in the routine
     int mNumberOfSteps;
+
+    /// The list of errors encountered during verification or execution
+    QStringList mErrors;
+
+    /// The routine name (derived from the file name)
+    QString mRoutineName;
 
     Communicator * mCommunicator;
 };

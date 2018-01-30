@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("Backend", ApplicationController::appController());
+    engine.rootContext()->setContextProperty("RoutineController", ApplicationController::appController()->routineController());
 
     engine.load(QUrl(QLatin1String("qrc:/src/qml/main.qml")));
     if (engine.rootObjects().isEmpty())

@@ -17,6 +17,8 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(&mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
     //QObject::connect(&mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(&mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+
+    mRoutineController = new RoutineController(&mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 }
 
 QString ApplicationController::connectionStatus()

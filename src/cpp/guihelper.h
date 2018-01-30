@@ -9,7 +9,7 @@
  * Collection of helper classes, to provide a bidirectional interface between the C++ backend and QML gui elements
  *
  * They are intended to be used as attributes of QML elements. For example PCHelper is registered to QML in main.cpp,
- * and should be instantiated within the actual graphical element in supports.
+ * and should be instantiated within the actual graphical element it supports.
  */
 
 class ApplicationController;
