@@ -12,6 +12,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void testParsing();
+    void testRunning();
 
     void onErrorReceived(QString errorString);
 private:

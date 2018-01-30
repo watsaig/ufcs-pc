@@ -6,7 +6,7 @@ void noMessageOutput(QtMsgType, const QMessageLogContext&, const QString&)
 void TestRoutines::initTestCase()
 {
     // Suppress all debug output
-    qInstallMessageHandler(noMessageOutput);
+    //qInstallMessageHandler(noMessageOutput);
 
     mTempFileLocation = "./dummyroutine.txt";
     createDummyRoutineFile(mTempFileLocation);
@@ -40,14 +40,30 @@ void TestRoutines::testParsing()
 }
 
 
+void TestRoutines::testRunning()
+{
+    Communicator c;
+    RoutineController r(&c);
+
+    connect(&r, SIGNAL(error(QString)), this, SLOT(onErrorReceived(QString)));
+
+    r.loadFile(mTempFileLocation);
+    r.begin();
+
+    while(r.status() != RoutineController::Finished) {
+        QTest::qSleep(100);
+    }
+}
+
+
 void TestRoutines::createDummyRoutineFile(QString url)
 {
     const char * dummyRoutine = R"(
 # This is a comment
 valve 14 open
-wait 10
+wait 4
     valve 14 close
-wait 2 minutes
+wait 2 seconds
 #And another comment
 
 # an invalid wait command
