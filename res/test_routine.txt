@@ -1,0 +1,29 @@
+
+# Fibronectin coating
+
+pressure 1 7.5 psi
+pressure 2 20 psi
+
+valve 2 close
+valve 3 close
+valve 4 close
+valve 14 open
+wait 2 seconds
+valve 14 close
+valve 15 open
+wait 5 seconds
+
+
+
+
+#And another comment
+
+# an invalid wait command
+wait 2 24 seconds
+
+# a couple of invalid valve numbers
+valve 43 open
+valve -1 close
+
+pressure 1 7.5 # psi
+pressure 2 5
