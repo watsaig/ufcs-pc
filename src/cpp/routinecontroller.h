@@ -31,6 +31,7 @@ class RoutineController : public QObject
 
     Q_PROPERTY(int currentStep READ currentStep NOTIFY currentStepChanged)
     Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
+    Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
 
 public:
     enum RunStatus {
@@ -54,7 +55,7 @@ public:
     Q_INVOKABLE int numberOfErrors();
 
     Q_INVOKABLE const QStringList &steps();
-    Q_INVOKABLE const QStringList &errors();
+    const QStringList& errors();
 
     Q_INVOKABLE QString routineName() { return mRoutineName; }
 

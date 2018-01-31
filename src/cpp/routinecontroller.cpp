@@ -243,9 +243,10 @@ void RoutineController::run(bool dummyRun)
 
 void RoutineController::reportError(const QString &errorString)
 {
-    emit error(errorString);
     mErrors << errorString;
+    emit error(errorString);
     mErrorCount++;
+
     // Errors could also be logged or output to terminal here, but beware of
     // race conditions due to run() being executed in a separate thread.
 }

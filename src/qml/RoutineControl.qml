@@ -46,6 +46,31 @@ Item {
 
         // add a scrolling text box, to show the current step (and previous and following 1-2 steps)
 
+        ListView {
+            id: errorList
+            visible: false
+            width: parent.width
+            height: 400
+            model: RoutineController.errorList
+            delegate: Rectangle {
+                height: 25
+                width: 100
+                Text { text: modelData }
+            }
+
+            Layout.alignment: Qt.AlignHCenter
+
+            /*
+            Connections {
+                target: RoutineController
+                onError: {
+                    errorList.model = RoutineController.errorList
+                    console.log("New error received")
+                }
+            }
+            */
+        }
+
         Button {
             id: browseButton
             visible: false
@@ -177,16 +202,15 @@ Item {
                 // get number of errors from backend
                 title.text = RoutineController.numberOfErrors() + " errors found"
                 title.visible = true
-                description.text = "Would you still ike to run the routine?"
+                description.text = "The routine was loaded, and the following errors found: "
                 description.visible = true
-                // show the expandable errors text box
-                // show the yes/no buttons
-
+                errorList.visible = true
                 runYesNoButtons.visible = true
             }
             onExited: {
                 title.visible = false
                 description.visible = false
+                errorList.visible = false
                 runYesNoButtons.visible = false
             }
 
