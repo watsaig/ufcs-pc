@@ -5,6 +5,8 @@ import QtQuick.Dialogs 1.2
 
 import QtQml.StateMachine 1.0
 
+import org.example.ufcs 1.0 // for the Style singleton
+
 /*
   Graphical interface for the routine controller C++ backend.
 
@@ -21,16 +23,16 @@ import QtQml.StateMachine 1.0
 
 Item {
     ColumnLayout {
-        //id: fileSelectionScreen
         anchors.fill: parent
-        //visible: false
 
         Label {
             id: title
             visible: false
             text: qsTr("Title")
-            //anchors.centerIn: parent
             Layout.alignment: Qt.AlignHCenter
+
+            font.pointSize: Style.title.fontSize
+            padding: Style.title.padding
         }
 
         Label {
@@ -52,20 +54,29 @@ Item {
             onClicked: fileDialog.open()
         }
 
-        RowLayout {
+        ColumnLayout {
             id: runYesNoButtons
             visible: false
 
             Layout.alignment: Qt.AlignHCenter
 
-            Button {
-                id: yes
-                text: "Yes"
+            Label {
+                text: "Would you still like to run the routine?"
             }
 
-            Button {
-                id: no
-                text: "No"
+            RowLayout {
+
+                Button {
+                    id: yes
+                    text: "Yes"
+                    padding: 12
+                }
+
+                Button {
+                    id: no
+                    text: "No"
+                    padding: 12
+                }
             }
         }
     }
@@ -124,10 +135,11 @@ Item {
                     errorsFound()
                 else
                     noErrorsFound()
+            }
 
-                // call routineController::verify()
-                // if the return value is zero, then switch to the routineLoadedSuccessfully state
-                // else, switch to the routineLoadedWithErrors state
+            onExited: {
+                description.text = ""
+                description.visible = false
             }
 
             SignalTransition {
@@ -140,10 +152,6 @@ Item {
                 signal: checkingRoutine.errorsFound
             }
 
-            onExited: {
-                description.text = ""
-                description.visible = false
-            }
         }
 
         State {
@@ -153,7 +161,6 @@ Item {
                 console.log("Entered state 'routineLoadedSuccessfully'")
                 description.text = "Routine loaded successfully."
                 description.visible = true
-                // display a message saying something like "routine loaded successfully"
                 // display a "run" button
             }
 
