@@ -30,7 +30,7 @@ bool RoutineController::loadFile(QString fileUrl)
     QTextStream stream(&file);
 
     while (!stream.atEnd())
-        mSteps << stream.readLine();
+        mLines << stream.readLine();
 
     file.close();
 
@@ -125,11 +125,12 @@ void RoutineController::run(bool dummyRun)
         emit runStatusChanged(Running);
     }
 
-    for (int i(0); i < mSteps.size(); ++i) {
-        if (!dummyRun)
-            setCurrentStep(i);
+    if (dummyRun)
+        mValidSteps.clear();
 
-        QString line = mSteps[i];
+    for (int i(0); i < mLines.size(); ++i) {
+
+        QString line = mLines[i];
         line.remove(QRegExp("#.*")); // remove hashes and all following characters.
         line = line.simplified(); // remove excess whitespace
 
@@ -161,8 +162,13 @@ void RoutineController::run(bool dummyRun)
             }
 
             nValidSteps++;
-            if (!dummyRun)
+
+            if (dummyRun)
+                mValidSteps << line;
+            else {
                 mCommunicator->setValve(valveNumber, (state == "open"));
+                setCurrentStep(mCurrentStep+1);
+            }
         }
 
         else if (list[0] == "pressure") {
@@ -190,10 +196,13 @@ void RoutineController::run(bool dummyRun)
             }
 
             nValidSteps++;
-            if (!dummyRun) {
+            if (dummyRun)
+                mValidSteps << line;
+            else {
                 // TODO: fix this for negative values (vacuum controller).
                 double p = mCommunicator->minPressure(controllerNumber) + (pressure / mCommunicator->maxPressure(controllerNumber));
                 mCommunicator->setPressure(controllerNumber, p);
+                setCurrentStep(mCurrentStep+1);
             }
 
         }
@@ -226,17 +235,24 @@ void RoutineController::run(bool dummyRun)
             }
 
             nValidSteps++;
-            if (!dummyRun)
+
+            if (dummyRun)
+                mValidSteps << line;
+            else {
                 // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
                 std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
+                setCurrentStep(mCurrentStep+1);
+            }
         }
     }
 
-    mNumberOfSteps = nValidSteps;
+    if (dummyRun)
+        mNumberOfSteps = mValidSteps.size();
 
-    if (!dummyRun) {
+    else {
         mRunStatus = Finished;
         emit runStatusChanged(Finished);
+        emit finished();
     }
 }
 

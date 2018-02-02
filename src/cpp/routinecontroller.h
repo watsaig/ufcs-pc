@@ -63,11 +63,14 @@ signals:
     /// Emitted whenever an error is encountered
     void error(QString errorString);
 
-    /// Emitted when switching to a new step in the routine
+    /// Emitted when switching to a new (valid) step in the routine
     void currentStepChanged(int newStepNumber);
 
     /// Emitted when the status has changed
     void runStatusChanged(RunStatus newStatus);
+
+    /// Emitted when the routine is finished
+    void finished();
 
 private:
     void run(bool dummyRun);
@@ -79,7 +82,10 @@ private:
     std::atomic<int> mErrorCount;
 
     /// The raw contents of the routine file, including empty lines and comments
-    QStringList mSteps;
+    QStringList mLines;
+
+    /// The valid steps of the routine. This is initialized only after verify() has run.
+    QStringList mValidSteps;
 
     /// Number of valid steps in the routine
     int mNumberOfSteps;
