@@ -56,7 +56,7 @@ void Communicator::connect()
         }
     }
 
-    if(portToUse.isNull() || !portToUse.isValid()) {
+    if(portToUse.isNull()) {
         qWarning() << "Serial port unknown or not valid:" << portToUse.portName();
         setConnectionStatus(Disconnected);
         return;
