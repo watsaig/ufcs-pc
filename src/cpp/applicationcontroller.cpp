@@ -21,6 +21,11 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     mRoutineController = new RoutineController(&mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 }
 
+ApplicationController::~ApplicationController()
+{
+    delete mRoutineController;
+}
+
 QString ApplicationController::connectionStatus()
 {
     return mCommunicator.getConnectionStatusString();

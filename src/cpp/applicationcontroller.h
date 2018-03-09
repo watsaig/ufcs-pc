@@ -28,7 +28,7 @@ private:
 
 public:
     static ApplicationController* appController();
-    virtual ~ApplicationController() {}
+    virtual ~ApplicationController();
 
     Q_INVOKABLE void connect();
 
