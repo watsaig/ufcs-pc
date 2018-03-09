@@ -73,6 +73,7 @@ signals:
     void finished();
 
 private:
+    void reset();
     void run(bool dummyRun);
     void reportError(const QString& errorString);
     void setCurrentStep(int stepNumber);

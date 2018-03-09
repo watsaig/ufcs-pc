@@ -9,6 +9,22 @@ RoutineController::RoutineController(Communicator * communicator)
 }
 
 /**
+ * @brief Reset the controller, deleting any stored routine and other information.
+ */
+void RoutineController::reset()
+{
+    mLines.clear();
+    mValidSteps.clear();
+    mErrors.clear();
+    mRoutineName.clear();
+
+    mNumberOfSteps = 0;
+    mCurrentStep = -1;
+    mErrorCount = 0;
+    mRunStatus = NotReady;
+}
+
+/**
  * @brief Load and parse the routine stored in the specified file
  * @param fileUrl The URL of the text file containing the routine
  *
@@ -18,6 +34,8 @@ RoutineController::RoutineController(Communicator * communicator)
  */
 bool RoutineController::loadFile(QString fileUrl)
 {
+    reset();
+
     QUrl url(fileUrl);
     QFile file(url.toLocalFile());
 
