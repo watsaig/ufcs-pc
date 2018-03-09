@@ -49,9 +49,7 @@ public:
 
     QString devicePort() const;
 
-    void setValve(int valveNumber, bool open);
     void setPump(int pumpNumber, bool on);
-    void setPressure(int controllerNumber, double pressure);
     void refreshAll(); // request status of all components
 
     int nValves() const { return N_VALVES; }
@@ -59,6 +57,10 @@ public:
     int nPressureControllers() const { return N_PRS; }
     double minPressure(int controllerNumber) const;
     double maxPressure(int controllerNumber) const;
+
+public slots:
+    void setValve(int valveNumber, bool open);
+    void setPressure(int controllerNumber, double pressure);
 
 
 signals:

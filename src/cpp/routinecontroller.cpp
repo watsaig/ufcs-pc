@@ -6,6 +6,9 @@ RoutineController::RoutineController(Communicator * communicator)
     , mCurrentStep(-1)
 {
 
+    QObject::connect(this, SIGNAL(setValve(int,bool)), mCommunicator, SLOT(setValve(int,bool)));
+    QObject::connect(this, SIGNAL(setPressure(int,double)), mCommunicator, SLOT(setPressure(int,double)));
+
 }
 
 /**
@@ -184,7 +187,8 @@ void RoutineController::run(bool dummyRun)
             if (dummyRun)
                 mValidSteps << line;
             else {
-                mCommunicator->setValve(valveNumber, (state == "open"));
+                // Signals & slots are necessary to avoid calling QSerialPort->write from a different thread (in which case it throws a QTimer-related error message)
+                emit setValve(valveNumber, (state == "open"));
                 setCurrentStep(mCurrentStep+1);
             }
         }
@@ -219,7 +223,8 @@ void RoutineController::run(bool dummyRun)
             else {
                 // TODO: fix this for negative values (vacuum controller).
                 double p = mCommunicator->minPressure(controllerNumber) + (pressure / mCommunicator->maxPressure(controllerNumber));
-                mCommunicator->setPressure(controllerNumber, p);
+                //mCommunicator->setPressure(controllerNumber, p);
+                emit setPressure(controllerNumber, p);
                 setCurrentStep(mCurrentStep+1);
             }
 

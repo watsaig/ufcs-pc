@@ -34,18 +34,15 @@ double PCHelper::measuredValueInPsi() const
 }
 
 /**
- * @brief Set the pressure controller's setpoint, i.e. target value
+ * @brief Update the display of the controller's setpoint, i.e. target value. This affects only the GUI component.
  * @param val A double between 0 and 1, representing the minimum and maximum possible pressure, respectively
  *
- * This sends the new requested setpoint to the microcontroller, and updates the GUI component (thus this function can
- * be called both from QML and C++ with the same result).
+ * This should be called when the setpoint is changed (e.g. by a routine) to update the GUI component.
  */
 void PCHelper::setSetPoint(double val)
 {
     //qDebug() << "Setting pressure to " << val;
     mSetPoint = val;
-
-    ApplicationController::appController()->setPressure(mControllerNumber, val);
     emit setPointChanged(val);
 }
 
@@ -73,8 +70,6 @@ void ValveSwitchHelper::setState(bool newState)
 {
     if (mState != newState) {
         mState = newState;
-        ApplicationController::appController()->setValve(mValveNumber, newState);
-
         emit stateChanged(newState);
     }
 }

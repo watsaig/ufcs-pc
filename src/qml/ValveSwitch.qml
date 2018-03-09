@@ -18,8 +18,9 @@ Item {
         width: 1.2*height
 
         checkable: true
-        onCheckedChanged: {
-            helper.state = checked
+
+        onClicked: {
+            Backend.setValve(valveNumber, checked);
         }
     }
 

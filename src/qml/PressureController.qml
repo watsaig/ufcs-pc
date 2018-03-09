@@ -24,8 +24,9 @@ Item {
             live: true
 
             onValueChanged: {
-                helper.setPoint = value // putting this here means that setValue() is called when the slider changes
+                helper.setPoint = value
                 setPointLabel.text = helper.setPointInPsi + " PSI"
+                Backend.setPressure(controllerNumber, value);
             }
         }
 

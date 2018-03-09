@@ -72,6 +72,10 @@ signals:
     /// Emitted when the routine is finished
     void finished();
 
+
+    void setValve(int valveNumber, bool open);
+    void setPressure(int controllerNumber, double value);
+
 private:
     void reset();
     void run(bool dummyRun);
