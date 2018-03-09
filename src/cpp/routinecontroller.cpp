@@ -57,7 +57,8 @@ bool RoutineController::loadFile(QString fileUrl)
 
     // TODO: polish this up a bit. remove the file extension,...
     // TODO? have a few lines towards the beginning of the file that would specify the routine's name and description
-    mRoutineName = url.fileName();
+    QFileInfo fileinfo(file);
+    mRoutineName = fileinfo.baseName();
 
     mRunStatus = Ready;
     emit runStatusChanged(Ready);
@@ -107,9 +108,20 @@ int RoutineController::numberOfSteps()
     return mNumberOfSteps;
 }
 
+/**
+ * @brief Return the entire contents of the routine file, with one line per string
+ */
+const QStringList& RoutineController::fileContents()
+{
+    return mLines;
+}
+
+/**
+ * @brief Return the list of valid steps of the routine. Lines with errors are removed.
+ */
 const QStringList& RoutineController::steps()
 {
-    return mSteps;
+    return mValidSteps;
 }
 
 int RoutineController::numberOfErrors()
@@ -136,6 +148,9 @@ void RoutineController::run(bool dummyRun)
 {
     // Counter for the number of valid steps in the routine
     int nValidSteps(0);
+    // TODO: simplify this by removing this counter; replace it by a boolean "isValid".
+    // if isValid == True at the end of the loop, then increment mCurrentStep; if it is not a dummy run,
+    // then also emit stepChanged. If it is a dummy run, then add that step to a list of valid steps.
 
     mErrorCount = 0;
     mErrors.clear();

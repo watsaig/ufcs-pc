@@ -32,6 +32,7 @@ class RoutineController : public QObject
     Q_PROPERTY(int currentStep READ currentStep NOTIFY currentStepChanged)
     Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
     Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
+    Q_PROPERTY(QStringList stepsList READ steps NOTIFY currentStepChanged) // TODO add notification
 
 public:
     enum RunStatus {
@@ -55,6 +56,8 @@ public:
     Q_INVOKABLE int numberOfErrors();
 
     Q_INVOKABLE const QStringList &steps();
+
+    const QStringList &fileContents();
     const QStringList& errors();
 
     Q_INVOKABLE QString routineName() { return mRoutineName; }
@@ -82,6 +85,9 @@ private:
     void reportError(const QString& errorString);
     void setCurrentStep(int stepNumber);
 
+    /// The serial port interface
+    Communicator * mCommunicator;
+
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;
     std::atomic<int> mErrorCount;
@@ -100,8 +106,6 @@ private:
 
     /// The routine name (derived from the file name)
     QString mRoutineName;
-
-    Communicator * mCommunicator;
 };
 
 #endif // ROUTINECONTROLLER_H
