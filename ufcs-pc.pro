@@ -22,10 +22,10 @@ RESOURCES += \
     res/qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = C:/Qt/5.9/msvc2017_64/qml/QtQuick/Controls.2
+QML_IMPORT_PATH = C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH += C:/Qt/5.9/msvc2017_64/qml/QtQuick/Controls.2/designer
+QML_DESIGNER_IMPORT_PATH += C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2/designer
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
