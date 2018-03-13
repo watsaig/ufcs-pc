@@ -3,6 +3,8 @@
 
 BluetoothCommunicator::BluetoothCommunicator()
     : mConnectionStatus(Disconnected)
+    , mDiscoveryAgent(NULL)
+    , mSocket(NULL)
 {
 }
 
@@ -13,39 +15,8 @@ BluetoothCommunicator::~BluetoothCommunicator()
     // TODO: close and kill socket, if necessary
 }
 
-/**
- * @brief Connect to the microcontroller.
- *
- *
- */
-void BluetoothCommunicator::connect(const QLatin1String &uuid)
+void BluetoothCommunicator::initSocket()
 {
-    setConnectionStatus(Connecting);
-    qDebug() << "Connecting to UUID...";
-
-    if (!mDiscoveryAgent) {
-        mDiscoveryAgent = new QBluetoothServiceDiscoveryAgent();
-        qDebug() << "Discovery agent created";
-
-        QObject::connect(mDiscoveryAgent, SIGNAL(serviceDiscovered(QBluetoothServiceInfo)),
-                         this, SLOT(onServiceDiscovered(QBluetoothServiceInfo)));
-        QObject::connect(mDiscoveryAgent, SIGNAL(finished()), this, SLOT(onDiscoveryFinished()));
-        QObject::connect(mDiscoveryAgent, SIGNAL(canceled()), this, SLOT(onDiscoveryFinished()));
-        QObject::connect(mDiscoveryAgent, SIGNAL(error(QBluetoothServiceDiscoveryAgent::Error)),
-                         this, SLOT(onDiscoveryError(QBluetoothServiceDiscoveryAgent::Error)));
-
-    }
-
-    qDebug() << "Starting service discovery...";
-    mDiscoveryAgent->setUuidFilter(QBluetoothUuid(uuid));
-    mDiscoveryAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
-}
-
-void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
-{
-    setConnectionStatus(Connecting);
-    qDebug() << "Connecting to service...";
-
     if (!mSocket) {
         mSocket = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol);
         qDebug() << "Socket created";
@@ -60,9 +31,64 @@ void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
                          this, SLOT(onSocketError(QBluetoothSocket::SocketError)));
 
     }
+}
+
+void BluetoothCommunicator::initDiscoveryAgent()
+{
+    if (!mDiscoveryAgent) {
+        mDiscoveryAgent = new QBluetoothServiceDiscoveryAgent();
+        qDebug() << "Discovery agent created";
+
+        QObject::connect(mDiscoveryAgent, SIGNAL(serviceDiscovered(QBluetoothServiceInfo)),
+                         this, SLOT(onServiceDiscovered(QBluetoothServiceInfo)));
+        QObject::connect(mDiscoveryAgent, SIGNAL(finished()), this, SLOT(onDiscoveryFinished()));
+        QObject::connect(mDiscoveryAgent, SIGNAL(canceled()), this, SLOT(onDiscoveryFinished()));
+        QObject::connect(mDiscoveryAgent, SIGNAL(error(QBluetoothServiceDiscoveryAgent::Error)),
+                         this, SLOT(onDiscoveryError(QBluetoothServiceDiscoveryAgent::Error)));
+
+    }
+}
+
+/**
+ * @brief Connect to the ESP32, if it's available
+ *
+ * This function searches for the ESP32 and connects to it, if possible.
+ */
+void BluetoothCommunicator::connect()
+{
+    setConnectionStatus(Connecting);
+    qDebug() << "Searching for ESP32...";
+
+    initDiscoveryAgent();
+
+    qDebug() << "Starting service discovery...";
+    //mDiscoveryAgent->setUuidFilter(QBluetoothUuid(uuid));
+    mDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort); //TODO: more filters, to target ESP32 specifically (or at least Espressif)
+    mDiscoveryAgent->start();//QBluetoothServiceDiscoveryAgent::FullDiscovery);
+}
+
+/**
+ * @brief Connect to the microcontroller, given the service information
+ * @param serviceInfo ServiceInfo describing the Serial Port Profile to connect to.
+ */
+void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
+{
+    setConnectionStatus(Connecting);
+    qDebug() << "Connecting to service...";
+
+    initSocket();
 
     mSocket->connectToService(serviceInfo);
     qDebug() << "Connect to service done";
+}
+
+void BluetoothCommunicator::connect(const QBluetoothAddress &address, quint16 port)
+{
+    setConnectionStatus(Connecting);
+    qDebug() << "Connecting to address and port...";
+    initSocket();
+
+    mSocket->connectToService(address, port);
 }
 
 void BluetoothCommunicator::onDiscoveryError(QBluetoothServiceDiscoveryAgent::Error error)
@@ -73,7 +99,7 @@ void BluetoothCommunicator::onDiscoveryError(QBluetoothServiceDiscoveryAgent::Er
 void BluetoothCommunicator::onDiscoveryFinished()
 {
     qDebug() << "Bluetooth discovery finished";
-    connect(mService);
+    //connect(mService);
 }
 
 void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInfo)
@@ -92,7 +118,8 @@ void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInf
     qDebug() << "==============================================";
 
 
-    mService = serviceInfo; // assuming I will only find one service.
+    // TODO: if the various attributes above correspond to the ESP32 serial port profile, stop the scanning and connect to it.
+    // or continue scanning but set mService = serviceInfo .
 }
 
 void BluetoothCommunicator::onSocketConnected()

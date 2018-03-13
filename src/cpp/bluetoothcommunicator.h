@@ -7,6 +7,19 @@
 
 #include "constants.h"
 
+/**
+ * @brief Communication interface between the GUI and microcontroller, using Bluetooth Classic (serial port profile).
+ *
+ * The communication is virtually identical to that of the Communicator class. The main differences are due to the more complex connection process for bluetooth.
+ * This class implements 3 ways of doing so (for now).
+ * The most straightforward is connect(QBluetoothAddress, quint16). This connects to the profile at the given address and port.
+ * While this is quick and easy for development purposes, it is not very useful on its own otherwise.
+ *
+ * connect(QBluetoothServiceInfo) connects to the provided ServiceInfo object. This is likely what
+ * should be used if e.g. a bluetooth scanner is implemented in QML, where the user would select the device to connect to.
+ *
+ * Finally, connect() mimicks Communicator::connect: it searches for available devices, and guesses at which one to connect to based on vendor information.
+ */
 class BluetoothCommunicator : public QObject // : public Communicator // this will have to come later; maybe Communicator should become an abstract class, inherited by SerialCommunicator and BluetoothCommunicator...
 {
     Q_OBJECT
@@ -39,7 +52,8 @@ public slots:
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double pressure);
 
-    void connect(const QLatin1String &uuid);
+    void connect();
+    void connect(const QBluetoothAddress &address, quint16 port);
     void connect(const QBluetoothServiceInfo &serviceInfo);
 
 
@@ -68,6 +82,9 @@ protected:
     ConnectionStatus mConnectionStatus;
 
 private:
+    void initSocket();
+    void initDiscoveryAgent();
+
     QBluetoothSocket * mSocket;
     QBluetoothServiceInfo mService;
     QBluetoothServiceDiscoveryAgent * mDiscoveryAgent;

@@ -2,7 +2,6 @@
 #include "guihelper.h"
 
 ApplicationController* singleton = nullptr;
-static const QLatin1String serviceUuid("e2c12764-1e66-402a-8c85-83fef64b6fed");
 
 ApplicationController* ApplicationController::appController()
 {
@@ -34,8 +33,22 @@ QString ApplicationController::connectionStatus()
 
 void ApplicationController::connect()
 {
-    mCommunicator.connect(serviceUuid);
-
+    /*
+     * Currently I can't use proper scanning / connection functions, I think due to limitations with the ESP32 (SDP browsing not possible).
+     * The workaround for now is to use mSocket->connectToService(QBluetoothAddress, Channel).
+     * To find the bluetooth address of the device (on Linux), run:
+     *
+     *  $ hcitool scan
+     *
+     * And find the address of the device -- for example 24:0A:C4:05:7E:EA
+     * Then, run
+     *
+     *  $ sdptool records 24:0A:C4:05:7E:EA | grep Channel
+     *
+     * This will tell you the channel number (e.g. 2).
+     */
+    mCommunicator.connect(QBluetoothAddress("24:0A:C4:05:7E:EA"), 2); // devkitC
+    //mCommunicator.connect(QBluetoothAddress("24:0A:C4:83:28:E2"), 2); // esp32thing
 }
 
 void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* instance)
