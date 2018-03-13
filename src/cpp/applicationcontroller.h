@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 
-#include "communicator.h"
+#include "bluetoothcommunicator.h"
 #include "routinecontroller.h"
 
 /*
@@ -54,11 +54,11 @@ private slots:
     void onPumpStateChanged(int pumpNumber, bool on);
     void onPressureChanged(int controllerNumber, double pressure);
 
-    void onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus);
+    void onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus);
 
 private:
 
-    Communicator mCommunicator;
+    BluetoothCommunicator mCommunicator;
     RoutineController * mRoutineController;
 
     QMap<int, ValveSwitchHelper*> mQmlValveSwitches;

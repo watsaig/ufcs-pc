@@ -2,6 +2,7 @@
 #include "guihelper.h"
 
 ApplicationController* singleton = nullptr;
+static const QLatin1String serviceUuid("e2c12764-1e66-402a-8c85-83fef64b6fed");
 
 ApplicationController* ApplicationController::appController()
 {
@@ -13,10 +14,10 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
-    QObject::connect(&mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
-    QObject::connect(&mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
-    //QObject::connect(&mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
-    QObject::connect(&mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+    QObject::connect(&mCommunicator, &BluetoothCommunicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
+    QObject::connect(&mCommunicator, &BluetoothCommunicator::pressureChanged, this, &ApplicationController::onPressureChanged);
+    //QObject::connect(&mCommunicator, &BluetoothCommunicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
+    QObject::connect(&mCommunicator, &BluetoothCommunicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
     mRoutineController = new RoutineController(&mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 }
@@ -33,9 +34,7 @@ QString ApplicationController::connectionStatus()
 
 void ApplicationController::connect()
 {
-    mCommunicator.connect();
-    if (mCommunicator.getConnectionStatus() == mCommunicator.Connected)
-        mCommunicator.refreshAll();
+    mCommunicator.connect(serviceUuid);
 
 }
 
@@ -74,8 +73,11 @@ void ApplicationController::onPressureChanged(int controllerNumber, double press
         mQmlPressureControllers[controllerNumber]->setMeasuredValue(pressure);
 }
 
-void ApplicationController::onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus)
+void ApplicationController::onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus)
 {
-    Q_UNUSED(newStatus)
+    qDebug() << "App controller: communicator status changed";
+    if (newStatus == mCommunicator.Connected)
+        mCommunicator.refreshAll();
+
     emit connectionStatusChanged(mCommunicator.getConnectionStatusString());
 }

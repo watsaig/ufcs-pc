@@ -7,7 +7,7 @@
 #include <QtCore>
 #include <QStringList>
 
-#include "communicator.h"
+#include "bluetoothcommunicator.h"
 
 /**
  * @brief The RoutineController class loads and runs routines, i.e pre-programmed sequences of actions.
@@ -42,7 +42,7 @@ public:
         Finished
     }; Q_ENUM(RunStatus)
 
-    RoutineController(Communicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
+    RoutineController(BluetoothCommunicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
     virtual ~RoutineController() {}
 
     Q_INVOKABLE bool loadFile(QString fileUrl);
@@ -86,7 +86,7 @@ private:
     void setCurrentStep(int stepNumber);
 
     /// The serial port interface
-    Communicator * mCommunicator;
+    BluetoothCommunicator * mCommunicator;
 
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;

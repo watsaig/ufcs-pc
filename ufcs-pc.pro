@@ -1,6 +1,7 @@
 QT += qml \
       quick \
-      serialport
+      serialport \
+      bluetooth
 
 CONFIG += c++11
 
@@ -9,14 +10,16 @@ HEADERS += \
     src/cpp/constants.h \
     src/cpp/applicationcontroller.h \
     src/cpp/routinecontroller.h \
-    src/cpp/guihelper.h
+    src/cpp/guihelper.h \
+    src/cpp/bluetoothcommunicator.h
 
 SOURCES += \
     src/cpp/main.cpp \
     src/cpp/communicator.cpp \
     src/cpp/applicationcontroller.cpp \
     src/cpp/routinecontroller.cpp \
-    src/cpp/guihelper.cpp
+    src/cpp/guihelper.cpp \
+    src/cpp/bluetoothcommunicator.cpp
 
 RESOURCES += \
     res/qml.qrc
