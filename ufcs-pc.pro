@@ -11,7 +11,8 @@ HEADERS += \
     src/cpp/applicationcontroller.h \
     src/cpp/routinecontroller.h \
     src/cpp/guihelper.h \
-    src/cpp/bluetoothcommunicator.h
+    src/cpp/bluetoothcommunicator.h \
+    src/cpp/serialcommunicator.h
 
 SOURCES += \
     src/cpp/main.cpp \
@@ -19,7 +20,8 @@ SOURCES += \
     src/cpp/applicationcontroller.cpp \
     src/cpp/routinecontroller.cpp \
     src/cpp/guihelper.cpp \
-    src/cpp/bluetoothcommunicator.cpp
+    src/cpp/bluetoothcommunicator.cpp \
+    src/cpp/serialcommunicator.cpp
 
 RESOURCES += \
     res/qml.qrc

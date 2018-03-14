@@ -2,6 +2,7 @@
 
 SerialCommunicator::SerialCommunicator()
     : Communicator()
+    , mSerialPort(NULL)
 {
 
 }
@@ -166,7 +167,7 @@ void SerialCommunicator::setComponentState(Component c, int val)
 }
 
 
-SerialCommunicator::initSerialPort()
+void SerialCommunicator::initSerialPort()
 {
     if (!mSerialPort) {
         mSerialPort = new QSerialPort(this);
