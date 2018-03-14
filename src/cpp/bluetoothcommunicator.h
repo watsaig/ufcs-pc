@@ -74,6 +74,10 @@ protected slots:
     void onSocketConnected();
     void onSocketDisconnected();
 
+    void onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo);
+    void onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error);
+    void onDeviceDiscoveryFinished();
+
 protected:
     void setComponentState(Component c, int val);
 
@@ -84,10 +88,13 @@ protected:
 private:
     void initSocket();
     void initDiscoveryAgent();
+    void initDeviceDiscoveryAgent();
 
     QBluetoothSocket * mSocket;
     QBluetoothServiceInfo mService;
     QBluetoothServiceDiscoveryAgent * mDiscoveryAgent;
+    QBluetoothDeviceDiscoveryAgent * mDeviceDiscoveryAgent;
+    QBluetoothDeviceInfo mDeviceInfo;
 
 };
 

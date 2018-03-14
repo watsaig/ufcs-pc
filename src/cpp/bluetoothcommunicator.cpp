@@ -4,6 +4,7 @@
 BluetoothCommunicator::BluetoothCommunicator()
     : mConnectionStatus(Disconnected)
     , mDiscoveryAgent(NULL)
+    , mDeviceDiscoveryAgent(NULL)
     , mSocket(NULL)
 {
 }
@@ -49,6 +50,64 @@ void BluetoothCommunicator::initDiscoveryAgent()
     }
 }
 
+void BluetoothCommunicator::initDeviceDiscoveryAgent()
+{
+    if (!mDeviceDiscoveryAgent) {
+        mDeviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent();
+        qDebug() << "Device discovery agent created";
+
+        QObject::connect(mDeviceDiscoveryAgent, SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),
+                         this, SLOT(onDeviceDiscovered(QBluetoothDeviceInfo)));
+        QObject::connect(mDeviceDiscoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
+                         this, SLOT(onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error)));
+        QObject::connect(mDeviceDiscoveryAgent, SIGNAL(finished()),
+                         this, SLOT(onDeviceDiscoveryFinished()));
+        QObject::connect(mDeviceDiscoveryAgent, SIGNAL(canceled()),
+                         this, SLOT(onDeviceDiscoveryFinished()));
+
+    }
+}
+
+void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
+{
+    /*
+    qDebug() << "-------------------------------------------------------------------------------";
+    qDebug() << "Bluetooth device discovered:" << deviceInfo.name() << "(" << deviceInfo.address() << ")";
+    qDebug() << "Device UUID:" << deviceInfo.deviceUuid();
+    qDebug() << "Major device class:" << deviceInfo.majorDeviceClass();
+    qDebug() << "Minor device class:" << deviceInfo.minorDeviceClass();
+    qDebug() << "RSSI:" << deviceInfo.rssi();
+    qDebug() << "Service classes:" << deviceInfo.serviceClasses();
+
+    qDebug() << "Service UUIDs:";
+    QList<QBluetoothUuid> uuids = deviceInfo.serviceUuids();
+    foreach(QBluetoothUuid id, uuids) {
+        qDebug() << id;
+    }
+    */
+
+    if (deviceInfo.name() == "Microfluidics control system") {
+        qDebug() << "Found control system; stopping discovery";
+        mDeviceInfo = deviceInfo;
+        mDeviceDiscoveryAgent->stop();
+    }
+
+}
+void BluetoothCommunicator::onDeviceDiscoveryFinished()
+{
+    qDebug() << "Device discovery finished";
+    if (mDeviceInfo.isValid())
+        connect(mDeviceInfo.address(), 2); // TODO: detect which channel the SPP is actually on (can't currently check for that)
+    else
+        setConnectionStatus(Disconnected);
+
+}
+
+void BluetoothCommunicator::onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
+{
+    qDebug() << "Device discovery error:" << mDeviceDiscoveryAgent->errorString();
+}
+
 /**
  * @brief Connect to the ESP32, if it's available
  *
@@ -59,12 +118,16 @@ void BluetoothCommunicator::connect()
     setConnectionStatus(Connecting);
     qDebug() << "Searching for ESP32...";
 
+    /*
     initDiscoveryAgent();
 
     qDebug() << "Starting service discovery...";
     //mDiscoveryAgent->setUuidFilter(QBluetoothUuid(uuid));
     mDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort); //TODO: more filters, to target ESP32 specifically (or at least Espressif)
     mDiscoveryAgent->start();//QBluetoothServiceDiscoveryAgent::FullDiscovery);
+    */
+    initDeviceDiscoveryAgent();
+    mDeviceDiscoveryAgent->start();
 }
 
 /**
@@ -85,7 +148,7 @@ void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
 void BluetoothCommunicator::connect(const QBluetoothAddress &address, quint16 port)
 {
     setConnectionStatus(Connecting);
-    qDebug() << "Connecting to address and port...";
+    qDebug() << "Connecting to address" << address << ", port" << port;
     initSocket();
 
     mSocket->connectToService(address, port);
@@ -98,7 +161,7 @@ void BluetoothCommunicator::onDiscoveryError(QBluetoothServiceDiscoveryAgent::Er
 
 void BluetoothCommunicator::onDiscoveryFinished()
 {
-    qDebug() << "Bluetooth discovery finished";
+    qDebug() << "Bluetooth service discovery finished";
     //connect(mService);
 }
 
@@ -299,7 +362,7 @@ void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)
  */
 void BluetoothCommunicator::onSocketReady()
 {
-    qDebug() << "Received" << mSocket->bytesAvailable() << "bytes on serial port";
+    //qDebug() << "Received" << mSocket->bytesAvailable() << "bytes on serial port";
 
     QByteArray buffer = mSocket->readAll();
 

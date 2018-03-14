@@ -47,7 +47,10 @@ void ApplicationController::connect()
      *
      * This will tell you the channel number (e.g. 2).
      */
-    mCommunicator.connect(QBluetoothAddress("24:0A:C4:05:7E:EA"), 2); // devkitC
+    
+    mCommunicator.connect();
+
+    //mCommunicator.connect(QBluetoothAddress("24:0A:C4:05:7E:EA"), 2); // devkitC
     //mCommunicator.connect(QBluetoothAddress("24:0A:C4:83:28:E2"), 2); // esp32thing
 }
 
