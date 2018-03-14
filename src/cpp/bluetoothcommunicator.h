@@ -39,9 +39,6 @@ public:
 
     QString getConnectionStatusString() const;
 
-    void setPump(int pumpNumber, bool on);
-    void refreshAll(); // request status of all components
-
     int nValves() const { return N_VALVES; }
     int nPumps() const { return N_PUMPS; }
     int nPressureControllers() const { return N_PRS; }
@@ -51,11 +48,12 @@ public:
 public slots:
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double pressure);
+    void setPump(int pumpNumber, bool on);
+    void refreshAll(); // request status of all components
 
     void connect();
-    void connect(const QBluetoothAddress &address, quint16 port);
     void connect(const QBluetoothServiceInfo &serviceInfo);
-
+    void connect(const QBluetoothAddress &address, quint16 port);
 
 signals:
     void valveStateChanged(int valveNumber, bool open);
@@ -65,14 +63,14 @@ signals:
     void connectionStatusChanged(ConnectionStatus newStatus);
 
 protected slots:
-    void onSocketError(QBluetoothSocket::SocketError error);
     void onSocketReady();
-
-    void onServiceDiscovered(QBluetoothServiceInfo serviceInfo);
-    void onServiceDiscoveryFinished();
-    void onServiceDiscoveryError(QBluetoothServiceDiscoveryAgent::Error error);
+    void onSocketError(QBluetoothSocket::SocketError error);
     void onSocketConnected();
     void onSocketDisconnected();
+
+    void onServiceDiscovered(QBluetoothServiceInfo serviceInfo);
+    void onServiceDiscoveryError(QBluetoothServiceDiscoveryAgent::Error error);
+    void onServiceDiscoveryFinished();
 
     void onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo);
     void onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error);
@@ -80,7 +78,6 @@ protected slots:
 
 protected:
     void setComponentState(Component c, int val);
-
     void setConnectionStatus(ConnectionStatus status);
 
     ConnectionStatus mConnectionStatus;
@@ -91,10 +88,12 @@ private:
     void initDeviceDiscoveryAgent();
 
     QBluetoothSocket * mSocket;
+
     QBluetoothServiceInfo mService;
     QBluetoothServiceDiscoveryAgent * mServiceDiscoveryAgent;
-    QBluetoothDeviceDiscoveryAgent * mDeviceDiscoveryAgent;
+
     QBluetoothDeviceInfo mDeviceInfo;
+    QBluetoothDeviceDiscoveryAgent * mDeviceDiscoveryAgent;
 
 };
 
