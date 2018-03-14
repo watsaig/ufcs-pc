@@ -195,6 +195,9 @@ void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
     qDebug() << "Connect to service done";
 }
 
+/**
+ * @brief Connect to the microcontroller, given an address and port
+ */
 void BluetoothCommunicator::connect(const QBluetoothAddress &address, quint16 port)
 {
     setConnectionStatus(Connecting);
@@ -361,6 +364,13 @@ void BluetoothCommunicator::setConnectionStatus(ConnectionStatus status)
     }
 }
 
+/**
+ * @brief Initialize the bluetooth socket and connect signals & slots
+ *
+ * The socket handles all communication between the two devices, once they are connected.
+ * Data is sent to the microcontroller using QBluetoothSocket::write; when data is received
+ * from the microcontroller, the BluetoothCommunicator::onSocketReady slot is called.
+ */
 void BluetoothCommunicator::initSocket()
 {
     if (!mSocket) {
@@ -379,6 +389,15 @@ void BluetoothCommunicator::initSocket()
     }
 }
 
+/**
+ * @brief Initialize the bluetooth service discovery agent and connect signals & slots
+ *
+ * The service discovery agent searches for all available services. It is a more in-depth
+ * search than the one carried out by the device discovery agent.
+ *
+ * Currently, it does not work as the ESP32 does not advertise is serial port profile service,
+ * so the device discovery method should be used. This function may be removed soon.
+ */
 void BluetoothCommunicator::initServiceDiscoveryAgent()
 {
     if (!mServiceDiscoveryAgent) {
@@ -395,6 +414,13 @@ void BluetoothCommunicator::initServiceDiscoveryAgent()
     }
 }
 
+/**
+ * @brief Initialize the bluetooth device discovery agent and connect signals & slots
+ *
+ * The device discovery agent searches for devices, which can then be queried to obtain the
+ * list of services that they offer. Every time a device is found, the deviceDiscovered signal is
+ * emitted.
+ */
 void BluetoothCommunicator::initDeviceDiscoveryAgent()
 {
     if (!mDeviceDiscoveryAgent) {
