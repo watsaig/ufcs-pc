@@ -13,22 +13,27 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
-    QObject::connect(&mCommunicator, &BluetoothCommunicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
-    QObject::connect(&mCommunicator, &BluetoothCommunicator::pressureChanged, this, &ApplicationController::onPressureChanged);
-    //QObject::connect(&mCommunicator, &BluetoothCommunicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
-    QObject::connect(&mCommunicator, &BluetoothCommunicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+    mCommunicator = new BluetoothCommunicator();
+    // or:
+    // mCommunicator = new SerialCommunicator();
 
-    mRoutineController = new RoutineController(&mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
+    QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
+    QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
+    //QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
+    QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+
+    mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 }
 
 ApplicationController::~ApplicationController()
 {
     delete mRoutineController;
+    delete mCommunicator;
 }
 
 QString ApplicationController::connectionStatus()
 {
-    return mCommunicator.getConnectionStatusString();
+    return mCommunicator->getConnectionStatusString();
 }
 
 void ApplicationController::connect()
@@ -48,10 +53,10 @@ void ApplicationController::connect()
      * This will tell you the channel number (e.g. 2).
      */
     
-    mCommunicator.connect();
+    mCommunicator->connect();
 
-    //mCommunicator.connect(QBluetoothAddress("24:0A:C4:05:7E:EA"), 2); // devkitC
-    //mCommunicator.connect(QBluetoothAddress("24:0A:C4:83:28:E2"), 2); // esp32thing
+    //mCommunicator->connect(QBluetoothAddress("24:0A:C4:05:7E:EA"), 2); // devkitC
+    //mCommunicator->connect(QBluetoothAddress("24:0A:C4:83:28:E2"), 2); // esp32thing
 }
 
 void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* instance)
@@ -92,8 +97,8 @@ void ApplicationController::onPressureChanged(int controllerNumber, double press
 void ApplicationController::onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus)
 {
     qDebug() << "App controller: communicator status changed";
-    if (newStatus == mCommunicator.Connected)
-        mCommunicator.refreshAll();
+    if (newStatus == Communicator::Connected)
+        mCommunicator->refreshAll();
 
-    emit connectionStatusChanged(mCommunicator.getConnectionStatusString());
+    emit connectionStatusChanged(mCommunicator->getConnectionStatusString());
 }

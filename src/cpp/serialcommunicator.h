@@ -5,7 +5,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
-#include "communicator.h">
+#include "communicator.h"
 
 class SerialCommunicator : public Communicator
 {

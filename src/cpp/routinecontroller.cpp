@@ -1,6 +1,6 @@
 #include "routinecontroller.h"
 
-RoutineController::RoutineController(BluetoothCommunicator * communicator)
+RoutineController::RoutineController(Communicator *communicator)
     : mCommunicator(communicator)
     , mRunStatus(NotReady)
     , mCurrentStep(-1)

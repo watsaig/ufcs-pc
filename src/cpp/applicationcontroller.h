@@ -5,6 +5,8 @@
 #include <QQmlEngine>
 
 #include "bluetoothcommunicator.h"
+#include "serialcommunicator.h"
+
 #include "routinecontroller.h"
 
 /*
@@ -32,12 +34,12 @@ public:
 
     Q_INVOKABLE void connect();
 
-    Q_INVOKABLE void setValve(int valveNumber, bool open) { mCommunicator.setValve(valveNumber, open); }
-    Q_INVOKABLE void setPump(int pumpNumber, bool on) { mCommunicator.setPump(pumpNumber, on); }
-    Q_INVOKABLE void setPressure(int controllerNumber, double pressure) { mCommunicator.setPressure(controllerNumber, pressure); }
+    Q_INVOKABLE void setValve(int valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
+    Q_INVOKABLE void setPump(int pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
+    Q_INVOKABLE void setPressure(int controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
 
-    double minPressure(int controllerNumber) { return mCommunicator.minPressure(controllerNumber); }
-    double maxPressure(int controllerNumber) { return mCommunicator.maxPressure(controllerNumber); }
+    double minPressure(int controllerNumber) { return mCommunicator->minPressure(controllerNumber); }
+    double maxPressure(int controllerNumber) { return mCommunicator->maxPressure(controllerNumber); }
 
     QString connectionStatus();
 
@@ -58,7 +60,7 @@ private slots:
 
 private:
 
-    BluetoothCommunicator mCommunicator;
+    Communicator * mCommunicator;
     RoutineController * mRoutineController;
 
     QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
