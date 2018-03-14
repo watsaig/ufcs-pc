@@ -2,8 +2,6 @@
 #define COMMUNICATOR_H
 
 #include <QtCore>
-#include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
 
 #include "constants.h"
 
@@ -41,16 +39,9 @@ public:
     Communicator ();
     virtual ~Communicator ();
 
-    void connect(); // No parameters yet; may change this to allow selecting what device we connect to
 
     ConnectionStatus getConnectionStatus() const;
-
     QString getConnectionStatusString() const;
-
-    QString devicePort() const;
-
-    void setPump(int pumpNumber, bool on);
-    void refreshAll(); // request status of all components
 
     int nValves() const { return N_VALVES; }
     int nPumps() const { return N_PUMPS; }
@@ -59,8 +50,11 @@ public:
     double maxPressure(int controllerNumber) const;
 
 public slots:
+    virtual void connect() = 0;
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double pressure);
+    void setPump(int pumpNumber, bool on);
+    virtual void refreshAll() = 0; // request status of all components
 
 
 signals:
@@ -70,17 +64,12 @@ signals:
 
     void connectionStatusChanged(ConnectionStatus newStatus);
 
-protected slots:
-    void handleSerialError(QSerialPort::SerialPortError error);
-    void onSerialReady();
-
 protected:
-    void setComponentState(Component c, int val);
+    virtual void setComponentState(Component c, int val) = 0;
 
     void setConnectionStatus(ConnectionStatus status);
 
     ConnectionStatus mConnectionStatus;
-    QSerialPort * mSerialPort;
 };
 
 #endif

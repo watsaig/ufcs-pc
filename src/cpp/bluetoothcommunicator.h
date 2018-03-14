@@ -6,6 +6,7 @@
 #include <QBluetoothServiceDiscoveryAgent>
 
 #include "constants.h"
+#include "communicator.h"
 
 /**
  * @brief Communication interface between the GUI and microcontroller, using Bluetooth Classic (serial port profile).
@@ -20,49 +21,22 @@
  *
  * Finally, connect() mimicks Communicator::connect: it searches for available devices, and guesses at which one to connect to based on vendor information.
  */
-class BluetoothCommunicator : public QObject // : public Communicator // this will have to come later; maybe Communicator should become an abstract class, inherited by SerialCommunicator and BluetoothCommunicator...
+class BluetoothCommunicator : public Communicator
 {
     Q_OBJECT
 
 public:
-    enum ConnectionStatus {
-        Disconnected,
-        Connecting,
-        Connected
-    };
-
     BluetoothCommunicator();
     ~BluetoothCommunicator();
 
-
-    ConnectionStatus getConnectionStatus() const;
-
-    QString getConnectionStatusString() const;
-
-    int nValves() const { return N_VALVES; }
-    int nPumps() const { return N_PUMPS; }
-    int nPressureControllers() const { return N_PRS; }
-    double minPressure(int controllerNumber) const;
-    double maxPressure(int controllerNumber) const;
-
 public slots:
-    void setValve(int valveNumber, bool open);
-    void setPressure(int controllerNumber, double pressure);
-    void setPump(int pumpNumber, bool on);
-    void refreshAll(); // request status of all components
-
     void connect();
     void connect(const QBluetoothServiceInfo &serviceInfo);
     void connect(const QBluetoothAddress &address, quint16 port);
 
-signals:
-    void valveStateChanged(int valveNumber, bool open);
-    void pumpStateChanged(int pumpNumber, bool on);
-    void pressureChanged(int controllerNumber, double pressure);
+    void refreshAll();
 
-    void connectionStatusChanged(ConnectionStatus newStatus);
-
-protected slots:
+private slots:
     void onSocketReady();
     void onSocketError(QBluetoothSocket::SocketError error);
     void onSocketConnected();
@@ -78,9 +52,6 @@ protected slots:
 
 protected:
     void setComponentState(Component c, int val);
-    void setConnectionStatus(ConnectionStatus status);
-
-    ConnectionStatus mConnectionStatus;
 
 private:
     void initSocket();
