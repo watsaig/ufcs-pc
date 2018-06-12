@@ -125,37 +125,74 @@ void SerialCommunicator::handleSerialError(QSerialPort::SerialPortError error)
  */
 void SerialCommunicator::onSerialReady()
 {
-    QByteArray buffer = mSerialPort->readAll();
+    mBuffer.append(mSerialPort->readAll());
 
-    //qDebug() << "Received" << buffer.size() << "bytes on serial port";
+    if (mBuffer.size() >= 4)
+        parseBuffer();
+}
 
+/**
+ * @brief SerialCommunicator::parseBuffer
+ *
+ * Parse the buffer of received serial messages; execute any valid commands
+ * and print any other data to the console.
+ */
+void SerialCommunicator::parseBuffer()
+{
+    // How it works:
+    // - Scan through buffer until we find a start byte
+    // - If there is a valid command following it, execute the command and delete that data
+    // - If there was any data at the beginning of the buffer, before the start byte, print it
+    //   then delete it
 
-    for (int i(0); i < buffer.size() - 1; i+=2) {
-        uint8_t item = buffer[i];
-        uint8_t value = buffer[i+1];
+    // Valid commands are of the form: START_BYTE, ITEM, VALUE, END_BYTE
 
-        if ((item >= VALVE1 && item <= VALVE32) && (value == OPEN || value == CLOSED))
-            emit valveStateChanged((item - VALVE1 + 1), value == OPEN);
+    uint8_t START_BYTE = 249;
+    uint8_t END_BYTE = 250;
 
-        else if ((item == PUMP1 || item == PUMP2) && (value == ON || value == OFF))
-            emit pumpStateChanged(item - PUMP1 + 1, value == ON);
+    for (int i(0); i < mBuffer.size(); ++i) {
+        if ((uint8_t)(mBuffer[i]) == START_BYTE) {
+            bool decrementI = false;
+            if (i < (mBuffer.size() - 3) && (uint8_t)(mBuffer[i+3]) == END_BYTE) {
 
-        else if (item == PR1 || item == PR2 || item == PR3) {
-            double pressure = double(value)/double(PR_MAX_VALUE);
-            if (pressure < 0)
-                qDebug() << "Pressure invalid:" << value;
-            int index = 1;
-            if (item == PR2)
-                index = 2;
-            else if (item == PR3)
-                index = 3;
+                uint8_t item = mBuffer[i+1];
+                uint8_t value = mBuffer[i+2];
 
-            emit pressureChanged(index, pressure);
-        }
+                if ((item >= VALVE1 && item <= VALVE32) && (value == OPEN || value == CLOSED))
+                    emit valveStateChanged((item - VALVE1 + 1), value == OPEN);
 
-        else {
-            qWarning() << "Unknown data received: " << item << " ; " << value;
-            mSerialPort->clear();
+                else if ((item == PUMP1 || item == PUMP2) && (value == ON || value == OFF))
+                    emit pumpStateChanged(item - PUMP1 + 1, value == ON);
+
+                else if (item == PR1 || item == PR2 || item == PR3) {
+                    double pressure = double(value)/double(PR_MAX_VALUE);
+                    if (pressure < 0)
+                        qDebug() << "Pressure invalid:" << value;
+                    int index = 1;
+                    if (item == PR2)
+                        index = 2;
+                    else if (item == PR3)
+                        index = 3;
+
+                    emit pressureChanged(index, pressure);
+                }
+
+                else
+                    qWarning() << "Unknown command: " << item << " ; " << value;
+
+                mBuffer.remove(i, 4);
+                decrementI = true;
+            }
+
+            if (i > 0) {
+                qDebug() << "Unknown message received: " << mBuffer.left(i);
+                mBuffer.remove(0, i);
+                i = -1; // return to beginning of array when i is incremented
+                decrementI = false;
+            }
+
+            if (decrementI)
+                i -= 1;
         }
     }
 }

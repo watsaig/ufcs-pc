@@ -31,8 +31,11 @@ protected:
 
 private:
     void initSerialPort();
+    void parseBuffer();
 
     QSerialPort * mSerialPort;
+
+    QByteArray mBuffer;
 };
 
 #endif // SERIALCOMMUNICATOR_H
