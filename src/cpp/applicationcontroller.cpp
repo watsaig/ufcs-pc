@@ -13,9 +13,9 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
-    mCommunicator = new BluetoothCommunicator();
+    //mCommunicator = new BluetoothCommunicator();
     // or:
-    // mCommunicator = new SerialCommunicator();
+    mCommunicator = new SerialCommunicator();
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
