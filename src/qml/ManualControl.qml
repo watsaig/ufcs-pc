@@ -254,6 +254,14 @@ Item {
                         visible: Backend.connectionStatus == "Disconnected"
                     }
 
+                    Button {
+                        id: refreshButton
+                        text: qsTr("Refresh component statuses")
+                        onClicked: Backend.requestRefresh()
+                        padding: 12
+                        visible: Backend.connectionStatus == "Connected"
+                    }
+
                     /*
                     Backend.onConnectionStatusChanged: {
                     }
