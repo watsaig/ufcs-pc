@@ -46,7 +46,7 @@ void SerialCommunicator::connect()
         qDebug().noquote() << s;
 
         // The following line may need to be customized depending on your specific ESP32 board.
-        if((info.description().contains("UART Bridge") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
+        if((info.description().contains("UART Bridge") || info.description().contains("USB Serial Port") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
             portToUse = info;
             break;
         }
@@ -67,6 +67,12 @@ void SerialCommunicator::connect()
 
     if (mSerialPort->open(QIODevice::ReadWrite)) {
         qInfo() << "Connected to" << portToUse.description() << "on" << portToUse.portName();
+
+        // The following two lines are necessary with Sparkfun's ESP32 thing (which uses an FTDI chip);
+        // not necessary (and maybe won't work -- to be tested) with the Espressif ESP32 DevKitC
+        mSerialPort->setDataTerminalReady(false);
+        mSerialPort->setRequestToSend(false);
+
         setConnectionStatus(Connected);
     }
     else {
