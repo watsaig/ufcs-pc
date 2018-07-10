@@ -33,7 +33,7 @@ void TestRoutines::testParsing()
     // The dummy file defined below has 17 lines, including empty lines and comments.
     // It has 6 valid commands, and 3 errors.
 
-    QVERIFY(r.steps().length() == 17);
+    QVERIFY(r.fileContents().length() == 17);
     QVERIFY(r.numberOfSteps() == 6);
     QVERIFY(mNumberOfErrorsReceived == 3);
 
