@@ -91,6 +91,7 @@ QString SerialCommunicator::devicePort() const
 
 void SerialCommunicator::refreshAll()
 {
+    qDebug() << "Requesting status of all components";
     char toSend[2] = {(uint8_t)STATUS, (uint8_t)ALL_COMPONENTS};
     mSerialPort->write(toSend, 2);
 }
