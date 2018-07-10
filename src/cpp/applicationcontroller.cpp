@@ -1,6 +1,40 @@
 #include "applicationcontroller.h"
 #include "guihelper.h"
 
+void ApplicationController::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+
+    QString text = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
+
+    switch (type) {
+    case QtDebugMsg:
+        text += QString("Debug: %1 \n").arg(msg);
+        break;
+    case QtInfoMsg:
+        text += QString("Info: %1 \n").arg(msg);
+        break;
+    case QtWarningMsg:
+        text += QString("Warning: %1 \n").arg(msg);
+        break;
+    case QtCriticalMsg:
+        text += QString("Critical error: %1 (%2:%3, %4)\n").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    case QtFatalMsg:
+        text += QString("Fatal error: %1 (%2:%3, %4)\n").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    }
+
+    QByteArray b = text.toLocal8Bit();
+    fprintf(stderr, b.constData());
+    fflush(stderr); // Force output to be printed right away
+
+    QFile logFile(appController()->logFilePath());
+    logFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream ts(&logFile);
+    ts << text;
+
+}
+
 ApplicationController* singleton = nullptr;
 
 ApplicationController* ApplicationController::appController()
@@ -23,6 +57,8 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
+
+    mLogFilePath = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss-zzz") + ".txt";
 }
 
 ApplicationController::~ApplicationController()

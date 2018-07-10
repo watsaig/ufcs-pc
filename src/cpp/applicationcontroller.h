@@ -32,6 +32,8 @@ public:
     static ApplicationController* appController();
     virtual ~ApplicationController();
 
+    static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
     Q_INVOKABLE void connect();
 
     Q_INVOKABLE void setValve(int valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
@@ -50,6 +52,8 @@ public:
 
     RoutineController* routineController() { return mRoutineController; }
 
+    QString logFilePath() { return mLogFilePath; }
+
 signals:
     void connectionStatusChanged(QString newStatus);
 
@@ -67,6 +71,8 @@ private:
 
     QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
     QMap<int, PCHelper*> mQmlPressureControllers; // To do (?): allow several instances of PCHelper* per controller number
+
+    QString mLogFilePath;
 };
 
 #endif // APPLICATIONCONTROLLER_H

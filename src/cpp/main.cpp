@@ -7,8 +7,11 @@
 #include "src/cpp/applicationcontroller.h"
 #include "src/cpp/guihelper.h"
 
+
 int main(int argc, char *argv[])
 {
+    qInstallMessageHandler(ApplicationController::messageHandler);
+
     //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
@@ -23,6 +26,7 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QLatin1String("qrc:/src/qml/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
+
 
     return app.exec();
 }
