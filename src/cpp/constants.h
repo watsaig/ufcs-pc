@@ -14,11 +14,11 @@
 /// The minimum and maximum pressure values (in PSI) supported by the pressure controllers.
 #define PR1_MIN_PRESSURE 0
 #define PR2_MIN_PRESSURE 0
-#define PR3_MIN_PRESSURE 0
+#define PR3_MIN_PRESSURE -14
 
-#define PR1_MAX_PRESSURE 50 // For control layer valves
-#define PR2_MAX_PRESSURE 15 // Flow layer valves
-#define PR3_MAX_PRESSURE -6.8 // Vacuum
+#define PR1_MAX_PRESSURE 29.5 // For control layer valves
+#define PR2_MAX_PRESSURE 4.8 // Flow layer valves
+#define PR3_MAX_PRESSURE 14
 
 // this enum could also be split into valves/prs/pumps
 enum Component : uint8_t {
