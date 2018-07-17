@@ -243,7 +243,7 @@ Item {
                     Label {
                         text: "ESP32 is " + Backend.connectionStatus
                         padding: 12
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        Layout.alignment: Qt.AlignHCenter
                     }
 
                     Button {

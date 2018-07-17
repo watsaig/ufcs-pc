@@ -35,7 +35,8 @@ Item {
             text: "0 PSI"
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: slider.horizontalCenter
+            //anchors.horizontalCenter: slider.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
         }
 
         Rectangle {
@@ -43,6 +44,7 @@ Item {
             height: slider.background.height
             width: slider.background.width
             color: "#000000"
+            Layout.alignment: Qt.AlignHCenter
 
             Rectangle {
                 id: measuredValueForeground
@@ -59,7 +61,7 @@ Item {
             text: "0 PSI"
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: measuredValueBackground.horizontalCenter
+            Layout.alignment: Qt.AlignHCenter
         }
     }
 
