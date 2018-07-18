@@ -4,6 +4,7 @@ QT += qml \
       bluetooth
 
 CONFIG += c++11
+CONFIG += qtquickcompiler
 
 HEADERS += \
     src/cpp/communicator.h \
