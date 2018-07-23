@@ -47,7 +47,7 @@ void BluetoothCommunicator::connect()
 
     qDebug() << "Starting service discovery...";
     mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort);
-    mServiceDiscoveryAgent->start();
+    mServiceDiscoveryAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
 
     /*
     initDeviceDiscoveryAgent();
