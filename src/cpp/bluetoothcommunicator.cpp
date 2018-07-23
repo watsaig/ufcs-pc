@@ -33,16 +33,26 @@ void BluetoothCommunicator::connect()
     setConnectionStatus(Connecting);
     qDebug() << "Searching for ESP32...";
 
-    /*
-    initDiscoveryAgent();
+    // There are two methods of discovering bluetooth devices. One discovers devices, and the other
+    // discovers services. Both are useful to find the correct device; one then connects to it using
+    // one of the three QBluetoothSocket::connectToService methods.
+
+    // Service discovery requires the device to support SDP (advertising its available services). This
+    // wasn't supported by the ESP32 at first, so device discovery was used instead. It now seems to have
+    // been implemented, so service discovery can be used.
+
+    // Service discovery is the preferred method, as it works on Linux as well as Android.
+
+    initServiceDiscoveryAgent();
 
     qDebug() << "Starting service discovery...";
-    //mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid(uuid));
-    mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort); //TODO: more filters, to target ESP32 specifically (or at least Espressif)
-    mServiceDiscoveryAgent->start();//QBluetoothServiceDiscoveryAgent::FullDiscovery);
-    */
+    mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort);
+    mServiceDiscoveryAgent->start();
+
+    /*
     initDeviceDiscoveryAgent();
     mDeviceDiscoveryAgent->start();
+    */
 }
 
 /**
@@ -62,6 +72,8 @@ void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
 
 /**
  * @brief Connect to the microcontroller, given an address and port
+ *
+ * Note that this method does not work on Android. The serviceInfo method should be used instead.
  */
 void BluetoothCommunicator::connect(const QBluetoothAddress &address, quint16 port)
 {
@@ -112,6 +124,7 @@ void BluetoothCommunicator::onSocketDisconnected()
 
 void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInfo)
 {
+    /*
     qDebug() << "==============================================";
     qDebug() << "Discovered service on"
              << serviceInfo.device().name() << serviceInfo.device().address().toString();
@@ -124,21 +137,24 @@ void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInf
              << serviceInfo.protocolServiceMultiplexer();
     qDebug() << "\tRFCOMM server channel:" << serviceInfo.serverChannel();
     qDebug() << "==============================================";
+    */
 
-
-    // TODO: if the various attributes above correspond to the ESP32 serial port profile, stop the scanning and connect to it.
-    // or continue scanning but set mService = serviceInfo .
+    if (serviceInfo.device().name() == "Microfluidics control system") {
+        qDebug () << "Found microcontroller.";
+        mService = serviceInfo;
+    }
 }
 
 void BluetoothCommunicator::onServiceDiscoveryError(QBluetoothServiceDiscoveryAgent::Error error)
 {
+    Q_UNUSED(error)
     qWarning() << "Bluetooth connection error:" << mServiceDiscoveryAgent->errorString();
 }
 
 void BluetoothCommunicator::onServiceDiscoveryFinished()
 {
-    qDebug() << "Bluetooth service discovery finished";
-    //connect(mService);
+    qDebug() << "Bluetooth service discovery finished. Connecting...";
+    connect(mService);
 }
 
 void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
@@ -169,6 +185,7 @@ void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
 
 void BluetoothCommunicator::onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
+    Q_UNUSED(error)
     qDebug() << "Device discovery error:" << mDeviceDiscoveryAgent->errorString();
 }
 
