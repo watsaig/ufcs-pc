@@ -85,34 +85,7 @@ void BluetoothCommunicator::onSocketReady()
     //qDebug() << "Received" << mSocket->bytesAvailable() << "bytes on serial port";
 
     QByteArray buffer = mSocket->readAll();
-
-    for (int i(0); i < buffer.size() - 1; i+=2) {
-        uint8_t item = buffer[i];
-        uint8_t value = buffer[i+1];
-
-        if ((item >= VALVE1 && item <= VALVE32) && (value == OPEN || value == CLOSED))
-            emit valveStateChanged((item - VALVE1 + 1), value == OPEN);
-
-        else if ((item == PUMP1 || item == PUMP2) && (value == ON || value == OFF))
-            emit pumpStateChanged(item - PUMP1 + 1, value == ON);
-
-        else if (item == PR1 || item == PR2 || item == PR3) {
-            double pressure = double(value)/double(PR_MAX_VALUE);
-            if (pressure < 0)
-                qDebug() << "Pressure invalid:" << value;
-            int index = 1;
-            if (item == PR2)
-                index = 2;
-            else if (item == PR3)
-                index = 3;
-
-            emit pressureChanged(index, pressure);
-        }
-
-        else {
-            qWarning() << "Unknown data received: " << item << " ; " << value;
-        }
-    }
+    parseBuffer(buffer);
 }
 
 void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)

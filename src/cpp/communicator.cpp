@@ -122,6 +122,71 @@ void Communicator::setPressure(int controllerNumber, double pressure)
     setComponentState(c, pressure*PR_MAX_VALUE);
 }
 
+/**
+ * @brief Communicator::parseBuffer
+ *
+ * Parse the buffer of received serial messages; execute any valid commands
+ * and print any other data to the console.
+ */
+void Communicator::parseBuffer(QByteArray buffer)
+{
+    // How it works:
+    // - Scan through buffer until we find a start byte
+    // - If there is a valid command following it, execute the command and delete that data
+    // - If there was any data at the beginning of the buffer, before the start byte, print it
+    //   then delete it
+
+    // Valid commands are of the form: START_BYTE, ITEM, VALUE, END_BYTE
+
+    uint8_t START_BYTE = 249;
+    uint8_t END_BYTE = 250;
+
+    for (int i(0); i < buffer.size(); ++i) {
+        if ((uint8_t)(buffer[i]) == START_BYTE) {
+            bool decrementI = false;
+            if (i < (buffer.size() - 3) && (uint8_t)(buffer[i+3]) == END_BYTE) {
+
+                uint8_t item = buffer[i+1];
+                uint8_t value = buffer[i+2];
+
+                if ((item >= VALVE1 && item <= VALVE32) && (value == OPEN || value == CLOSED))
+                    emit valveStateChanged((item - VALVE1 + 1), value == OPEN);
+
+                else if ((item == PUMP1 || item == PUMP2) && (value == ON || value == OFF))
+                    emit pumpStateChanged(item - PUMP1 + 1, value == ON);
+
+                else if (item == PR1 || item == PR2 || item == PR3) {
+                    double pressure = double(value)/double(PR_MAX_VALUE);
+                    if (pressure < 0)
+                        qDebug() << "Pressure invalid:" << value;
+                    int index = 1;
+                    if (item == PR2)
+                        index = 2;
+                    else if (item == PR3)
+                        index = 3;
+
+                    emit pressureChanged(index, pressure);
+                }
+
+                else
+                    qWarning() << "Unknown command: " << item << " ; " << value;
+
+                buffer.remove(i, 4);
+                decrementI = true;
+            }
+
+            if (i > 0) {
+                qInfo() << "Unknown message received: " << buffer.left(i);
+                buffer.remove(0, i);
+                i = -1; // return to beginning of array when i is incremented
+                decrementI = false;
+            }
+
+            if (decrementI)
+                i -= 1;
+        }
+    }
+}
 
 /**
  * @brief Return the minimum pressure supported by the given pressure controller.

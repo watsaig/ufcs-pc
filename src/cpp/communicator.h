@@ -66,8 +66,8 @@ signals:
 
 protected:
     virtual void setComponentState(Component c, int val) = 0;
-
     void setConnectionStatus(ConnectionStatus status);
+    virtual void parseBuffer(QByteArray buffer);
 
     ConnectionStatus mConnectionStatus;
 };
