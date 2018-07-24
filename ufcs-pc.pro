@@ -57,5 +57,6 @@ DISTFILES += \
     src/qml/PressureController.qml \
     src/qml/ValveSwitch.qml \
     src/qml/Style.qml \
-    src/qml/RoutineControl.qml
+    src/qml/RoutineControl.qml \
+    src/qml/LogScreen.qml
 

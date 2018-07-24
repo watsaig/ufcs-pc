@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>../src/qml/main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>../src/qml/LogScreen.qml</file>
         <file>../src/qml/ManualControl.qml</file>
         <file>../src/qml/RoutineControl.qml</file>
         <file>../src/qml/PressureController.qml</file>

@@ -21,6 +21,10 @@ ApplicationWindow {
         RoutineControl {
             id: routineControlView
         }
+
+        LogScreen {
+            id: logScreenView
+        }
     }
 
     footer: TabBar {
@@ -32,6 +36,10 @@ ApplicationWindow {
 
         TabButton {
             text: qsTr("Routines")
+        }
+
+        TabButton {
+            text: qsTr("Log")
         }
     }
 }

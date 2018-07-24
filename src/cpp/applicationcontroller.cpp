@@ -29,10 +29,12 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
     fflush(stderr); // Force output to be printed right away
 
     QFile logFile(appController()->logFilePath());
-    logFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&logFile);
-    ts << text;
+    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        QTextStream ts(&logFile);
+        ts << text;
+    }
 
+    appController()->addToLog(text);
 }
 
 ApplicationController* singleton = nullptr;
