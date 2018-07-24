@@ -4,7 +4,8 @@
 void ApplicationController::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
 
-    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+    QString time = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
 
     QString messageType;
     QString message;
@@ -32,7 +33,7 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
         break;
     }
 
-    QString text = timestamp + " " + messageType + ": " + message + "\n";
+    QString text = date + " " + time + " " + messageType + ": " + message + "\n";
 
     QByteArray b = text.toLocal8Bit();
     fprintf(stderr, b.constData());
@@ -44,9 +45,10 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
         ts << text;
     }
 
-    // Logs are stored in a fragmented way to make rich markup easier in QML
+    // Logs are stored in a fragmented way to make rich markup easier in QML.
+    // Date is omitted since not particularly useful within the app
     QStringList toAdd;
-    toAdd << timestamp << messageType << message;
+    toAdd << time << messageType << message;
     appController()->addToLog(toAdd);
 }
 
@@ -73,7 +75,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 
-    mLogFilePath = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss-zzz") + ".txt";
+    mLogFilePath = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
 
     // This is used by mSettings
     QCoreApplication::setApplicationName("ufcs-pc");

@@ -18,8 +18,10 @@ Item {
             height: parent.height
             model: Backend.logMessageList
 
+            ScrollBar.vertical: ScrollBar {}
+
             delegate: Rectangle {
-                height: timestamp.contentHeight
+                height: messageText.contentHeight
                 width: parent.width
                 color: "transparent"
 
@@ -39,11 +41,12 @@ Item {
                         case "Info":
                             return "blue"
                         default:
-                            return "black"
+                            return "red"
                     }
                 }
 
                 Row {
+                    width: parent.width
 
                     Text {
                         id: timestamp
@@ -64,6 +67,8 @@ Item {
                         id: messageText
                         font.pointSize: 10
                         text: modelData[2]
+                        wrapMode: Text.Wrap
+                        width: parent.width - timestamp.width - messageType.width
                     }
 
                 }
