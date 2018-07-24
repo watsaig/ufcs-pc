@@ -57,6 +57,8 @@ public:
     Q_INVOKABLE QStringList log() { return mLog; }
     void addToLog(QString entry) { mLog.append(entry); emit newLogMessage(entry);}
 
+    QSettings* settings() { return mSettings; }
+
 signals:
     void connectionStatusChanged(QString newStatus);
     void newLogMessage(QString newMessage);
@@ -78,6 +80,8 @@ private:
 
     QString mLogFilePath;
     QStringList mLog;
+
+    QSettings * mSettings;
 };
 
 #endif // APPLICATIONCONTROLLER_H

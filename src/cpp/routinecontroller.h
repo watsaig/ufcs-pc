@@ -33,7 +33,7 @@ class RoutineController : public QObject
     Q_PROPERTY(int currentStep READ currentStep NOTIFY currentStepChanged)
     Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
     Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
-    Q_PROPERTY(QStringList stepsList READ steps NOTIFY currentStepChanged) // TODO add notification
+    Q_PROPERTY(QStringList stepsList READ steps NOTIFY currentStepChanged)
 
 public:
     enum RunStatus {

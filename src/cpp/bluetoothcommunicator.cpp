@@ -1,4 +1,5 @@
 #include "bluetoothcommunicator.h"
+#include "applicationcontroller.h"
 
 
 BluetoothCommunicator::BluetoothCommunicator()
@@ -6,6 +7,8 @@ BluetoothCommunicator::BluetoothCommunicator()
     , mSocket(NULL)
     , mServiceDiscoveryAgent(NULL)
     , mDeviceDiscoveryAgent(NULL)
+    , mConnectingToSavedDevice(false)
+    , mFailedToConnectToSavedDevice(false)
 {
 }
 
@@ -31,28 +34,59 @@ void BluetoothCommunicator::refreshAll()
 void BluetoothCommunicator::connect()
 {
     setConnectionStatus(Connecting);
-    qDebug() << "Searching for ESP32...";
 
-    // There are two methods of discovering bluetooth devices. One discovers devices, and the other
-    // discovers services. Both are useful to find the correct device; one then connects to it using
-    // one of the three QBluetoothSocket::connectToService methods.
+    QSettings* settings = ApplicationController::appController()->settings();
 
-    // Service discovery requires the device to support SDP (advertising its available services). This
-    // wasn't supported by the ESP32 at first, so device discovery was used instead. It now seems to have
-    // been implemented, so service discovery can be used.
+    if (settings->contains("controllerUuid") && settings->contains("controllerAddress")
+            && !mFailedToConnectToSavedDevice)
+    {
+        QBluetoothUuid uuid(settings->value("controllerUuid").toUuid());
+        QBluetoothAddress address(settings->value("controllerAddress").toString());
 
-    // Service discovery is the preferred method, as it works on Linux as well as Android.
+        qDebug() << "Attempting to connect to saved device at address " << address.toString()
+                 << "with UUID" << uuid.toString();
 
-    initServiceDiscoveryAgent();
+        mConnectingToSavedDevice = true;
 
-    qDebug() << "Starting service discovery...";
-    mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort);
-    mServiceDiscoveryAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
+        connect(address, uuid);
+    }
 
-    /*
-    initDeviceDiscoveryAgent();
-    mDeviceDiscoveryAgent->start();
-    */
+    else {
+        qDebug() << "Searching for ESP32...";
+
+        // There are two methods of discovering bluetooth devices. One discovers devices, and the other
+        // discovers services. Both are useful to find the correct device; one then connects to it using
+        // one of the three QBluetoothSocket::connectToService methods.
+
+        // Service discovery requires the device to support SDP (advertising its available services). This
+        // wasn't supported by the ESP32 at first, so device discovery was used instead. It now seems to have
+        // been implemented, so service discovery can be used.
+
+        // Service discovery is the preferred method, as it works on Linux as well as Android.
+
+        initServiceDiscoveryAgent();
+
+        qDebug() << "Starting service discovery...";
+        mServiceDiscoveryAgent->setUuidFilter(QBluetoothUuid::SerialPort);
+        mServiceDiscoveryAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
+
+        /*
+        initDeviceDiscoveryAgent();
+        mDeviceDiscoveryAgent->start();
+        */
+    }
+}
+
+/**
+ * @brief Connect to the microcontroller, given an address and service UUID.
+ */
+void BluetoothCommunicator::connect(const QBluetoothAddress &address, const QBluetoothUuid& uuid)
+{
+    setConnectionStatus(Connecting);
+    qDebug() << "Connecting to address" << address << "and UUID" << uuid;
+
+    initSocket();
+    mSocket->connectToService(address, uuid);
 }
 
 /**
@@ -65,9 +99,7 @@ void BluetoothCommunicator::connect(const QBluetoothServiceInfo &serviceInfo)
     qDebug() << "Connecting to service...";
 
     initSocket();
-
     mSocket->connectToService(serviceInfo);
-    qDebug() << "Connect to service done";
 }
 
 /**
@@ -107,6 +139,15 @@ void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)
 
     if (error != QBluetoothSocket::NoSocketError) {
         qWarning() << "Bluetooth socket error: " << mSocket->errorString();
+
+        if (mConnectingToSavedDevice) {
+            qInfo() << "Failed to connect to saved device. Will try searching for it instead.";
+            mFailedToConnectToSavedDevice = true;
+            connect();
+        }
+
+        else
+            setConnectionStatus(Disconnected);
     }
 }
 
@@ -114,6 +155,21 @@ void BluetoothCommunicator::onSocketConnected()
 {
     setConnectionStatus(Connected);
     qDebug() << "Socket connected";
+
+    if (!mConnectingToSavedDevice || mFailedToConnectToSavedDevice) {
+        qDebug() << "Saving device information to speed up later connection attempts.";
+
+        QBluetoothUuid uuid = mService.serviceClassUuids()[0];
+        QBluetoothAddress address = mService.device().address();
+
+        qDebug() << "Device UUID and address:" << uuid.toString() << ";" << address.toString();
+
+        ApplicationController::appController()->settings()->setValue("controllerUuid", uuid);
+        ApplicationController::appController()->settings()->setValue("controllerAddress", address.toString());
+    }
+
+    mConnectingToSavedDevice = false;
+    mFailedToConnectToSavedDevice = false;
 }
 
 void BluetoothCommunicator::onSocketDisconnected()
@@ -124,7 +180,6 @@ void BluetoothCommunicator::onSocketDisconnected()
 
 void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInfo)
 {
-    /*
     qDebug() << "==============================================";
     qDebug() << "Discovered service on"
              << serviceInfo.device().name() << serviceInfo.device().address().toString();
@@ -137,7 +192,6 @@ void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInf
              << serviceInfo.protocolServiceMultiplexer();
     qDebug() << "\tRFCOMM server channel:" << serviceInfo.serverChannel();
     qDebug() << "==============================================";
-    */
 
     if (serviceInfo.device().name() == "Microfluidics control system") {
         qDebug () << "Found microcontroller.";
@@ -148,7 +202,7 @@ void BluetoothCommunicator::onServiceDiscovered(QBluetoothServiceInfo serviceInf
 void BluetoothCommunicator::onServiceDiscoveryError(QBluetoothServiceDiscoveryAgent::Error error)
 {
     Q_UNUSED(error)
-    qWarning() << "Bluetooth connection error:" << mServiceDiscoveryAgent->errorString();
+    qWarning() << "Bluetooth service discovery error:" << mServiceDiscoveryAgent->errorString();
 }
 
 void BluetoothCommunicator::onServiceDiscoveryFinished()
@@ -159,7 +213,6 @@ void BluetoothCommunicator::onServiceDiscoveryFinished()
 
 void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
 {
-    /*
     qDebug() << "-------------------------------------------------------------------------------";
     qDebug() << "Bluetooth device discovered:" << deviceInfo.name() << "(" << deviceInfo.address() << ")";
     qDebug() << "Device UUID:" << deviceInfo.deviceUuid();
@@ -173,7 +226,6 @@ void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
     foreach(QBluetoothUuid id, uuids) {
         qDebug() << id;
     }
-    */
 
     if (deviceInfo.name() == "Microfluidics control system") {
         qDebug() << "Found control system; stopping discovery";
@@ -186,7 +238,7 @@ void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
 void BluetoothCommunicator::onDeviceDiscoveryError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
     Q_UNUSED(error)
-    qDebug() << "Device discovery error:" << mDeviceDiscoveryAgent->errorString();
+    qDebug() << "Bluetooth device discovery error:" << mDeviceDiscoveryAgent->errorString();
 }
 
 void BluetoothCommunicator::onDeviceDiscoveryFinished()

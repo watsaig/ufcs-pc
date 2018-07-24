@@ -33,6 +33,7 @@ public slots:
     void connect();
     void connect(const QBluetoothServiceInfo &serviceInfo);
     void connect(const QBluetoothAddress &address, quint16 port);
+    void connect(const QBluetoothAddress &address, const QBluetoothUuid& uuid);
 
     void refreshAll();
 
@@ -65,6 +66,9 @@ private:
 
     QBluetoothDeviceInfo mDeviceInfo;
     QBluetoothDeviceDiscoveryAgent * mDeviceDiscoveryAgent;
+
+    bool mConnectingToSavedDevice;
+    bool mFailedToConnectToSavedDevice;
 
 };
 

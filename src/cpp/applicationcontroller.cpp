@@ -49,9 +49,9 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
-    //mCommunicator = new BluetoothCommunicator();
+    mCommunicator = new BluetoothCommunicator();
     // or:
-    mCommunicator = new SerialCommunicator();
+    //mCommunicator = new SerialCommunicator();
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
@@ -61,6 +61,12 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 
     mLogFilePath = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss-zzz") + ".txt";
+
+    // This is used by mSettings
+    QCoreApplication::setApplicationName("ufcs-pc");
+    QCoreApplication::setOrganizationName("Watsaig");
+    QCoreApplication::setOrganizationDomain("watsaig.com");
+    mSettings = new QSettings();
 }
 
 ApplicationController::~ApplicationController()
@@ -114,9 +120,10 @@ void ApplicationController::onPressureChanged(int controllerNumber, double press
         mQmlPressureControllers[controllerNumber]->setMeasuredValue(pressure);
 }
 
-void ApplicationController::onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus)
+void ApplicationController::onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus)
 {
-    qDebug() << "App controller: communicator status changed";
+    qDebug() << "App controller: communicator status changed to" << mCommunicator->getConnectionStatusString();
+
     if (newStatus == Communicator::Connected)
         mCommunicator->refreshAll();
 
