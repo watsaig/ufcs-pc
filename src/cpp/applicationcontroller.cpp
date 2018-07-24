@@ -4,25 +4,35 @@
 void ApplicationController::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
 
-    QString text = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
+    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+
+    QString messageType;
+    QString message;
 
     switch (type) {
     case QtDebugMsg:
-        text += QString("Debug: %1 \n").arg(msg);
+        messageType  = "Debug";
+        message = msg;
         break;
     case QtInfoMsg:
-        text += QString("Info: %1 \n").arg(msg);
+        messageType  = "Info";
+        message = msg;
         break;
     case QtWarningMsg:
-        text += QString("Warning: %1 \n").arg(msg);
+        messageType  = "Warning";
+        message = msg;
         break;
     case QtCriticalMsg:
-        text += QString("Critical error: %1 (%2:%3, %4)\n").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+        messageType  = "Critical error";
+        message = QString("%1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
         break;
     case QtFatalMsg:
-        text += QString("Fatal error: %1 (%2:%3, %4)\n").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+        messageType  = "Fatal error";
+        message = QString("%1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
         break;
     }
+
+    QString text = timestamp + " " + messageType + ": " + message + "\n";
 
     QByteArray b = text.toLocal8Bit();
     fprintf(stderr, b.constData());
@@ -34,7 +44,10 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
         ts << text;
     }
 
-    appController()->addToLog(text);
+    // Logs are stored in a fragmented way to make rich markup easier in QML
+    QStringList toAdd;
+    toAdd << timestamp << messageType << message;
+    appController()->addToLog(toAdd);
 }
 
 ApplicationController* singleton = nullptr;

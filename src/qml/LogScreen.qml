@@ -17,10 +17,56 @@ Item {
             width: parent.width
             height: parent.height
             model: Backend.logMessageList
+
             delegate: Rectangle {
-                height: 20
-                width: 100
-                Text { text: modelData }
+                height: timestamp.contentHeight
+                width: parent.width
+                color: "transparent"
+
+                // Logs are stored as a list of strings (represented in a QVariant). The elements are:
+                // 0: timestamp
+                // 1: message type ("debug", "warning", ...)
+                // 2: the actual message text
+
+                function messageTypeColor()
+                {
+                    var text = modelData[1]
+                    switch(text) {
+                        case "Debug":
+                            return "gray"
+                        case "Warning":
+                            return "orange"
+                        case "Info":
+                            return "blue"
+                        default:
+                            return "black"
+                    }
+                }
+
+                Row {
+
+                    Text {
+                        id: timestamp
+                        font.pointSize: 10
+                        color: "gray"
+                        text: modelData[0] + " "
+                    }
+
+                    Text {
+                        id: messageType
+                        font.pointSize: 10
+                        font.bold: true
+                        text: modelData[1] + ": "
+                        color: messageTypeColor()
+                    }
+
+                    Text {
+                        id: messageText
+                        font.pointSize: 10
+                        text: modelData[2]
+                    }
+
+                }
             }
 
             onCountChanged: positionViewAtEnd()

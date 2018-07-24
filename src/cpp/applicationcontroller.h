@@ -24,7 +24,7 @@ class ApplicationController : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
-    Q_PROPERTY(QStringList logMessageList READ log NOTIFY newLogMessage)
+    Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -54,14 +54,15 @@ public:
     RoutineController* routineController() { return mRoutineController; }
 
     QString logFilePath() { return mLogFilePath; }
-    Q_INVOKABLE QStringList log() { return mLog; }
-    void addToLog(QString entry) { mLog.append(entry); emit newLogMessage(entry);}
+
+    Q_INVOKABLE QVariantList log() { return mLog; }
+    void addToLog(QVariant entry) { mLog.append(entry); emit newLogMessage(entry);}
 
     QSettings* settings() { return mSettings; }
 
 signals:
     void connectionStatusChanged(QString newStatus);
-    void newLogMessage(QString newMessage);
+    void newLogMessage(QVariant newMessage);
 
 private slots:
     void onValveStateChanged(int valveNumber, bool open);
@@ -79,7 +80,7 @@ private:
     QMap<int, PCHelper*> mQmlPressureControllers; // To do (?): allow several instances of PCHelper* per controller number
 
     QString mLogFilePath;
-    QStringList mLog;
+    QVariantList mLog;
 
     QSettings * mSettings;
 };
