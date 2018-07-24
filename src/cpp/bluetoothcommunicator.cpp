@@ -207,8 +207,14 @@ void BluetoothCommunicator::onServiceDiscoveryError(QBluetoothServiceDiscoveryAg
 
 void BluetoothCommunicator::onServiceDiscoveryFinished()
 {
-    qDebug() << "Bluetooth service discovery finished. Connecting...";
-    connect(mService);
+    qDebug() << "Bluetooth service discovery finished";
+    if (mService.isValid()) {
+        connect(mService);
+    }
+    else {
+        qWarning() << "Microcontroller not found. Check that it is powered on and in range.";
+        setConnectionStatus(Disconnected);
+    }
 }
 
 void BluetoothCommunicator::onDeviceDiscovered(QBluetoothDeviceInfo deviceInfo)
