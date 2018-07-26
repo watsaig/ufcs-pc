@@ -110,6 +110,19 @@ void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwit
     mQmlValveSwitches[valveNumber] = instance;
 }
 
+/**
+ * @brief Add a message to the (internal) log, for access within the application.
+ * @param entry A QStringList (or compatible type) with 3 elements: time, message type and message text.
+ *
+ * This log is only for access within the application. It is separate from the messages logged to file.
+ * See ApplicationController::messageHandler for the rest of the logging code.
+ */
+void ApplicationController::addToLog(QVariant entry)
+{
+    mLog.append(entry);
+    emit newLogMessage(entry);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");
@@ -129,8 +142,6 @@ void ApplicationController::onPumpStateChanged(int pumpNumber, bool on)
 void ApplicationController::onPressureChanged(int controllerNumber, double pressure)
 {
     //qInfo() << "Measured pressure (normalized) on controller" << controllerNumber << ":" << pressure;
-    if (pressure < 0)
-        qDebug() << "pressure: " << pressure;
     if (mQmlPressureControllers.contains(controllerNumber))
         mQmlPressureControllers[controllerNumber]->setMeasuredValue(pressure);
 }

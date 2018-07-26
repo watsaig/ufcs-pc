@@ -55,7 +55,6 @@ bool RoutineController::loadFile(QString fileUrl)
 
     file.close();
 
-    // TODO: polish this up a bit. remove the file extension,...
     // TODO? have a few lines towards the beginning of the file that would specify the routine's name and description
     QFileInfo fileinfo(file);
     mRoutineName = fileinfo.baseName();

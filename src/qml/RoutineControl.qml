@@ -150,7 +150,7 @@ StateMachine {
     State {
         id: noFileLoaded
         onEntered: {
-            console.log("Entered state 'noFileLoaded'")
+            console.log("Routine UI: Entered state 'noFileLoaded'")
             title.text = "Load routine"
             description.text = "Choose a file to run"
             title.visible = true
@@ -181,7 +181,7 @@ StateMachine {
         signal errorsFound
 
         onEntered: {
-            console.log("Entered state 'checkingRoutine'")
+            console.log("Routine UI: Entered state 'checkingRoutine'")
             description.text = "Checking routine for errors..."
             description.visible = true
 
@@ -212,7 +212,7 @@ StateMachine {
         id: routineLoadedSuccessfully
 
         onEntered: {
-            console.log("Entered state 'routineLoadedSuccessfully'")
+            console.log("Routine UI: Entered state 'routineLoadedSuccessfully'")
             title.text = "Routine loaded"
             title.visible = true
             description.text = "The routine was loaded successfully. Click below to launch it."
@@ -235,7 +235,7 @@ StateMachine {
         id: routineLoadedWithErrors
 
         onEntered: {
-            console.log("Entered state 'routineLoadedWithErrors'")
+            console.log("Routine UI: Entered state 'routineLoadedWithErrors'")
 
             title.text = RoutineController.numberOfErrors() + " errors found"
             title.visible = true
@@ -268,7 +268,7 @@ StateMachine {
 
 
         onEntered: {
-                console.log("Entered state 'routineRunning'")
+                console.log("Routine UI: Entered state 'routineRunning'")
                 // get name of routine from backend
                 title.text = "Running routine: " + RoutineController.routineName()
                 title.visible = true
@@ -294,7 +294,7 @@ StateMachine {
         id: finishedRunning
 
         onEntered: {
-            console.log("Entered state 'finishedRunning'")
+            console.log("Routine UI: Entered state 'finishedRunning'")
             title.text = "Finished"
             title.visible = true
             description.text = "The execution of the routine has ended."
@@ -328,10 +328,6 @@ StateMachine {
             else {
                 description.text = "The selected file could not be opened. Check that you have read permissions on the file, and try again."
             }
-        }
-
-        onRejected: {
-            console.log("Canceled")
         }
 
         signal fileOpened ()

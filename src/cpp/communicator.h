@@ -39,7 +39,6 @@ public:
     Communicator ();
     virtual ~Communicator ();
 
-
     ConnectionStatus getConnectionStatus() const;
     QString getConnectionStatusString() const;
 
@@ -55,7 +54,6 @@ public slots:
     void setPressure(int controllerNumber, double pressure);
     void setPump(int pumpNumber, bool on);
     virtual void refreshAll() = 0; // request status of all components
-
 
 signals:
     void valveStateChanged(int valveNumber, bool open);

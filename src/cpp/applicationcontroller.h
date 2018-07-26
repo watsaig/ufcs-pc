@@ -56,7 +56,7 @@ public:
     QString logFilePath() { return mLogFilePath; }
 
     Q_INVOKABLE QVariantList log() { return mLog; }
-    void addToLog(QVariant entry) { mLog.append(entry); emit newLogMessage(entry);}
+    void addToLog(QVariant entry);
 
     QSettings* settings() { return mSettings; }
 
@@ -77,7 +77,7 @@ private:
     RoutineController * mRoutineController;
 
     QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
-    QMap<int, PCHelper*> mQmlPressureControllers; // To do (?): allow several instances of PCHelper* per controller number
+    QMap<int, PCHelper*> mQmlPressureControllers;
 
     QString mLogFilePath;
     QVariantList mLog;

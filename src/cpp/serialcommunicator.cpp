@@ -69,7 +69,7 @@ void SerialCommunicator::connect()
         qInfo() << "Connected to" << portToUse.description() << "on" << portToUse.portName();
 
         // The following two lines are necessary with Sparkfun's ESP32 thing (which uses an FTDI chip);
-        // not necessary (and maybe won't work -- to be tested) with the Espressif ESP32 DevKitC
+        // not necessary with the Espressif ESP32 DevKitC
         mSerialPort->setDataTerminalReady(false);
         mSerialPort->setRequestToSend(false);
 

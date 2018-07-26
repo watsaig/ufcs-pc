@@ -63,54 +63,22 @@ Item {
                             id: controlLayerValveGrid
                             columns: flowLayerValveGrid.columns
 
-                            ValveSwitch {
-                                valveNumber: 1
-                            }
-                            ValveSwitch {
-                                valveNumber: 2
-                            }
-                            ValveSwitch {
-                                valveNumber: 3
-                            }
-                            ValveSwitch {
-                                valveNumber: 4
-                            }
-                            ValveSwitch {
-                                valveNumber: 5
-                            }
-                            ValveSwitch {
-                                valveNumber: 6
-                            }
-                            ValveSwitch {
-                                valveNumber: 7
-                            }
-                            ValveSwitch {
-                                valveNumber: 8
-                            }
-                            ValveSwitch {
-                                valveNumber: 9
-                            }
-                            ValveSwitch {
-                                valveNumber: 10
-                            }
-                            ValveSwitch {
-                                valveNumber: 11
-                            }
-                            ValveSwitch {
-                                valveNumber: 12
-                            }
-                            ValveSwitch {
-                                valveNumber: 13
-                            }
-                            ValveSwitch {
-                                valveNumber: 14
-                            }
-                            ValveSwitch {
-                                valveNumber: 15
-                            }
-                            ValveSwitch {
-                                valveNumber: 16
-                            }
+                            ValveSwitch { valveNumber: 1 }
+                            ValveSwitch { valveNumber: 2 }
+                            ValveSwitch { valveNumber: 3 }
+                            ValveSwitch { valveNumber: 4 }
+                            ValveSwitch { valveNumber: 5 }
+                            ValveSwitch { valveNumber: 6 }
+                            ValveSwitch { valveNumber: 7 }
+                            ValveSwitch { valveNumber: 8 }
+                            ValveSwitch { valveNumber: 9 }
+                            ValveSwitch { valveNumber: 10 }
+                            ValveSwitch { valveNumber: 11 }
+                            ValveSwitch { valveNumber: 12 }
+                            ValveSwitch { valveNumber: 13 }
+                            ValveSwitch { valveNumber: 14 }
+                            ValveSwitch { valveNumber: 15 }
+                            ValveSwitch { valveNumber: 16 }
                         }
                     }
                 }
@@ -144,27 +112,13 @@ Item {
                             id: flowLayerValveGrid
                             columns: 4
 
-                            ValveSwitch {
-                                valveNumber: 17
-                            }
-                            ValveSwitch {
-                                valveNumber: 18
-                            }
-                            ValveSwitch {
-                                valveNumber: 19
-                            }
-                            ValveSwitch {
-                                valveNumber: 20
-                            }
-                            ValveSwitch {
-                                valveNumber: 21
-                            }
-                            ValveSwitch {
-                                valveNumber: 22
-                            }
-                            ValveSwitch {
-                                valveNumber: 23
-                            }
+                            ValveSwitch { valveNumber: 17 }
+                            ValveSwitch { valveNumber: 18 }
+                            ValveSwitch { valveNumber: 19 }
+                            ValveSwitch { valveNumber: 20 }
+                            ValveSwitch { valveNumber: 21 }
+                            ValveSwitch { valveNumber: 22 }
+                            ValveSwitch { valveNumber: 23 }
                         }
                     }
                 }

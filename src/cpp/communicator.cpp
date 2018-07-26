@@ -33,10 +33,9 @@ QString Communicator::getConnectionStatusString() const
     }
 }
 
-
 /**
  * @brief Open or close a specific valve
- * @param valveNumber The valve number, between 1 and 32
+ * @param valveNumber The valve number, between 1 and N_VALVES (32)
  * @param open If true, valve will be opened; otherwise, valve will be closed
  */
 void Communicator::setValve(int valveNumber, bool open)
@@ -46,7 +45,7 @@ void Communicator::setValve(int valveNumber, bool open)
     Component c;
     ValveStates state;
 
-    if (valveNumber >= 1 && valveNumber <= 32)
+    if (valveNumber >= 1 && valveNumber <= N_VALVES)
         c = (Component)(VALVE1 + valveNumber - 1);
 
     else {
