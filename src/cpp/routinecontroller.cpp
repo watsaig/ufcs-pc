@@ -4,6 +4,7 @@ RoutineController::RoutineController(Communicator *communicator)
     : mCommunicator(communicator)
     , mRunStatus(NotReady)
     , mCurrentStep(-1)
+    , mNumberOfSteps(-1)
 {
 
     QObject::connect(this, SIGNAL(setValve(int,bool)), mCommunicator, SLOT(setValve(int,bool)));
@@ -201,9 +202,9 @@ void RoutineController::run(bool dummyRun)
             if (dummyRun)
                 mValidSteps << line;
             else {
+                setCurrentStep(mCurrentStep+1);
                 // Signals & slots are necessary to avoid calling QSerialPort->write from a different thread (in which case it throws a QTimer-related error message)
                 emit setValve(valveNumber, (state == "open"));
-                setCurrentStep(mCurrentStep+1);
             }
         }
 
@@ -237,9 +238,8 @@ void RoutineController::run(bool dummyRun)
             else {
                 // TODO: fix this for negative values (vacuum controller).
                 double p = mCommunicator->minPressure(controllerNumber) + (pressure / mCommunicator->maxPressure(controllerNumber));
-                //mCommunicator->setPressure(controllerNumber, p);
-                emit setPressure(controllerNumber, p);
                 setCurrentStep(mCurrentStep+1);
+                emit setPressure(controllerNumber, p);
             }
 
         }
@@ -276,9 +276,9 @@ void RoutineController::run(bool dummyRun)
             if (dummyRun)
                 mValidSteps << line;
             else {
+                setCurrentStep(mCurrentStep+1);
                 // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
                 std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
-                setCurrentStep(mCurrentStep+1);
             }
         }
     }

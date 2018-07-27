@@ -24,6 +24,9 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     ColumnLayout {
         anchors.fill: parent
+        anchors.topMargin: 50
+        anchors.leftMargin: 40
+        anchors.rightMargin: anchors.leftMargin
 
         Label {
             id: title
@@ -47,8 +50,7 @@ Item {
             visible: false
             Layout.alignment: Qt.AlignHCenter
 
-            property int currentStep: RoutineController.currentStep
-            text : "Step " +  (currentStep + 1 ) + " of " + RoutineController.numberOfSteps()
+            text : "Step " +  (RoutineController.currentStep + 1 ) + " of " + RoutineController.numberOfSteps()
         }
 
 
@@ -61,10 +63,21 @@ Item {
             height: 400
             Layout.alignment: Qt.AlignHCenter
             model: RoutineController.stepsList
+            currentIndex: RoutineController.currentStep
+
             delegate: Rectangle {
-                height: 25
-                width: 100
-                Text { text: modelData }
+                height: delegateText.contentHeight
+                width: parent.width
+                color: "transparent"
+
+                Text {
+                    id: delegateText
+                    text: modelData
+
+                    font.pointSize: 10
+                    font.bold: RoutineController.currentStep == index
+                    color: RoutineController.currentStep == index ? "black" : "gray"
+                }
             }
         }
 
@@ -268,15 +281,16 @@ StateMachine {
 
 
         onEntered: {
-                console.log("Routine UI: Entered state 'routineRunning'")
-                // get name of routine from backend
-                title.text = "Running routine: " + RoutineController.routineName()
-                title.visible = true
-                stepCounter.visible = true
-                stepsList.visible = true
+            console.log("Routine UI: Entered state 'routineRunning'")
+            // get name of routine from backend
+            title.text = "Running routine: " + RoutineController.routineName()
+            title.visible = true
+            stepCounter.visible = true
+            stepsList.visible = true
 
-                RoutineController.begin()
-            }
+            RoutineController.begin()
+        }
+
         onExited: {
             title.visible = false
             description.visible = false
@@ -300,18 +314,26 @@ StateMachine {
             description.text = "The execution of the routine has ended."
             description.visible = true
             returnToHomeButton.visible = true
+            runButton.visible = true
+            runButton.text = "Re-run"
         }
 
         onExited: {
             title.visible = false
             description.visible = false
             returnToHomeButton.visible = false
+            runButton.visible = false
             stepsList.visible = false
         }
 
         SignalTransition {
             targetState: noFileLoaded
             signal: returnToHomeButton.clicked
+        }
+
+        SignalTransition {
+            targetState: runningRoutine
+            signal: runButton.clicked
         }
     }
 }
