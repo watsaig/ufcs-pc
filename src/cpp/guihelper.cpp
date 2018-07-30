@@ -47,6 +47,24 @@ void PCHelper::setSetPoint(double val)
 }
 
 /**
+ * @brief Update the display of the controller's setpoint, i.e. target value. This affects only the GUI component.
+ * @param val A value in PSI. If it is not within the bounds of the pressure controller's min and max values, it is ignored.
+ */
+void PCHelper::setSetPointInPsi(double val)
+{
+    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
+    double min = ApplicationController::appController()->minPressure(mControllerNumber);
+
+    if (val > max || val < min) {
+        qDebug() << "PCHelper::setSetPointInPsi: value out of bounds";
+        return;
+    }
+
+    double setPoint = (val - min)/(max - min);
+    this->setSetPoint(setPoint);
+}
+
+/**
  * @brief Set the measured value. This should be called when the (physical) pressure controller sends a new value.
  * @param val A double between 0 and 1, representing the minimum and maximum possible pressure, respectively
  *
@@ -58,6 +76,24 @@ void PCHelper::setMeasuredValue(double val)
         mMeasuredValue = val;
         emit measuredValueChanged(val);
     }
+}
+
+/**
+ * @brief Set the measured value. This should be called when the (physical) pressure controller sends a new value.
+ * @param val A value in PSI. If it is not within the bounds of the pressure controller's min and max values, it is ignored.
+ */
+void PCHelper::setMeasuredValueInPsi(double val)
+{
+    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
+    double min = ApplicationController::appController()->minPressure(mControllerNumber);
+
+    if (val > max || val < min) {
+        qDebug() << "PCHelper::setMeasuredValueInPsi: value out of bounds";
+        return;
+    }
+
+    double setPoint = (val - min)/(max - min);
+    this->setMeasuredValue(setPoint);
 }
 
 void ValveSwitchHelper::setValveNumber(int valveNumber)

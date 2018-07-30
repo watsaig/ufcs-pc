@@ -37,7 +37,9 @@ public:
 
 public slots:
     void setSetPoint(double val);
+    void setSetPointInPsi(double val);
     void setMeasuredValue(double val);
+    void setMeasuredValueInPsi(double val);
 
 signals:
     void setPointChanged (double val);
