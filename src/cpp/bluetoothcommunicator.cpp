@@ -140,7 +140,12 @@ void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)
     if (error != QBluetoothSocket::NoSocketError) {
         qWarning() << "Bluetooth socket error: " << mSocket->errorString();
 
-        if (mConnectingToSavedDevice) {
+        if (error == QBluetoothSocket::NetworkError) {
+            qWarning() << "Bluetooth adapter is unavailable. Make sure that it is powered on and try again.";
+            setConnectionStatus(Disconnected);
+        }
+
+        else if (mConnectingToSavedDevice) {
             qInfo() << "Failed to connect to saved device. Will try searching for it instead.";
             mFailedToConnectToSavedDevice = true;
             connect();
