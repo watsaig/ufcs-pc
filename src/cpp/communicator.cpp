@@ -167,6 +167,17 @@ void Communicator::parseBuffer(QByteArray buffer)
                     emit pressureChanged(index, pressure);
                 }
 
+                else if (item == ERROR) {
+                    switch (value) {
+                        case PRESSURE_REGULATOR_NOT_RESPONDING:
+                            qWarning() << "Pressure regulator not responding";
+                            break;
+                        default:
+                            qWarning() << "Unkown error signaled by microcontroller";
+                            break;
+                    }
+                }
+
                 else
                     qWarning() << "Unknown command: " << item << " ; " << value;
 
