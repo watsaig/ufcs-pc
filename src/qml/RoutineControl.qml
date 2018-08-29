@@ -45,6 +45,13 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
+        Switch {
+            id: runForeverSwitch
+            visible: false
+            text: qsTr("Run continuously")
+            Layout.alignment: Qt.AlignHCenter
+        }
+
         Label {
             id: stepCounter
             visible: false
@@ -287,6 +294,7 @@ StateMachine {
             title.visible = true
             stepCounter.visible = true
             stepsList.visible = true
+            runForeverSwitch.visible = true
 
             RoutineController.begin()
         }
@@ -295,6 +303,7 @@ StateMachine {
             title.visible = false
             description.visible = false
             stepCounter.visible = false
+            runForeverSwitch.visible = false
         }
 
         SignalTransition {
@@ -306,8 +315,14 @@ StateMachine {
 
     State {
         id: finishedRunning
+        signal restartRoutine
 
         onEntered: {
+            if (runForeverSwitch.checked) {
+                console.log("Routine restarting automatically")
+                restartRoutine()
+            }
+
             console.log("Routine UI: Entered state 'finishedRunning'")
             title.text = "Finished"
             title.visible = true
@@ -334,6 +349,11 @@ StateMachine {
         SignalTransition {
             targetState: runningRoutine
             signal: runButton.clicked
+        }
+
+        SignalTransition {
+            targetState: runningRoutine
+            signal: finishedRunning.restartRoutine
         }
     }
 }
