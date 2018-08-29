@@ -135,15 +135,43 @@ void Communicator::parseBuffer(QByteArray buffer)
     // - If there was any data at the beginning of the buffer, before the start byte, print it
     //   then delete it
 
-    // Valid commands are of the form: START_BYTE, ITEM, VALUE, END_BYTE
+    // Valid messages are of the form: START_BYTE, ITEM, VALUE, END_BYTE
+    // An exception to this is the "uptime" message, which requires 4 bytes to represent the value
+    // (time in seconds since boot). In that case, the message is of the form:
+    // START_BYTE, ITEM, VALUE0, VALUE1, VALUE2, VALUE3, END_BYTE
+    // where VALUE0 is the MSB.
 
     uint8_t START_BYTE = 249;
     uint8_t END_BYTE = 250;
 
-    for (int i(0); i < buffer.size(); ++i) {
+    for (int i(0); i < buffer.size() - 3; ++i) {
         if ((uint8_t)(buffer[i]) == START_BYTE) {
             bool decrementI = false;
-            if (i < (buffer.size() - 3) && (uint8_t)(buffer[i+3]) == END_BYTE) {
+
+            // Check for uptime message
+            if ((uint8_t)(buffer[i+1]) == UPTIME) {
+
+                if ((i < buffer.size() - 6) && (uint8_t)(buffer[i+6]) == END_BYTE) {
+                    uint8_t value0 = buffer[i+2];
+                    uint8_t value1 = buffer[i+3];
+                    uint8_t value2 = buffer[i+4];
+                    uint8_t value3 = buffer[i+5];
+
+                    long uptime = value0 << 24 | value1 << 16 | value2 << 8 | value3;
+
+                    int hours = uptime/3600;
+                    int minutes = (uptime % 3600)/60;
+                    int seconds = uptime % 60;
+
+                    qInfo() << "Current uptime:" << hours << "h" << minutes << "min" << seconds << "s";
+
+                    buffer.remove(i, 4);
+                    decrementI = true;
+                }
+
+            }
+
+            else if ((uint8_t)(buffer[i+3]) == END_BYTE) {
 
                 uint8_t item = buffer[i+1];
                 uint8_t value = buffer[i+2];
@@ -186,10 +214,11 @@ void Communicator::parseBuffer(QByteArray buffer)
             }
 
             if (i > 0) {
+                // Extra characters before the actual message => print them and remove them.
                 qInfo() << "Unknown message received: " << buffer.left(i);
                 buffer.remove(0, i);
-                i = -1; // return to beginning of array when i is incremented
                 decrementI = false;
+                i = -1; // return to beginning of array when i is incremented
             }
 
             if (decrementI)

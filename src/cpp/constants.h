@@ -73,7 +73,8 @@ enum PumpStates : uint8_t {
 };
 
 enum SerialRequests : uint8_t {
-    STATUS = OFF+1// request status of a certain component (or all)
+    STATUS = OFF+1, // request status of a certain component (or all)
+    UPTIME // time in seconds since the microcontroller booted
 };
 
 enum Errors : uint8_t {
