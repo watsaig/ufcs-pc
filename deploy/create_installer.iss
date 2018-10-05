@@ -21,7 +21,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=C:\Users\Craig\BoxSync\ufcs\software\pc\ufcs-pc\build\installer
+OutputDir={#SourcePath}\..\build\installer
 OutputBaseFilename=ufcs-installer
 Compression=lzma
 SolidCompression=yes
@@ -33,8 +33,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Craig\BoxSync\ufcs\software\pc\ufcs-pc\build\release\ufcs-pc.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Craig\BoxSync\ufcs\software\pc\ufcs-pc\build\release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourcePath}\..\build\release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\..\build\release\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

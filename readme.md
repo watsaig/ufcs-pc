@@ -41,3 +41,19 @@ Overall, the code follows an object-oriented approach where each functional unit
 
 This approach intends to make it easy to understand how different parts of the application fit together, and to make it relatively painless to update any one part without having to touch other parts. 
 
+
+## Deploying
+
+### Android
+A .apk package is built by Qt Creator when building a project for Android. Not much else is needed, really.
+
+### Windows
+Deployment scripts (to build a release version, and create an installer) are in the `deploy` folder.
+
+On top of the requirements for Qt (to simply build the app), you will need:
+    - the [Build Tools for Visual Studio 2017](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2017) 
+    - [Inno Setup 5](http://jrsoftware.org/isdl.php#stable)
+
+
+Adjust the paths as needed in `deploy_windows.bat` to point towards your Qt, Visual Studio Build Tools and Inno Setup installations, then run it. An installer will be created in `build/installer`.
+
