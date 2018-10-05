@@ -135,6 +135,13 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
+		Button {
+		    id: stopButton
+			visible: false
+			text: "Stop routine"
+			Layout.alignment: Qt.AlignHCenter
+		}
+
         ColumnLayout {
             id: runYesNoButtons
             visible: false
@@ -295,7 +302,7 @@ StateMachine {
             stepCounter.visible = true
             stepsList.visible = true
             runForeverSwitch.visible = true
-
+            stopButton.visible = true
             RoutineController.begin()
         }
 
@@ -304,11 +311,17 @@ StateMachine {
             description.visible = false
             stepCounter.visible = false
             runForeverSwitch.visible = false
+            stopButton.visible = false
         }
 
         SignalTransition {
             targetState: finishedRunning
             signal: RoutineController.finished
+        }
+
+        SignalTransition {
+            targetState: routineLoadedSuccessfully
+            signal: stopButton.clicked
         }
 
     }

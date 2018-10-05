@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     qInstallMessageHandler(ApplicationController::messageHandler);
 
-    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<PCHelper>("org.example.ufcs", 1, 0, "PCHelper");
