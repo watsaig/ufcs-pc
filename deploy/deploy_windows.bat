@@ -7,7 +7,7 @@ REM   - InnoSetup5 (to create the installer)
 REM
 REM Usage: update QT_DIR and other relevant paths, and run this script.
 
-set QT_DIR=C:\Qt\5.11.2\msvc2017_64
+set QT_DIR=C:\Qt\5.11.1\msvc2017_64
 set QT_BIN=%QT_DIR%\bin
 set APP_NAME=ufcs-pc
 
@@ -18,6 +18,21 @@ set INNO_EXE=%PROGRAM_FILES%\Inno Setup 5\iscc.exe
 set SCRIPT_PATH=%~dp0
 set BUILD_DIR=%SCRIPT_PATH%\..\build
 
+echo -------------------------------------------------
+echo Checking directories...
+echo -------------------------------------------------
+IF NOT EXIST "%QT_BIN%\qmake.exe" (
+    echo Could not find qmake.
+    GOTO EXIT_WITH_ERROR
+)
+IF NOT EXIST "%VS_BIN%\" (
+    echo Could not find Visual Studio Build Tools.
+    GOTO EXIT_WITH_ERROR
+)
+IF NOT EXIST "%INNO_EXE%" (
+    echo Could not find InnoSetup.
+    GOTO EXIT_WITH_ERROR
+)
 
 echo -------------------------------------------------
 echo Setting up environment...
