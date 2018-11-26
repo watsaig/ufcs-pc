@@ -79,6 +79,14 @@ Item {
                             ValveSwitch { valveNumber: 14 }
                             ValveSwitch { valveNumber: 15 }
                             ValveSwitch { valveNumber: 16 }
+                            ValveSwitch { valveNumber: 17 }
+                            ValveSwitch { valveNumber: 18 }
+                            ValveSwitch { valveNumber: 19 }
+                            ValveSwitch { valveNumber: 20 }
+                            ValveSwitch { valveNumber: 21 }
+                            ValveSwitch { valveNumber: 22 }
+                            ValveSwitch { valveNumber: 23 }
+                            ValveSwitch { valveNumber: 24 }
                         }
                     }
                 }
@@ -112,18 +120,20 @@ Item {
                             id: flowLayerValveGrid
                             columns: 4
 
-                            ValveSwitch { valveNumber: 17 }
-                            ValveSwitch { valveNumber: 18 }
-                            ValveSwitch { valveNumber: 19 }
-                            ValveSwitch { valveNumber: 20 }
-                            ValveSwitch { valveNumber: 21 }
-                            ValveSwitch { valveNumber: 22 }
-                            ValveSwitch { valveNumber: 23 }
+                            ValveSwitch { valveNumber: 25 }
+                            ValveSwitch { valveNumber: 26 }
+                            ValveSwitch { valveNumber: 27 }
+                            ValveSwitch { valveNumber: 28 }
+                            ValveSwitch { valveNumber: 29 }
+                            ValveSwitch { valveNumber: 30 }
+                            ValveSwitch { valveNumber: 31 }
+                            ValveSwitch { valveNumber: 32 }
                         }
                     }
                 }
             }
 
+            /*
             Pane {
                 id: vacuumPane
                 Material.elevation: Style.card.elevation
@@ -145,7 +155,9 @@ Item {
                     }
                 }
             }
+            */
 
+            /*
             Pane {
                 id: pumpPane
                 Material.elevation: Style.card.elevation
@@ -178,6 +190,7 @@ Item {
                     }
                 }
             }
+            */
 
             Pane {
                 id: statusPane
