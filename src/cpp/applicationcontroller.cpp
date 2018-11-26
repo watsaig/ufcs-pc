@@ -64,9 +64,19 @@ ApplicationController* ApplicationController::appController()
 
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
+    // Initialize mCommunicator. Can be either USB ("Serial") or Bluetooth. Windows
+    // doesn't support Bluetooth, and Android doesn't support serial over USB (at least,
+    // not without rooting your phone), so we can set defaults for those platforms.
+    // For other platforms, use whichever one you prefer.
+    // This has to be specified at compile time for now; run-time switching may be supported later.
+
+#if defined(Q_OS_WIN)
+    mCommunicator = new SerialCommunicator();
+#elif defined(Q_OS_ANDROID)
     mCommunicator = new BluetoothCommunicator();
-    // or:
-    //mCommunicator = new SerialCommunicator();
+#else
+    mCommunicator = new SerialCommunicator();
+#endif
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
