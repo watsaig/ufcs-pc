@@ -58,3 +58,20 @@ On top of the requirements for Qt (to simply build the app), you will need:
 
 Adjust the paths as needed in `deploy_windows.bat` to point towards your Qt, Visual Studio Build Tools and Inno Setup installations, then run it. An installer will be created in `build/installer`.
 
+## Customizing the code to your hardware setup
+
+The PC part of the code has very little knowledge of the actual hardware connected to the microcontroller. It does not concern itself with whether a pressure regulator is analog or digital, where it is connected, or what types of valves are connected to what pins, for example.
+
+The few aspects that you may need to customize are the number of valves and pressure regulators, and the bounds (maximum and minimum pressure) of each pressure regulator.
+
+The valves are defined in `src/qml/ManualControl.qml`. By default, the screen is divided into panes for the "flow layer" and "control layer", since we use two different pressure levels for different layers of our microfluidic chip. So here, each pane has a `PressureController` item and several `ValveSwitch` items.
+
+Both of these are initialized with only a number. By default, the valve numbers correspond to the actual markings on the PCB. Switching Valve number 1 on in the PC software will transmit that same information to the microcontroller, which then relates this to the pin that the valve is connected to.
+
+Valve Switches are buttons that make it possible to turn valves on and off, and display their current state. They are defined like so:
+
+    ValveSwitch { valveNumber: 1 }
+
+(See for example line 66 of `ManualControl.qml`). If you wish to add or remove valves, simply edit these lines. You only need to specify a valve here for it to be available to the rest of the program. 
+
+Next, you may need to edit the bounds of the pressure regulators. These are specified in `src/cpp/constants.h`. Simply edit the values for `PR1_MIN_PRESSURE`, `PR1_MAX_PRESSURE` and so on. These are pressures in PSI that are displayed on the screen. They do not affect the values that are sent to the microcontroller (which are always between 0 and 255).
