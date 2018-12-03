@@ -319,11 +319,19 @@ StateMachine {
             signal: RoutineController.finished
         }
 
-        SignalTransition {
-            targetState: routineLoadedSuccessfully
-            signal: stopButton.clicked
+        Connections {
+            target: stopButton
+            onClicked: {
+                console.log("Routine UI: stop requested")
+                title.text = "Stop requested"
+                description.visible = true
+                description.text = "Routine will end after current step"
+                runForeverSwitch.visible = false
+                stopButton.visible = false
+                // RoutineController then emits finished signal, to transition to next state
+                RoutineController.stop()
+            }
         }
-
     }
 
     State {

@@ -4,6 +4,7 @@ RoutineController::RoutineController(Communicator *communicator)
     : mCommunicator(communicator)
     , mRunStatus(NotReady)
     , mCurrentStep(-1)
+    , mStopRequested(false)
     , mNumberOfSteps(-1)
 {
 
@@ -86,6 +87,15 @@ void RoutineController::begin()
     std::thread t([this] { run(false); });
     t.detach();
 }
+
+/**
+ * @brief Stop execution of the routine, after the current step.
+ */
+void RoutineController::stop()
+{
+    mStopRequested = true;
+}
+
 RoutineController::RunStatus RoutineController::status()
 {
     return mRunStatus;
@@ -155,6 +165,7 @@ void RoutineController::run(bool dummyRun)
     mErrorCount = 0;
     mErrors.clear();
     mCurrentStep = -1;
+    mStopRequested = false;
 
     if (!dummyRun) {
         mRunStatus = Running;
@@ -281,6 +292,9 @@ void RoutineController::run(bool dummyRun)
                 std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
             }
         }
+
+        if (mStopRequested)
+            break;
     }
 
     if (dummyRun)

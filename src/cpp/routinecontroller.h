@@ -49,6 +49,7 @@ public:
     Q_INVOKABLE bool loadFile(QString fileUrl);
     Q_INVOKABLE int verify();
     Q_INVOKABLE void begin();
+    Q_INVOKABLE void stop();
 
     RunStatus status();
 
@@ -92,6 +93,9 @@ private:
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;
     std::atomic<int> mErrorCount;
+
+    /// If true, routine execution stops after the current step
+    std::atomic<bool> mStopRequested;
 
     /// The raw contents of the routine file, including empty lines and comments
     QStringList mLines;
