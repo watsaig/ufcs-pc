@@ -156,12 +156,6 @@ const QStringList& RoutineController::errors()
  */
 void RoutineController::run(bool dummyRun)
 {
-    // Counter for the number of valid steps in the routine
-    int nValidSteps(0);
-    // TODO: simplify this by removing this counter; replace it by a boolean "isValid".
-    // if isValid == True at the end of the loop, then increment mCurrentStep; if it is not a dummy run,
-    // then also emit stepChanged. If it is a dummy run, then add that step to a list of valid steps.
-
     mErrorCount = 0;
     mErrors.clear();
     mCurrentStep = -1;
@@ -208,7 +202,6 @@ void RoutineController::run(bool dummyRun)
                 continue;
             }
 
-            nValidSteps++;
 
             if (dummyRun)
                 mValidSteps << line;
@@ -243,7 +236,6 @@ void RoutineController::run(bool dummyRun)
                 continue;
             }
 
-            nValidSteps++;
             if (dummyRun)
                 mValidSteps << line;
             else {
@@ -282,7 +274,6 @@ void RoutineController::run(bool dummyRun)
                 time *= multiplier;
             }
 
-            nValidSteps++;
 
             if (dummyRun)
                 mValidSteps << line;
