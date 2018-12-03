@@ -7,14 +7,14 @@ import org.example.ufcs 1.0
 Item {
     property int valveNumber
 
-    height: button.height
-    width: button.width
+    Layout.preferredHeight: button.height
+    Layout.preferredWidth: button.width
 
     Button {
         id: button
         text: valveNumber
 
-        height: 60
+        height: 50
         width: 1.2*height
 
         checkable: true

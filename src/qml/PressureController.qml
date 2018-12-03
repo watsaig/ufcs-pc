@@ -16,7 +16,7 @@ Item {
         rows: 2
 
         rowSpacing: 25
-        columnSpacing: 50
+        columnSpacing: 25
 
         Slider {
             id: slider
@@ -74,6 +74,7 @@ Item {
 
         onMeasuredValueChanged: {
             measuredValueLabel.text = measuredValueInPsi + " PSI"
+            //console.log("Updating measured value to " + measuredValueLabel.text)
         }
     }
     Component.onCompleted: {

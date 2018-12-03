@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 
 ApplicationWindow {
     visible: true
-    width: 1200
+    width: 800
     height: 1000
     title: qsTr("Microfluidics control system")
 
