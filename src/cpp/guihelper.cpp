@@ -12,25 +12,25 @@ void PCHelper::setControllerNumber(int controllerNumber)
 }
 
 /**
- * @brief Return the value in PSI of the controller's setpoint, rounded to 2 decimal places
+ * @brief Return the value in PSI of the controller's setpoint, rounded to 1 decimal place
  */
 double PCHelper::setPointInPsi() const
 {
     double max = ApplicationController::appController()->maxPressure(mControllerNumber);
     double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
-    return round(100.0*(mSetPoint*(max-min) + min))/100.0;
+    return round(10.0*(mSetPoint*(max-min) + min))/10.0;
 }
 
 /**
- * @brief Return the value in PSI of the controller's measured pressure, rounded to 2 decimal places
+ * @brief Return the value in PSI of the controller's measured pressure, rounded to 1 decimal place
  */
 double PCHelper::measuredValueInPsi() const
 {
     double max = ApplicationController::appController()->maxPressure(mControllerNumber);
     double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
-    return round(100.0*(mMeasuredValue*(max-min) + min))/100.0;
+    return round(10.0*(mMeasuredValue*(max-min) + min))/10.0;
 }
 
 /**
