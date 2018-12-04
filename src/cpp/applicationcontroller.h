@@ -26,6 +26,7 @@ class ApplicationController : public QObject
 
     Q_PROPERTY(QString connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
     Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
+    Q_PROPERTY(QString appVersion READ appVersion)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -47,6 +48,7 @@ public:
     double minPressure(int controllerNumber) { return mCommunicator->minPressure(controllerNumber); }
     double maxPressure(int controllerNumber) { return mCommunicator->maxPressure(controllerNumber); }
 
+    QString appVersion() { return GIT_VERSION; }
     QString connectionStatus();
 
     void registerPCHelper(int controllerNumber, PCHelper* instance);

@@ -42,4 +42,8 @@ ApplicationWindow {
             text: qsTr("Log")
         }
     }
+
+    Component.onCompleted: {
+        console.info("Application version: " + Backend.appVersion)
+    }
 }

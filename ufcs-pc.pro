@@ -61,3 +61,7 @@ DISTFILES += \
     src/qml/LogScreen.qml \
     src/qml/PumpSwitch.qml
 
+
+GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
+GIT_VERSION ~= s/g/"" # Remove the "g" which is prepended to the hash
+DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
