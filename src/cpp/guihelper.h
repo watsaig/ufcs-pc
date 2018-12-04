@@ -74,4 +74,26 @@ private:
     int mValveNumber;
 };
 
+class PumpSwitchHelper : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(bool state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(int pumpNumber MEMBER mPumpNumber WRITE setPumpNumber)
+
+public:
+    bool state() { return mState; }
+    void setPumpNumber(int pumpNumber);
+
+public slots:
+    void setState(bool newState);
+
+signals:
+    void stateChanged(bool newState);
+
+private:
+    bool mState; // true: on. false: off
+    int mPumpNumber;
+};
+
 #endif // GUIHELPER_H

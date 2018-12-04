@@ -109,3 +109,17 @@ void ValveSwitchHelper::setState(bool newState)
         emit stateChanged(newState);
     }
 }
+
+void PumpSwitchHelper::setPumpNumber(int pumpNumber)
+{
+    mPumpNumber = pumpNumber;
+    ApplicationController::appController()->registerPumpSwitchHelper(pumpNumber, this);
+}
+
+void PumpSwitchHelper::setState(bool newState)
+{
+    if (mState != newState) {
+        mState = newState;
+        emit stateChanged(newState);
+    }
+}

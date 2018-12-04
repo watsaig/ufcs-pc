@@ -124,15 +124,8 @@ Item {
             }
 
             RowLayout {
-                Switch {
-                    text: qsTr("Pump 1")
-                    onCheckedChanged: Backend.setPump(1, checked)
-                }
-
-                Switch {
-                    text: qsTr("Pump 2")
-                    onCheckedChanged: Backend.setPump(2, checked)
-                }
+                PumpSwitch { pumpNumber: 1 }
+                PumpSwitch { pumpNumber: 2 }
             }
 
             Label {

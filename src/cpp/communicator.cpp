@@ -68,7 +68,7 @@ void Communicator::setValve(int valveNumber, bool open)
  */
 void Communicator::setPump(int pumpNumber, bool on)
 {
-    qDebug() << "Communicator: setting pump" << pumpNumber << (on ? "on" : "off");
+    //qDebug() << "Communicator: setting pump" << pumpNumber << (on ? "on" : "off");
 
     Component c;
     PumpStates state;

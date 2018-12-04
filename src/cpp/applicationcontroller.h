@@ -18,6 +18,7 @@
 
 class PCHelper;
 class ValveSwitchHelper;
+class PumpSwitchHelper;
 
 class ApplicationController : public QObject
 {
@@ -50,6 +51,7 @@ public:
 
     void registerPCHelper(int controllerNumber, PCHelper* instance);
     void registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance);
+    void registerPumpSwitchHelper(int pumpNumber, PumpSwitchHelper* instance);
 
     RoutineController* routineController() { return mRoutineController; }
 
@@ -76,8 +78,9 @@ private:
     Communicator * mCommunicator;
     RoutineController * mRoutineController;
 
-    QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
     QMap<int, PCHelper*> mQmlPressureControllers;
+    QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
+    QMap<int, PumpSwitchHelper*> mQmlPumpSwitches;
 
     QString mLogFilePath;
     QVariantList mLog;

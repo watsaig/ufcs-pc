@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<PCHelper>("org.example.ufcs", 1, 0, "PCHelper");
     qmlRegisterType<ValveSwitchHelper>("org.example.ufcs", 1, 0, "ValveSwitchHelper");
+    qmlRegisterType<PumpSwitchHelper>("org.example.ufcs", 1, 0, "PumpSwitchHelper");
     qmlRegisterSingletonType(QUrl("qrc:/src/qml/Style.qml"), "org.example.ufcs", 1, 0, "Style"); // an alternative to this not-very-clean solution is to use a qmldir file. This way the QML-only stuff would stay separate from C++.
 
     QQmlApplicationEngine engine;

@@ -80,7 +80,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
-    //QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
+    QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
@@ -120,6 +120,11 @@ void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwit
     mQmlValveSwitches[valveNumber] = instance;
 }
 
+void ApplicationController::registerPumpSwitchHelper(int pumpNumber, PumpSwitchHelper *instance)
+{
+    mQmlPumpSwitches[pumpNumber] = instance;
+}
+
 /**
  * @brief Add a message to the (internal) log, for access within the application.
  * @param entry A QStringList (or compatible type) with 3 elements: time, message type and message text.
@@ -143,10 +148,10 @@ void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 
 void ApplicationController::onPumpStateChanged(int pumpNumber, bool on)
 {
-    Q_UNUSED(pumpNumber)
-    Q_UNUSED(on)
+    qInfo() << "Pump" << pumpNumber << "switched" << (on ? "on" : "off");
 
-    // Not used for now, probably not necessary
+    if (mQmlPumpSwitches.contains(pumpNumber))
+        mQmlPumpSwitches[pumpNumber]->setState(on);
 }
 
 void ApplicationController::onPressureChanged(int controllerNumber, double pressure)
