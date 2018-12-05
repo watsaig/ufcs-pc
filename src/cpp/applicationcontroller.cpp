@@ -35,15 +35,25 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
 
     QString text = date + " " + time + " " + messageType + ": " + message + "\n";
 
+    // Write to console
     QByteArray b = text.toLocal8Bit();
-    fprintf(stderr, b.constData());
-    fflush(stderr); // Force output to be printed right away
+    fprintf(stdout, b.constData());
+    fflush(stdout); // Force output to be printed right away
 
+    // Write to file
     QFile logFile(appController()->logFilePath());
     if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
         QTextStream ts(&logFile);
         ts << text;
     }
+
+    else {
+        QByteArray path = appController()->logFilePath().toLocal8Bit();
+        fprintf(stderr, "Could not open log file for writing at %s", path.constData());
+        fflush(stderr);
+    }
+
+    // Write to app
 
     // Logs are stored in a fragmented way to make rich markup easier in QML.
     // Date is omitted since not particularly useful within the app
@@ -85,7 +95,17 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 
-    mLogFilePath = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
+    // Initialize log file path
+    QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/logs";
+    QDir d;
+    if (!d.mkpath(dataLocation))
+        fprintf(stderr, "Could not create directory for log file storage\n");
+
+    QString fileName = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
+    mLogFilePath = QDir::cleanPath(dataLocation + "/" + fileName);
+
+    QByteArray path = mLogFilePath.toLocal8Bit();
+    fprintf(stdout, "Log file location: %s\n", path.constData());
 
     // This is used by mSettings
     QCoreApplication::setApplicationName("ufcs-pc");
