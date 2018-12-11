@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ufcs-pc"
-#define MyAppVersion "0.1"
-#define MyAppPublisher "Watsaig Inc."
-#define MyAppURL "https://github.com/freeheel3r/ufcs-pc"
+#define MyAppVersion "1.0"
+#define MyAppPublisher "Senyo Lab, CWRU"
+#define MyAppURL "https://github.com/watsaig/ufcs-pc"
 #define MyAppExeName "ufcs-pc.exe"
 
 [Setup]
