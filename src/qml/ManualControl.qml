@@ -85,6 +85,14 @@ Item {
                     ValveSwitch { valveNumber: 22 }
                     ValveSwitch { valveNumber: 23 }
                     ValveSwitch { valveNumber: 24 }
+                    ValveSwitch { valveNumber: 25 }
+                    ValveSwitch { valveNumber: 26 }
+                    ValveSwitch { valveNumber: 27 }
+                    ValveSwitch { valveNumber: 28 }
+                    ValveSwitch { valveNumber: 29 }
+                    ValveSwitch { valveNumber: 30 }
+                    ValveSwitch { valveNumber: 31 }
+                    ValveSwitch { valveNumber: 32 }
                 }
             }
 
@@ -100,20 +108,17 @@ Item {
                 spacing: 50
 
                 PressureController { controllerNumber: 2 }
+            }
 
-                GridLayout {
-                    id: flowLayerValveGrid
-                    columns: 8
+            Label {
+                text: qsTr("Multiplexer")
+                font.pointSize: Style.title.fontSize
+                padding: Style.title.padding
+                leftPadding: Style.title.paddingLeft
+            }
 
-                    ValveSwitch { valveNumber: 25 }
-                    ValveSwitch { valveNumber: 26 }
-                    ValveSwitch { valveNumber: 27 }
-                    ValveSwitch { valveNumber: 28 }
-                    ValveSwitch { valveNumber: 29 }
-                    ValveSwitch { valveNumber: 30 }
-                    ValveSwitch { valveNumber: 31 }
-                    ValveSwitch { valveNumber: 32 }
-                }
+            MultiplexerControl {
+                id: multiplexerControlElement
             }
 
             Label {

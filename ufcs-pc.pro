@@ -59,7 +59,8 @@ DISTFILES += \
     src/qml/Style.qml \
     src/qml/RoutineControl.qml \
     src/qml/LogScreen.qml \
-    src/qml/PumpSwitch.qml
+    src/qml/PumpSwitch.qml \
+    src/qml/MultiplexerControl.qml
 
 
 GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
