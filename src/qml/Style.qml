@@ -6,8 +6,8 @@ QtObject {
 
     property QtObject title: QtObject {
         property int fontSize: 18
-        property int padding: 12
-        property int paddingLeft: 5
+        property int padding: 15
+        property int paddingLeft: 0
     }
 
     property QtObject card: QtObject {

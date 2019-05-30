@@ -8,6 +8,9 @@ import org.example.ufcs 1.0 // for the Style singleton
 
 Item {
         Layout.preferredHeight: button1.height
+
+        property int h: 50
+        property int w: h*1.2
         RowLayout {
             id: multiplexerButtons
 
@@ -17,6 +20,9 @@ Item {
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(1)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
 
             Button {
@@ -24,42 +30,63 @@ Item {
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(2)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "3"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(3)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "4"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(4)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "5"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(5)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "6"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(6)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "7"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(7)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
             Button {
                 text: "8"
                 autoExclusive: true
                 checkable: true
                 onClicked: multiplexer(8)
+
+                Layout.preferredHeight: h
+                Layout.preferredWidth: w
             }
         }
 
