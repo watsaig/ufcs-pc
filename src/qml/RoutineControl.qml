@@ -359,6 +359,7 @@ StateMachine {
             description.visible = false
             returnToHomeButton.visible = false
             runButton.visible = false
+            runButton.text = "Run"
             stepsList.visible = false
         }
 
