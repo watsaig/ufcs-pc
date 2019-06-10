@@ -93,68 +93,68 @@ Item {
    function multiplexer(n) {
         switch (n) {
             case 1:
-                Backend.setValve(17, false)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                Backend.setValve(12, true)
+                Backend.setValve(18, false)
+                Backend.setValve(17, true)
+                Backend.setValve(16, false)
+                Backend.setValve(15, true)
+                Backend.setValve(14, false)
+                Backend.setValve(13, true)
                 break;
             case 2:
-                Backend.setValve(17, false)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
+                Backend.setValve(18, false)
+                Backend.setValve(17, true)
+                Backend.setValve(16, false)
+                Backend.setValve(15, true)
                 Backend.setValve(14, true)
-                Backend.setValve(13, true)
-                Backend.setValve(12, false)
+                Backend.setValve(13, false)
                 break;
             case 3:
-                Backend.setValve(17, false)
+                Backend.setValve(18, false)
+                Backend.setValve(17, true)
                 Backend.setValve(16, true)
-                Backend.setValve(15, true)
+                Backend.setValve(15, false)
                 Backend.setValve(14, false)
-                Backend.setValve(13, false)
-                Backend.setValve(12, true)
+                Backend.setValve(13, true)
                 break;
             case 4:
-                Backend.setValve(17, false)
+                Backend.setValve(18, false)
+                Backend.setValve(17, true)
                 Backend.setValve(16, true)
-                Backend.setValve(15, true)
-                Backend.setValve(14, false)
-                Backend.setValve(13, true)
-                Backend.setValve(12, false)
+                Backend.setValve(15, false)
+                Backend.setValve(14, true)
+                Backend.setValve(13, false)
                 break;
             case 5:
-                Backend.setValve(17, true)
+                Backend.setValve(18, true)
+                Backend.setValve(17, false)
                 Backend.setValve(16, false)
-                Backend.setValve(15, false)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                Backend.setValve(12, true)
+                Backend.setValve(15, true)
+                Backend.setValve(14, false)
+                Backend.setValve(13, true)
                 break;
             case 6:
-                Backend.setValve(17, true)
+                Backend.setValve(18, true)
+                Backend.setValve(17, false)
                 Backend.setValve(16, false)
-                Backend.setValve(15, false)
+                Backend.setValve(15, true)
                 Backend.setValve(14, true)
-                Backend.setValve(13, true)
-                Backend.setValve(12, false)
+                Backend.setValve(13, false)
                 break;
             case 7:
-                Backend.setValve(17, true)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
-                Backend.setValve(14, false)
-                Backend.setValve(13, false)
-                Backend.setValve(12, true)
-                break;
-            case 8:
-                Backend.setValve(17, true)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
+                Backend.setValve(18, true)
+                Backend.setValve(17, false)
+                Backend.setValve(16, true)
+                Backend.setValve(15, false)
                 Backend.setValve(14, false)
                 Backend.setValve(13, true)
-                Backend.setValve(12, false)
+                break;
+            case 8:
+                Backend.setValve(18, true)
+                Backend.setValve(17, false)
+                Backend.setValve(16, true)
+                Backend.setValve(15, false)
+                Backend.setValve(14, true)
+                Backend.setValve(13, false)
                 break;
 
             default:
