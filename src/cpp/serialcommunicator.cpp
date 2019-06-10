@@ -59,7 +59,7 @@ void SerialCommunicator::connect()
     }
 
     mSerialPort->setPortName(portToUse.portName());
-    mSerialPort->setBaudRate(QSerialPort::Baud57600);
+    mSerialPort->setBaudRate(QSerialPort::Baud38400);
     mSerialPort->setDataBits(QSerialPort::Data8);
     mSerialPort->setParity(QSerialPort::NoParity);
     mSerialPort->setStopBits(QSerialPort::OneStop);
