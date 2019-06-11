@@ -36,9 +36,11 @@ void ApplicationController::messageHandler(QtMsgType type, const QMessageLogCont
     QString text = date + " " + time + " " + messageType + ": " + message + "\n";
 
     // Write to console
+#ifdef LOG_TO_TERMINAL
     QByteArray b = text.toLocal8Bit();
     fprintf(stdout, b.constData());
     fflush(stdout); // Force output to be printed right away
+#endif
 
     // Write to file
     QFile logFile(appController()->logFilePath());
