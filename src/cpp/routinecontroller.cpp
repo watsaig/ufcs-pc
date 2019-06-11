@@ -182,18 +182,26 @@ void RoutineController::run(bool dummyRun)
         int length = list.size();
 
         if (list[0] == "valve") {
-            // Expected format: valve <number> <open / close>. e.g: valve 12 open
+            // Expected format: valve <number> <open / close>. e.g: valve 12 open. "Number" can also be "all" to open/close all valves at once.
             if (length != 3) {
                 reportError("Line " + QString::number(i+1) + ": line starting with \"valve\" should contain 3 arguments. For example, \"valve 12 open\"");
                 continue;
             }
 
-            bool ok;
-            int valveNumber = list[1].toInt(&ok);
-            if (!ok || valveNumber < 1 || valveNumber > mCommunicator->nValves()) {
-                reportError("Line " + QString::number(i+1) + ": invalid valve ID: " + list[1]
-                            + ". Must be an integer between 1 and " + QString::number(mCommunicator->nValves()));
-                continue;
+            int valveNumber(0);
+            bool toggleAll = false;
+
+            if (list[1] == "all")
+                toggleAll = true;
+
+            else {
+                bool ok;
+                valveNumber = list[1].toInt(&ok);
+                if (!ok || valveNumber < 1 || valveNumber > mCommunicator->nValves()) {
+                    reportError("Line " + QString::number(i+1) + ": invalid valve ID: " + list[1]
+                                + ". Must be 'all' or an integer between 1 and " + QString::number(mCommunicator->nValves()));
+                    continue;
+                }
             }
 
             QString state = list[2];
@@ -207,8 +215,18 @@ void RoutineController::run(bool dummyRun)
                 mValidSteps << line;
             else {
                 setCurrentStep(mCurrentStep+1);
-                // Signals & slots are necessary to avoid calling QSerialPort->write from a different thread (in which case it throws a QTimer-related error message)
-                emit setValve(valveNumber, (state == "open"));
+
+                if (toggleAll) {
+                    for (int v(1); v <= mCommunicator->nValves(); v++)
+                        emit setValve(v, (state == "open"));
+                }
+
+                else
+                    emit setValve(valveNumber, (state == "open"));
+
+                // Signals & slots are necessary to avoid calling QSerialPort->write from a different thread
+                // (in which case it throws a QTimer-related error message), which is why "emit setValve" etc.
+                // are used here.
             }
         }
 
