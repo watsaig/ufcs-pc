@@ -24,7 +24,31 @@
  * You can then safely call begin() to run the routine. It is run in a separate thread to prevent blocking. Status
  * can be checked with the status() and currentStep() functions. When execution is over, the finished() signal is emitted.
  *
- * TODO: documentation on syntax
+ * Supported syntax
+ * ---------------------
+ *
+ * valve X [open/close]
+ *      Open or close valve X, where X is a number between 1 and appController->nValves(),
+ *      or "all", to toggle all valves at once.
+ *
+ *      Example: valve 12 open
+ *
+ * pressure X Y
+ *      Set pressure regulator X to a pressure of Y PSI.
+ *
+ *      Example: pressure 1 4.5
+ *
+ * wait X Y
+ *      Pause for some time X. Y defines the units, can be milliseconds, seconds, minutes or hours.
+ *      Default is seconds, in case Y is ommitted or does not match any other unit.
+ *      See run function for complete list of supported unit formats.
+ *
+ *      Example: wait 2 minutes
+ *
+ *
+ * multiplexer X
+ *      Open multiplexer to channel X, where X is 1-8 or "all".
+ *
  */
 class RoutineController : public QObject
 {
@@ -80,6 +104,7 @@ signals:
 
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double value);
+    void setMultiplexer(int channels);
 
 private:
     void reset();

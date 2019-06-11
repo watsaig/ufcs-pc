@@ -19,7 +19,7 @@ Item {
                 text: "1"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(1)
+                onClicked: Backend.setMultiplexer(1)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -29,7 +29,7 @@ Item {
                 text: "2"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(2)
+                onClicked: Backend.setMultiplexer(2)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -38,7 +38,7 @@ Item {
                 text: "3"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(3)
+                onClicked: Backend.setMultiplexer(3)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -47,7 +47,7 @@ Item {
                 text: "4"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(4)
+                onClicked: Backend.setMultiplexer(4)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -56,7 +56,7 @@ Item {
                 text: "5"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(5)
+                onClicked: Backend.setMultiplexer(5)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -65,7 +65,7 @@ Item {
                 text: "6"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(6)
+                onClicked: Backend.setMultiplexer(6)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -74,7 +74,7 @@ Item {
                 text: "7"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(7)
+                onClicked: Backend.setMultiplexer(7)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
@@ -83,82 +83,10 @@ Item {
                 text: "8"
                 autoExclusive: true
                 checkable: true
-                onClicked: multiplexer(8)
+                onClicked: Backend.setMultiplexer(8)
 
                 Layout.preferredHeight: h
                 Layout.preferredWidth: w
             }
         }
-
-   function multiplexer(n) {
-        switch (n) {
-            case 1:
-                Backend.setValve(18, false)
-                Backend.setValve(17, true)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
-                Backend.setValve(14, false)
-                Backend.setValve(13, true)
-                break;
-            case 2:
-                Backend.setValve(18, false)
-                Backend.setValve(17, true)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                break;
-            case 3:
-                Backend.setValve(18, false)
-                Backend.setValve(17, true)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
-                Backend.setValve(14, false)
-                Backend.setValve(13, true)
-                break;
-            case 4:
-                Backend.setValve(18, false)
-                Backend.setValve(17, true)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                break;
-            case 5:
-                Backend.setValve(18, true)
-                Backend.setValve(17, false)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
-                Backend.setValve(14, false)
-                Backend.setValve(13, true)
-                break;
-            case 6:
-                Backend.setValve(18, true)
-                Backend.setValve(17, false)
-                Backend.setValve(16, false)
-                Backend.setValve(15, true)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                break;
-            case 7:
-                Backend.setValve(18, true)
-                Backend.setValve(17, false)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
-                Backend.setValve(14, false)
-                Backend.setValve(13, true)
-                break;
-            case 8:
-                Backend.setValve(18, true)
-                Backend.setValve(17, false)
-                Backend.setValve(16, true)
-                Backend.setValve(15, false)
-                Backend.setValve(14, true)
-                Backend.setValve(13, false)
-                break;
-
-            default:
-                break;
-        }
-    }
 }

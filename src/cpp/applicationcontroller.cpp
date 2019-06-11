@@ -96,6 +96,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
+    QObject::connect(mRoutineController, &RoutineController::setMultiplexer, this, &ApplicationController::setMultiplexer);
 
     // Initialize log file path
     QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/logs";
@@ -191,4 +192,86 @@ void ApplicationController::onCommunicatorStatusChanged(Communicator::Connection
         mCommunicator->refreshAll();
 
     emit connectionStatusChanged(mCommunicator->getConnectionStatusString());
+}
+
+void ApplicationController::setMultiplexer(int channel)
+{
+    // Valve numbers hard-coded for now; as this depends on the specific microfluidic chip used, this is
+    // not written in a generic way yet.
+    qDebug() << "Setting multiplexer to channel" << channel;
+
+    switch (channel) {
+        case 0: // open all
+            setValve(18, false);
+            setValve(17, false);
+            setValve(16, false);
+            setValve(15, false);
+            setValve(14, false);
+            setValve(13, false);
+            break;
+        case 1:
+            setValve(18, false);
+            setValve(17, true);
+            setValve(16, false);
+            setValve(15, true);
+            setValve(14, false);
+            setValve(13, true);
+            break;
+        case 2:
+            setValve(18, false);
+            setValve(17, true);
+            setValve(16, false);
+            setValve(15, true);
+            setValve(14, true);
+            setValve(13, false);
+            break;
+        case 3:
+            setValve(18, false);
+            setValve(17, true);
+            setValve(16, true);
+            setValve(15, false);
+            setValve(14, false);
+            setValve(13, true);
+            break;
+        case 4:
+            setValve(18, false);
+            setValve(17, true);
+            setValve(16, true);
+            setValve(15, false);
+            setValve(14, true);
+            setValve(13, false);
+            break;
+        case 5:
+            setValve(18, true);
+            setValve(17, false);
+            setValve(16, false);
+            setValve(15, true);
+            setValve(14, false);
+            setValve(13, true);
+            break;
+        case 6:
+            setValve(18, true);
+            setValve(17, false);
+            setValve(16, false);
+            setValve(15, true);
+            setValve(14, true);
+            setValve(13, false);
+            break;
+        case 7:
+            setValve(18, true);
+            setValve(17, false);
+            setValve(16, true);
+            setValve(15, false);
+            setValve(14, false);
+            setValve(13, true);
+            break;
+        case 8:
+            setValve(18, true);
+            setValve(17, false);
+            setValve(16, true);
+            setValve(15, false);
+            setValve(14, true);
+            setValve(13, false);
+            break;
+    }
 }

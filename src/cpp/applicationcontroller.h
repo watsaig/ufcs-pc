@@ -65,6 +65,9 @@ public:
 
     QSettings* settings() { return mSettings; }
 
+public slots:
+    void setMultiplexer(int channel);
+
 signals:
     void connectionStatusChanged(QString newStatus);
     void newLogMessage(QVariant newMessage);

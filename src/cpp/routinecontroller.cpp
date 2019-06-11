@@ -302,6 +302,34 @@ void RoutineController::run(bool dummyRun)
             }
         }
 
+        else if (list[0] == "multiplexer") {
+            // Expected format: multiplexer X, where X is 1-8 or "all".
+            if (length != 2) {
+                reportError("Line " + QString::number(i+1) + ": line starting with \"multiplexer\" should contain 2 arguments. For example, \"multiplexer 4\"");
+                continue;
+            }
+            int channel(-1);
+
+            if (list[1] == "all")
+                channel = 0;
+            else {
+                bool ok;
+                channel = list[1].toInt(&ok);
+                if (!ok || channel < 1 || channel > 8) {
+                    reportError("Line " + QString::number(i+1) + ": invalid channel: " + list[1]
+                                + ". Must be 'all' or an integer between 1 and 8");
+                    continue;
+                }
+            }
+
+            if (dummyRun)
+                mValidSteps << line;
+            else {
+                setCurrentStep(mCurrentStep+1);
+                emit setMultiplexer(channel);
+            }
+        }
+
         if (mStopRequested)
             break;
     }
