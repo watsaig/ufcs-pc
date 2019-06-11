@@ -45,5 +45,6 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.info("Application version: " + Backend.appVersion)
+        console.info("Writing to log file at: " + Backend.logFilePath)
     }
 }

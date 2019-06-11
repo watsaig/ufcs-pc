@@ -27,6 +27,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(QString connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
     Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
     Q_PROPERTY(QString appVersion READ appVersion)
+    Q_PROPERTY(QString logFilePath READ logFilePath)
 
 private:
     ApplicationController(QObject *parent = nullptr);
