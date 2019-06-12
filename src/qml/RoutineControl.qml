@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Material 2.2
 
 import QtQml.StateMachine 1.0
 
@@ -83,7 +84,7 @@ Item {
 
                     font.pointSize: 10
                     font.bold: RoutineController.currentStep == index
-                    color: RoutineController.currentStep == index ? "black" : "gray"
+                    color: RoutineController.currentStep == index ? Material.foreground : "gray"
                 }
             }
         }

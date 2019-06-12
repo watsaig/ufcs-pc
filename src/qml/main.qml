@@ -1,12 +1,17 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import QtQuick.Controls.Material 2.2
 import QtQuick.Layouts 1.3
 
 ApplicationWindow {
+    id: mainWindow
     visible: true
     width: 800
     height: 1000
     title: qsTr("Microfluidics control system")
+
+    property bool darkMode: false
+    Material.theme: darkMode ? Material.Dark : Material.Light
 
     SwipeView {
         id: swipeView

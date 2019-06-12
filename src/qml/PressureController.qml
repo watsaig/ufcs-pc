@@ -43,7 +43,7 @@ Item {
             id: measuredValueBackground
             height: slider.background.height
             width: slider.background.width
-            color: "#000000"
+            color: Material.foreground
             Layout.alignment: Qt.AlignHCenter
 
             Rectangle {
