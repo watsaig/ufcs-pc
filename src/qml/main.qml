@@ -10,8 +10,7 @@ ApplicationWindow {
     height: 1000
     title: qsTr("Microfluidics control system")
 
-    property bool darkMode: false
-    Material.theme: darkMode ? Material.Dark : Material.Light
+    Material.theme: Backend.darkMode ? Material.Dark : Material.Light
 
     SwipeView {
         id: swipeView

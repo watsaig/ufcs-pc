@@ -164,7 +164,8 @@ Item {
             Switch {
                 id: themeSwitcher
                 text: qsTr("Dark theme")
-                onCheckedChanged: mainWindow.darkMode = checked
+                onCheckedChanged: Backend.darkMode = checked
+                Component.onCompleted: checked = Backend.darkMode
             }
         }
     }

@@ -28,6 +28,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
     Q_PROPERTY(QString appVersion READ appVersion)
     Q_PROPERTY(QString logFilePath READ logFilePath)
+    Q_PROPERTY(bool darkMode READ darkMode WRITE setDarkMode NOTIFY darkModeChanged)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -63,6 +64,9 @@ public:
     Q_INVOKABLE QVariantList log() { return mLog; }
     void addToLog(QVariant entry);
 
+    bool darkMode();
+    void setDarkMode(bool enabled = false);
+
     QSettings* settings() { return mSettings; }
 
 public slots:
@@ -71,6 +75,7 @@ public slots:
 signals:
     void connectionStatusChanged(QString newStatus);
     void newLogMessage(QVariant newMessage);
+    void darkModeChanged(bool enabled);
 
 private slots:
     void onValveStateChanged(int valveNumber, bool open);

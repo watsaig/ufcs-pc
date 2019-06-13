@@ -161,6 +161,25 @@ void ApplicationController::addToLog(QVariant entry)
     emit newLogMessage(entry);
 }
 
+bool ApplicationController::darkMode()
+{
+    return mSettings->value("darkMode", false).toBool();
+}
+
+/**
+ * @brief Set the theme to dark or light mode.
+ * @param enabled if true, theme is set to dark mode
+ *
+ * This is handled in C++ so that the change can be persisted, and the appropriate QML elements
+ * updated at application startup.
+ */
+void ApplicationController::setDarkMode(bool enabled)
+{
+    mSettings->setValue("darkMode", enabled);
+    qInfo() << "Setting theme to" << (enabled ? "dark" : "light") << "mode";
+    emit darkModeChanged(enabled);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");
