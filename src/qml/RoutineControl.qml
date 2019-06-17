@@ -327,6 +327,7 @@ StateMachine {
                 title.text = "Stop requested"
                 description.visible = true
                 description.text = "Routine will end after current step"
+                runForeverSwitch.checked = false
                 runForeverSwitch.visible = false
                 stopButton.visible = false
                 // RoutineController then emits finished signal, to transition to next state
