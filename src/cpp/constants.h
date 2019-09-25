@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <inttypes.h>
+
 // The following are constants for the serial communicator. Not necessarily for the whole program.
 // TODO: possibly move this to within the Communicator class
 
@@ -16,8 +18,8 @@
 #define PR2_MIN_PRESSURE 0
 #define PR3_MIN_PRESSURE -14
 
-#define PR1_MAX_PRESSURE 29.5 // For control layer valves
-#define PR2_MAX_PRESSURE 4.8 // Flow layer valves
+#define PR1_MAX_PRESSURE 4.9 // Flow layer
+#define PR2_MAX_PRESSURE 29.5 // control layer
 #define PR3_MAX_PRESSURE 14
 
 // this enum could also be split into valves/prs/pumps

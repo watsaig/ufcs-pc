@@ -98,6 +98,7 @@ Item {
                 columnSpacing: 70
                 Layout.maximumWidth: controlLayerValveGrid.width
 
+                /*
                 Label {
                     text: qsTr("Control layer")
                     font.pointSize: 14
@@ -106,21 +107,22 @@ Item {
                 }
 
                 PressureController { controllerNumber: 1 }
+                */
 
                 Label {
                     text: qsTr("Flow layer")
                     font.pointSize: 14
-                    horizontalAlignment: Text.AlignHCenter
+                    horizontalAlignment: Text.AlignLeft
                     Layout.fillWidth: true
                 }
 
-                PressureController { controllerNumber: 2 }
+                PressureController { controllerNumber: 1 }
 
                 Label {
                     text: qsTr("Pumps")
                     font.pointSize: 14
                     bottomPadding: 10
-                    horizontalAlignment: Text.AlignHCenter
+                    horizontalAlignment: Text.AlignLeft
                     Layout.fillWidth: true
                 }
 
