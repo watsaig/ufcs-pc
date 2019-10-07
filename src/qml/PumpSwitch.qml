@@ -10,6 +10,8 @@ Item {
     Layout.preferredHeight: button.height
     Layout.preferredWidth: button.width
 
+    enabled: Backend.connectionStatus == "Connected"
+
     Switch {
         id: button
         text: qsTr("Pump ") + pumpNumber

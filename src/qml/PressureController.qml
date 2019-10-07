@@ -9,6 +9,7 @@ Item {
     property int controllerNumber
     width: grid1.width
     height: grid1.height
+    enabled: Backend.connectionStatus == "Connected"
 
     GridLayout {
         id: grid1

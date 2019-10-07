@@ -19,6 +19,7 @@ Item {
                 text: "1"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(1)
 
                 Layout.preferredHeight: h
@@ -29,6 +30,7 @@ Item {
                 text: "2"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(2)
 
                 Layout.preferredHeight: h
@@ -38,6 +40,7 @@ Item {
                 text: "3"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(3)
 
                 Layout.preferredHeight: h
@@ -47,6 +50,7 @@ Item {
                 text: "4"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(4)
 
                 Layout.preferredHeight: h
@@ -56,6 +60,7 @@ Item {
                 text: "5"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(5)
 
                 Layout.preferredHeight: h
@@ -65,6 +70,7 @@ Item {
                 text: "6"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(6)
 
                 Layout.preferredHeight: h
@@ -74,6 +80,7 @@ Item {
                 text: "7"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(7)
 
                 Layout.preferredHeight: h
@@ -83,6 +90,7 @@ Item {
                 text: "8"
                 autoExclusive: true
                 checkable: true
+                enabled: Backend.connectionStatus == "Connected"
                 onClicked: Backend.setMultiplexer(8)
 
                 Layout.preferredHeight: h

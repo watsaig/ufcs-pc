@@ -18,6 +18,7 @@ Item {
         width: 1.2*height
 
         checkable: true
+        enabled: Backend.connectionStatus == "Connected"
 
         onClicked: {
             Backend.setValve(valveNumber, checked);
