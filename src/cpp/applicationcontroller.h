@@ -29,6 +29,8 @@ class ApplicationController : public QObject
     Q_PROPERTY(QString appVersion READ appVersion)
     Q_PROPERTY(QString logFilePath READ logFilePath)
     Q_PROPERTY(bool darkMode READ darkMode WRITE setDarkMode NOTIFY darkModeChanged)
+    Q_PROPERTY(int windowWidth READ loadWindowWidth WRITE saveWindowWidth NOTIFY windowWidthChanged)
+    Q_PROPERTY(int windowHeight READ loadWindowHeight WRITE saveWindowHeight NOTIFY windowHeightChanged)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -64,8 +66,13 @@ public:
     Q_INVOKABLE QVariantList log() { return mLog; }
     void addToLog(QVariant entry);
 
+    // Settings
     bool darkMode();
     void setDarkMode(bool enabled = false);
+    int loadWindowWidth();
+    void saveWindowWidth(int width);
+    int loadWindowHeight();
+    void saveWindowHeight(int height);
 
     QSettings* settings() { return mSettings; }
 
@@ -76,6 +83,8 @@ signals:
     void connectionStatusChanged(QString newStatus);
     void newLogMessage(QVariant newMessage);
     void darkModeChanged(bool enabled);
+    void windowWidthChanged(int width);
+    void windowHeightChanged(int height);
 
 private slots:
     void onValveStateChanged(int valveNumber, bool open);

@@ -6,11 +6,14 @@ import QtQuick.Layouts 1.3
 ApplicationWindow {
     id: mainWindow
     visible: true
-    width: 800
-    height: 1000
+    width: Backend.windowWidth
+    height: Backend.windowHeight
     title: qsTr("Microfluidics control system")
 
     Material.theme: Backend.darkMode ? Material.Dark : Material.Light
+
+    onWidthChanged: Backend.windowWidth = width
+    onHeightChanged: Backend.windowHeight = height
 
     SwipeView {
         id: swipeView

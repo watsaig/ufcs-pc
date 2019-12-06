@@ -180,6 +180,38 @@ void ApplicationController::setDarkMode(bool enabled)
     emit darkModeChanged(enabled);
 }
 
+/**
+ * @brief Load the window width from settings
+ */
+int ApplicationController::loadWindowWidth()
+{
+    return mSettings->value("windowWidth", 580).toInt();
+}
+
+/**
+ * @brief Persist the window width to settings
+ */
+void ApplicationController::saveWindowWidth(int width)
+{
+    mSettings->setValue("windowWidth", width);
+}
+
+/**
+ * @brief Load the window height from settings
+ */
+int ApplicationController::loadWindowHeight()
+{
+    return mSettings->value("windowHeight", 850).toInt();
+}
+
+/**
+ * @brief Persist the window height to settings
+ */
+void ApplicationController::saveWindowHeight(int height)
+{
+    mSettings->setValue("windowHeight", height);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");
