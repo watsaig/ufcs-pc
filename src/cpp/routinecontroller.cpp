@@ -334,6 +334,9 @@ void RoutineController::run(bool dummyRun)
             break;
     }
 
+    if (!mValidSteps.empty())
+        emit stepsListChanged();
+
     if (dummyRun)
         mNumberOfSteps = mValidSteps.size();
 
