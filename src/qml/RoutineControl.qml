@@ -245,17 +245,28 @@ StateMachine {
             title.visible = true
             description.text = "The routine was loaded successfully. Click below to launch it."
             description.visible = true
+            stepsList.visible = true
             runButton.visible = true
+            returnToHomeButton.visible = true
+            returnToHomeButton.text = "Cancel"
         }
 
         onExited: {
             description.visible = false
             runButton.visible = false
+            stepsList.visible = false
+            returnToHomeButton.text = "OK"
+            returnToHomeButton.visible = false
         }
 
         SignalTransition {
             targetState: runningRoutine
             signal: runButton.clicked
+        }
+
+        SignalTransition {
+            targetState: noFileLoaded
+            signal: returnToHomeButton.clicked
         }
     }
 
