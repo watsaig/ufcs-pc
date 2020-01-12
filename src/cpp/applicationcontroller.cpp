@@ -212,6 +212,26 @@ void ApplicationController::saveWindowHeight(int height)
     mSettings->setValue("windowHeight", height);
 }
 
+/**
+ * @brief Load the last location from which a routine file was opened
+ *
+ * This is the path that the dialog box for loading routines will first display
+ */
+QUrl ApplicationController::loadRoutineFolder()
+{
+    return mSettings->value("routineFolder", "").toUrl();
+}
+
+/**
+ * @brief Save the location from which routine files are loaded
+ *
+ * This is the path that the dialog box for loading routines will first display
+ */
+void ApplicationController::saveRoutineFolder(QUrl folder)
+{
+    mSettings->setValue("routineFolder", folder);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");

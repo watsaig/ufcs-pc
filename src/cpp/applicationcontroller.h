@@ -69,10 +69,15 @@ public:
     // Settings
     bool darkMode();
     void setDarkMode(bool enabled = false);
+
     int loadWindowWidth();
     void saveWindowWidth(int width);
+
     int loadWindowHeight();
     void saveWindowHeight(int height);
+
+    Q_INVOKABLE QUrl loadRoutineFolder();
+    Q_INVOKABLE void saveRoutineFolder(QUrl folder);
 
     QSettings* settings() { return mSettings; }
 

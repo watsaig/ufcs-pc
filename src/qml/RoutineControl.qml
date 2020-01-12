@@ -421,10 +421,11 @@ StateMachine {
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
-        folder: shortcuts.home
+        folder: Backend.loadRoutineFolder()
         selectMultiple: false
         visible: false
         onAccepted: {
+            Backend.saveRoutineFolder(folder)
             if (RoutineController.loadFile(fileUrl))
                 fileOpened()
             else {
