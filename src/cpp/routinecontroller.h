@@ -58,6 +58,7 @@ class RoutineController : public QObject
     Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
     Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
     Q_PROPERTY(QStringList stepsList READ steps NOTIFY stepsListChanged)
+    Q_PROPERTY(long totalRunTime READ totalRunTime NOTIFY totalRunTimeChanged)
 
 public:
     enum RunStatus {
@@ -87,6 +88,7 @@ public:
     const QStringList& errors();
 
     Q_INVOKABLE QString routineName() { return mRoutineName; }
+    Q_INVOKABLE long totalRunTime() { return mTotalWaitTime; }
 
 signals:
     /// Emitted when the list of steps is updated
@@ -104,6 +106,8 @@ signals:
     /// Emitted when the routine is finished
     void finished();
 
+    /// Emitted when the estimated total run time is updated
+    void totalRunTimeChanged(long time);
 
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double value);
@@ -139,6 +143,9 @@ private:
 
     /// The routine name (derived from the file name)
     QString mRoutineName;
+
+    /// Estimated run time of the routine (sum of wait times)
+    long mTotalWaitTime;
 };
 
 #endif // ROUTINECONTROLLER_H

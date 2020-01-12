@@ -61,6 +61,12 @@ Item {
             text : "Step " +  (RoutineController.currentStep + 1 ) + " of " + RoutineController.numberOfSteps()
         }
 
+        Label {
+            id: runTime
+            visible: false
+            text: "Estimated run time: " + RoutineController.totalRunTime
+        }
+
 
     // add a scrolling text box, to show the current step (and previous and following 1-2 steps)
 
@@ -245,6 +251,7 @@ StateMachine {
             title.visible = true
             description.text = "The routine was loaded successfully. Click below to launch it."
             description.visible = true
+            runTime.visible = true
             stepsList.visible = true
             runButton.visible = true
             returnToHomeButton.visible = true
@@ -253,6 +260,7 @@ StateMachine {
 
         onExited: {
             description.visible = false
+            runTime.visible = false
             runButton.visible = false
             stepsList.visible = false
             returnToHomeButton.text = "OK"
@@ -312,6 +320,7 @@ StateMachine {
             title.text = "Running routine: " + RoutineController.routineName()
             title.visible = true
             stepCounter.visible = true
+            runTime.visible = true
             stepsList.visible = true
             runForeverSwitch.visible = true
             stopButton.visible = true
@@ -322,6 +331,7 @@ StateMachine {
             title.visible = false
             description.visible = false
             stepCounter.visible = false
+            runTime.visible = false
             runForeverSwitch.visible = false
             stopButton.visible = false
         }

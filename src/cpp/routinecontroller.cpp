@@ -27,6 +27,7 @@ void RoutineController::reset()
     mCurrentStep = -1;
     mErrorCount = 0;
     mRunStatus = NotReady;
+    mTotalWaitTime = 0;
 }
 
 /**
@@ -166,8 +167,10 @@ void RoutineController::run(bool dummyRun)
         emit runStatusChanged(Running);
     }
 
-    if (dummyRun)
+    if (dummyRun) {
         mValidSteps.clear();
+        mTotalWaitTime = 0;
+    }
 
     for (int i(0); i < mLines.size(); ++i) {
 
@@ -293,8 +296,12 @@ void RoutineController::run(bool dummyRun)
             }
 
 
-            if (dummyRun)
+            if (dummyRun) {
                 mValidSteps << line;
+                mTotalWaitTime += time;
+                totalRunTimeChanged(mTotalWaitTime);
+            }
+
             else {
                 setCurrentStep(mCurrentStep+1);
                 // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
