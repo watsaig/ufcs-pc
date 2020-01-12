@@ -23,6 +23,17 @@ import org.example.ufcs 1.0 // for the Style singleton
 */
 
 Item {
+
+    Timer {
+        id: elapsedTimer
+        property double seconds: 0
+        interval: 100
+        running: false
+        repeat: true
+        onTriggered: seconds += .1
+
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 50
@@ -64,7 +75,7 @@ Item {
         Label {
             id: runTime
             visible: false
-            text: "Estimated run time: " + RoutineController.totalRunTime
+            text: "Estimated run time: " + RoutineController.totalRunTime + "s ; elapsed time: " + Math.floor(elapsedTimer.seconds) + "s"
         }
 
 
@@ -324,6 +335,10 @@ StateMachine {
             stepsList.visible = true
             runForeverSwitch.visible = true
             stopButton.visible = true
+
+            elapsedTimer.seconds = 0
+            elapsedTimer.restart()
+
             RoutineController.begin()
         }
 
