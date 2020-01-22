@@ -5,6 +5,7 @@ RoutineController::RoutineController(Communicator *communicator)
     , mRunStatus(NotReady)
     , mCurrentStep(-1)
     , mStopRequested(false)
+    , mPauseRequested(false)
     , mNumberOfSteps(-1)
 {
 
@@ -28,6 +29,7 @@ void RoutineController::reset()
     mErrorCount = 0;
     mRunStatus = NotReady;
     mTotalWaitTime = 0;
+    mPauseRequested = false;
 }
 
 /**
@@ -95,6 +97,24 @@ void RoutineController::begin()
 void RoutineController::stop()
 {
     mStopRequested = true;
+}
+
+/**
+ * @brief Pause execution of the routine, after the current step
+ */
+void RoutineController::pause()
+{
+    mPauseRequested = true;
+}
+
+/**
+ * @brief Resume execution of the routine
+ */
+void RoutineController::resume()
+{
+    std::lock_guard<std::mutex> lockGuard(mPauseMutex); // Not sure this is necessary given that mPauseRequested is atomic.
+    mPauseRequested = false;
+    mPauseConditionVariable.notify_one();
 }
 
 RoutineController::RunStatus RoutineController::status()
@@ -339,6 +359,15 @@ void RoutineController::run(bool dummyRun)
 
         if (mStopRequested)
             break;
+
+        if (mPauseRequested) {
+            qDebug() << "Pause requested. RoutineController::run is pausing";
+            emit paused();
+            std::unique_lock<std::mutex> lock(mPauseMutex);
+            mPauseConditionVariable.wait(lock, [this]{return !mPauseRequested;});
+            qDebug() << "RoutineController::run is resuming";
+            emit resumed();
+        }
     }
 
     if (!mValidSteps.empty())

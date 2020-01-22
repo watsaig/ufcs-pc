@@ -65,7 +65,8 @@ public:
         NotReady,
         Ready,
         Running,
-        Finished
+        Finished,
+        Paused
     }; Q_ENUM(RunStatus)
 
     RoutineController(Communicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
@@ -75,6 +76,8 @@ public:
     Q_INVOKABLE int verify();
     Q_INVOKABLE void begin();
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void pause();
+    Q_INVOKABLE void resume();
 
     RunStatus status();
 
@@ -106,6 +109,12 @@ signals:
     /// Emitted when the routine is finished
     void finished();
 
+    /// Emitted when the routine is paused
+    void paused();
+
+    /// Emitted when the routine is resumed
+    void resumed();
+
     /// Emitted when the estimated total run time is updated
     void totalRunTimeChanged(long time);
 
@@ -128,6 +137,15 @@ private:
 
     /// If true, routine execution stops after the current step
     std::atomic<bool> mStopRequested;
+
+    /// If true, routine execution is paused after the current step
+    std::atomic<bool> mPauseRequested;
+
+    /// Mutex used by pause functionality
+    std::mutex mPauseMutex;
+
+    /// Condition variable used by pause functionality
+    std::condition_variable mPauseConditionVariable;
 
     /// The raw contents of the routine file, including empty lines and comments
     QStringList mLines;

@@ -153,6 +153,20 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
+        Button {
+            id: pauseButton
+            visible: false
+            text: "Pause routine"
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        Button {
+            id: resumeButton
+            visible: false
+            text: "Resume"
+            Layout.alignment: Qt.AlignHCenter
+        }
+
 		Button {
 		    id: stopButton
 			visible: false
@@ -279,7 +293,7 @@ StateMachine {
         }
 
         SignalTransition {
-            targetState: runningRoutine
+            targetState: beginRoutine
             signal: runButton.clicked
         }
 
@@ -312,7 +326,7 @@ StateMachine {
         }
 
         SignalTransition {
-            targetState: runningRoutine
+            targetState: beginRoutine
             signal: yes.clicked
         }
         SignalTransition {
@@ -322,11 +336,31 @@ StateMachine {
     }
 
     State {
+        id: beginRoutine
+        // This state simply starts the routine then switches to "runningRoutine"
+        signal routineStarted
+        onEntered: {
+            console.log("Routine UI: Entered state 'beginRoutine'")
+
+            elapsedTimer.seconds = 0
+            elapsedTimer.restart()
+
+            RoutineController.begin()
+            routineStarted();
+        }
+
+        SignalTransition {
+            targetState: runningRoutine
+            signal: beginRoutine.routineStarted
+        }
+    }
+
+    State {
         id: runningRoutine
 
 
         onEntered: {
-            console.log("Routine UI: Entered state 'routineRunning'")
+            console.log("Routine UI: Entered state 'runningRoutine'")
             // get name of routine from backend
             title.text = "Running routine: " + RoutineController.routineName()
             title.visible = true
@@ -334,12 +368,9 @@ StateMachine {
             runTime.visible = true
             stepsList.visible = true
             runForeverSwitch.visible = true
+            pauseButton.visible = true
             stopButton.visible = true
 
-            elapsedTimer.seconds = 0
-            elapsedTimer.restart()
-
-            RoutineController.begin()
         }
 
         onExited: {
@@ -349,11 +380,17 @@ StateMachine {
             runTime.visible = false
             runForeverSwitch.visible = false
             stopButton.visible = false
+            pauseButton.visible = false
         }
 
         SignalTransition {
             targetState: finishedRunning
             signal: RoutineController.finished
+        }
+
+        SignalTransition {
+            targetState: routinePaused
+            signal: RoutineController.paused
         }
 
         Connections {
@@ -366,10 +403,50 @@ StateMachine {
                 runForeverSwitch.checked = false
                 runForeverSwitch.visible = false
                 stopButton.visible = false
+                pauseButton.visible = false
                 // RoutineController then emits finished signal, to transition to next state
                 RoutineController.stop()
             }
         }
+
+        Connections {
+            target: pauseButton
+            onClicked: {
+                console.log("Routine UI: pause requested")
+                title.text = "Pause requested"
+                description.text = "Routine will pause after the current step"
+                RoutineController.pause()
+                pauseButton.visible = false
+            }
+        }
+
+    }
+
+    State {
+        id: routinePaused
+        onEntered: {
+            console.log("Routine UI: Entered state 'routinePaused'");
+            title.text = "Routine paused"
+            description.text = "Routine execution paused by user"
+            title.visible = true
+            description.visible = true
+            resumeButton.visible = true
+        }
+
+        Connections {
+            target: resumeButton
+            onClicked: {
+                console.log("Routine UI: resume requested")
+                RoutineController.resume()
+                resumeButton.visible = false
+            }
+        }
+
+        SignalTransition {
+            targetState: runningRoutine
+            signal: RoutineController.resumed
+        }
+
     }
 
     State {
