@@ -400,6 +400,7 @@ StateMachine {
                 console.log("Routine UI: pause requested")
                 title.text = "Pause requested"
                 description.text = "Routine will pause after the current step"
+                description.visible = true
                 RoutineController.pause()
                 pauseButton.visible = false
             }
@@ -423,6 +424,7 @@ StateMachine {
             onClicked: {
                 console.log("Routine UI: resume requested")
                 RoutineController.resume()
+                description.visible = false
                 resumeButton.visible = false
             }
         }
