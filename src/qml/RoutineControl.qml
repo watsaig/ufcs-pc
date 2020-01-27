@@ -23,17 +23,6 @@ import org.example.ufcs 1.0 // for the Style singleton
 */
 
 Item {
-
-    Timer {
-        id: elapsedTimer
-        property double seconds: 0
-        interval: 100
-        running: false
-        repeat: true
-        onTriggered: seconds += .1
-
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 50
@@ -75,7 +64,8 @@ Item {
         Label {
             id: runTime
             visible: false
-            text: "Estimated run time: " + RoutineController.totalRunTime + "s ; elapsed time: " + Math.floor(elapsedTimer.seconds) + "s"
+            Layout.alignment: Qt.AlignHCenter
+            text: "Estimated run time: " + RoutineController.totalRunTime + " seconds";
         }
 
 
@@ -342,9 +332,6 @@ StateMachine {
         onEntered: {
             console.log("Routine UI: Entered state 'beginRoutine'")
 
-            elapsedTimer.seconds = 0
-            elapsedTimer.restart()
-
             RoutineController.begin()
             routineStarted();
         }
@@ -365,7 +352,6 @@ StateMachine {
             title.text = "Running routine: " + RoutineController.routineName()
             title.visible = true
             stepCounter.visible = true
-            runTime.visible = true
             stepsList.visible = true
             runForeverSwitch.visible = true
             pauseButton.visible = true
@@ -377,7 +363,6 @@ StateMachine {
             title.visible = false
             description.visible = false
             stepCounter.visible = false
-            runTime.visible = false
             runForeverSwitch.visible = false
             stopButton.visible = false
             pauseButton.visible = false
