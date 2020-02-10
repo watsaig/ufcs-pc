@@ -75,7 +75,7 @@ Item {
             id: stepsList
             visible: false
             width: parent.width
-            height: 400
+            Layout.fillHeight: true
             Layout.alignment: Qt.AlignHCenter
             model: RoutineController.stepsList
             currentIndex: RoutineController.currentStep
@@ -100,7 +100,7 @@ Item {
             id: errorList
             visible: false
             width: parent.width
-            height: 400
+            Layout.fillHeight: true
             model: RoutineController.errorList
             delegate: Rectangle {
                 height: 25
