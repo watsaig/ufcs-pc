@@ -23,6 +23,7 @@ Item {
             id: slider
             orientation: Qt.Vertical
             live: true
+            stepSize: 1./256.
 
             onValueChanged: {
                 helper.setPoint = value

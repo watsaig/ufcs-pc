@@ -118,7 +118,7 @@ void Communicator::setPressure(int controllerNumber, double pressure)
         return;
     }
 
-    setComponentState(c, pressure*PR_MAX_VALUE);
+    setComponentState(c, int(round(pressure*PR_MAX_VALUE)));
 }
 
 /**
