@@ -4,9 +4,11 @@ RoutineController::RoutineController(Communicator *communicator)
     : mCommunicator(communicator)
     , mRunStatus(NotReady)
     , mCurrentStep(-1)
+    , mErrorCount(0)
     , mStopRequested(false)
     , mPauseRequested(false)
     , mNumberOfSteps(-1)
+    , mTotalWaitTime(0)
 {
 
     QObject::connect(this, SIGNAL(setValve(int,bool)), mCommunicator, SLOT(setValve(int,bool)));
