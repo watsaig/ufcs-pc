@@ -12,25 +12,39 @@ void PCHelper::setControllerNumber(int controllerNumber)
 }
 
 /**
- * @brief Return the value in PSI of the controller's setpoint, rounded to 1 decimal place
+ * @brief Return the value in PSI of the controller's setpoint, rounded to 1 or 2 decimal places
  */
 double PCHelper::setPointInPsi() const
 {
     double max = ApplicationController::appController()->maxPressure(mControllerNumber);
     double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
-    return round(10.0*(mSetPoint*(max-min) + min))/10.0;
+    // Number of decimal points displayed. Since there are only 255 steps, it doesn't make
+    // sense to display 2 decimal points for pressure regulators with more than  25.5 PSI range.
+
+    int decimals = 1;
+    if ((max - min) < 25.5)
+        decimals = 2;
+    double precision = pow(10, decimals);
+
+    return round(precision*(mSetPoint*(max-min) + min))/precision;
 }
 
 /**
- * @brief Return the value in PSI of the controller's measured pressure, rounded to 1 decimal place
+ * @brief Return the value in PSI of the controller's measured pressure, rounded to 1 or 2 decimal places
  */
 double PCHelper::measuredValueInPsi() const
 {
     double max = ApplicationController::appController()->maxPressure(mControllerNumber);
     double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
-    return round(10.0*(mMeasuredValue*(max-min) + min))/10.0;
+    // Number of decimal points displayed
+    int decimals = 1;
+    if ((max - min) < 25.5)
+        decimals = 2;
+    double precision = pow(10, decimals);
+
+    return round(precision*(mMeasuredValue*(max-min) + min))/precision;
 }
 
 /**
