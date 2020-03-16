@@ -471,12 +471,12 @@ StateMachine {
         }
 
         SignalTransition {
-            targetState: runningRoutine
+            targetState: beginRoutine
             signal: runButton.clicked
         }
 
         SignalTransition {
-            targetState: runningRoutine
+            targetState: beginRoutine
             signal: finishedRunning.restartRoutine
         }
     }

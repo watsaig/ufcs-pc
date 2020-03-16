@@ -58,6 +58,7 @@ On top of the requirements for Qt (to simply build the app), you will need:
 
 Adjust the paths as needed in `deploy_windows.bat` to point towards your Qt, Visual Studio Build Tools and Inno Setup installations, then run it. An installer will be created in `build/installer`.
 
+
 ## Customizing the code to your hardware setup
 
 The PC part of the code has very little knowledge of the actual hardware connected to the microcontroller. It does not concern itself with whether a pressure regulator is analog or digital, where it is connected, or what types of valves are connected to what pins, for example.
