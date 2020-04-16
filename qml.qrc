@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/qml/main.qml</file>
+        <file>src/qml/LogScreen.qml</file>
+        <file>src/qml/ManualControl.qml</file>
+        <file>src/qml/MultiplexerControl.qml</file>
+        <file>src/qml/RoutineControl.qml</file>
+        <file>src/qml/PressureController.qml</file>
+        <file>src/qml/PumpSwitch.qml</file>
+        <file>src/qml/ValveSwitch.qml</file>
+        <file>src/qml/GraphicalValveSwitch.qml</file>
+        <file>src/qml/GraphicalControl.qml</file>
+        <file>src/qml/Style.qml</file>
+        <file alias="qtquickcontrols2.conf">res/qtquickcontrols2.conf</file>
+        <file>res/images/v4_flow_layer.png</file>
+    </qresource>
+</RCC>

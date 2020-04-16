@@ -24,8 +24,7 @@ SOURCES += \
     src/cpp/bluetoothcommunicator.cpp \
     src/cpp/serialcommunicator.cpp
 
-RESOURCES += \
-    res/qml.qrc
+RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH = C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2
@@ -50,7 +49,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    src/qml/qtquickcontrols2.conf \
     src/qml/main.qml \
     res/qtquickcontrols2.conf \
     src/qml/ManualControl.qml \
