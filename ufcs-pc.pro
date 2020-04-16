@@ -49,6 +49,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    src/qml/GraphicalControl.qml \
+    src/qml/GraphicalValveSwitch.qml \
     src/qml/main.qml \
     res/qtquickcontrols2.conf \
     src/qml/ManualControl.qml \

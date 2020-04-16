@@ -25,6 +25,10 @@ ApplicationWindow {
             id: manualControlView
         }
 
+        GraphicalControl {
+            id: graphicalControlView
+        }
+
         RoutineControl {
             id: routineControlView
         }
@@ -39,6 +43,10 @@ ApplicationWindow {
         currentIndex: swipeView.currentIndex
         TabButton {
             text: qsTr("Manual control")
+        }
+
+        TabButton {
+            text: qsTr("Graphical control")
         }
 
         TabButton {

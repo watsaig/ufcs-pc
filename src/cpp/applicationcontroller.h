@@ -104,7 +104,7 @@ private:
     RoutineController * mRoutineController;
 
     QMap<int, PCHelper*> mQmlPressureControllers;
-    QMap<int, ValveSwitchHelper*> mQmlValveSwitches;
+    QMap<int, QList<ValveSwitchHelper*> > mQmlValveSwitches;
     QMap<int, PumpSwitchHelper*> mQmlPumpSwitches;
 
     QString mLogFilePath;

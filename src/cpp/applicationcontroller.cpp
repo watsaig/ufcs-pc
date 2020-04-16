@@ -140,7 +140,10 @@ void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* ins
 
 void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance)
 {
-    mQmlValveSwitches[valveNumber] = instance;
+    if (!mQmlValveSwitches.contains(valveNumber))
+        mQmlValveSwitches[valveNumber] = QList<ValveSwitchHelper*>();
+
+    mQmlValveSwitches[valveNumber].push_back(instance);
 }
 
 void ApplicationController::registerPumpSwitchHelper(int pumpNumber, PumpSwitchHelper *instance)
@@ -236,8 +239,10 @@ void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");
 
-    if (mQmlValveSwitches.contains(valveNumber))
-        mQmlValveSwitches[valveNumber]->setState(open);
+    if (mQmlValveSwitches.contains(valveNumber)) {
+        for (auto v : mQmlValveSwitches[valveNumber])
+            v->setState(open);
+    }
 }
 
 void ApplicationController::onPumpStateChanged(int pumpNumber, bool on)
