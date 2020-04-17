@@ -28,6 +28,7 @@ RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH = C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2
+QML_IMPORT_PATH += ./src/qml
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 #QML_DESIGNER_IMPORT_PATH += C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2/designer
@@ -50,6 +51,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     src/qml/GraphicalControl.qml \
+    src/qml/GraphicalLabeledValveSwitch.qml \
     src/qml/GraphicalValveSwitch.qml \
     src/qml/main.qml \
     res/qtquickcontrols2.conf \
