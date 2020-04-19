@@ -235,6 +235,29 @@ void ApplicationController::saveRoutineFolder(QUrl folder)
     mSettings->setValue("routineFolder", folder);
 }
 
+
+/**
+ * @brief Load the label associated with a given valve
+ * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
+ * @return The user-defined label, or "Unlabeled input" if none is set
+ */
+QString ApplicationController::loadValveLabel(int valveNumber)
+{
+    QString key = QString("valveLabels/") + QString::number(valveNumber);
+    return mSettings->value(key, "Unlabeled input").toString();
+}
+
+/**
+ * @brief Persist a user-defined label for a given valve
+ * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
+ * @param label The label to be saved
+ */
+void ApplicationController::saveValveLabel(int valveNumber, QString label)
+{
+    QString key = QString("valveLabels/") + QString::number(valveNumber);
+    mSettings->setValue(key, label);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");

@@ -95,6 +95,10 @@ Item {
             // Surrender focus to hide the editing cursor
             control.focus = true
         }
+
+        onTextEdited: {
+            Backend.saveValveLabel(valveNumber, text);
+        }
     }
 
 
@@ -104,7 +108,10 @@ Item {
         onStateChanged: button.checked = state
     }
 
-    Component.onCompleted: helper.valveNumber = valveNumber
+    Component.onCompleted: {
+        helper.valveNumber = valveNumber
+        textInput.text = Backend.loadValveLabel(valveNumber);
+    }
 }
 
 /*##^##

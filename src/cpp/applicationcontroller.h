@@ -79,6 +79,9 @@ public:
     Q_INVOKABLE QUrl loadRoutineFolder();
     Q_INVOKABLE void saveRoutineFolder(QUrl folder);
 
+    Q_INVOKABLE QString loadValveLabel(int valveNumber);
+    Q_INVOKABLE void saveValveLabel(int valveNumber, QString label);
+
     QSettings* settings() { return mSettings; }
 
 public slots:
