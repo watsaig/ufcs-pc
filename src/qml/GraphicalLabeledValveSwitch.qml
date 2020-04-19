@@ -81,9 +81,8 @@ Item {
         height: 20
         anchors.horizontalCenter: control.horizontalCenter
 
-        readOnly: !control.editable
-        //activeFocusOnPress: !readOnly
         selectByMouse: control.editable
+        enabled: control.editable
 
         text: qsTr("Input label")
         verticalAlignment: Text.AlignVCenter
