@@ -17,7 +17,7 @@ Item {
     // True if user can edit the label
     property bool editable: false
 
-    height: 100
+    height: 70
     width: 100
 
     Button {
@@ -34,61 +34,47 @@ Item {
         enabled: !control.editable
 
         onClicked: Backend.setValve(valveNumber, checked);
-
-            /*
-        background: Rectangle {
-            anchors.fill: button
-
-            color: control.normalColor
-            opacity: button.checked ? 1 : 0.5
-
-            Ripple {
-                clipRadius: 2
-                width: button.width
-                height: button.height
-                pressed: button.pressed
-                anchor: button
-                active: button.down || button.visualFocus || button.hovered
-                color: control.highlightedColor
-            }
-        }
-
-            */
     }
 
     Text {
         id: element
-        x: 47
-        y: 12
         text: valveNumber
+
+        anchors.top: control.top
+        anchors.topMargin: 12
         anchors.horizontalCenter: control.horizontalCenter
+
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 13
+        color: Material.primaryTextColor
     }
 
     Rectangle {
         id: textInputBackground
         anchors.fill: textInput
-        color: "#ffffff"
+        color: Material.backgroundColor
         visible: control.editable
     }
 
     TextInput {
         id: textInput
-        x: 12
-        y: 60
         width: control.width - 6
         height: 20
+
         anchors.horizontalCenter: control.horizontalCenter
+        anchors.bottom: control.bottom
+        anchors.bottomMargin: 12
 
         selectByMouse: control.editable
         enabled: control.editable
 
         text: qsTr("Input label")
+        anchors.horizontalCenterOffset: 0
         verticalAlignment: Text.AlignVCenter
         autoScroll: false
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 12
+        color: Material.primaryTextColor
 
         onEditingFinished: {
             // Surrender focus to hide the editing cursor
@@ -98,9 +84,8 @@ Item {
         onTextEdited: {
             Backend.saveValveLabel(valveNumber, text);
         }
+
     }
-
-
 
     ValveSwitchHelper {
         id: helper

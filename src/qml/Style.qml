@@ -15,4 +15,9 @@ QtObject {
         property int padding: 8
     }
 
+    property QtObject view: QtObject {
+        // A view of the SwipeView, aka an individual page
+        property int margin: 30
+    }
+
 }
