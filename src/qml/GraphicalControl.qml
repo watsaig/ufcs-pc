@@ -10,6 +10,7 @@ Item {
     // When True: buttons are disabled; user can edit labels
     property bool editingMode : editingModeSwitch.checked
 
+    property int minimumWidth : inputValveGrid.implicitWidth + 2*Style.view.margin
 
     ColumnLayout {
         anchors.fill: parent

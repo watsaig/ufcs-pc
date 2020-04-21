@@ -10,6 +10,10 @@ ApplicationWindow {
     height: Backend.windowHeight
     title: qsTr("Microfluidics control system")
 
+    // if necessary, set this to be the max of the minimum widths of each view
+    minimumWidth: graphicalControlView.minimumWidth
+    minimumHeight: 500
+
     Material.theme: Backend.darkMode ? Material.Dark : Material.Light
 
     onWidthChanged: Backend.windowWidth = width
