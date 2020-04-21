@@ -21,7 +21,16 @@ Item {
         id: button
         text: valveNumber
         anchors.fill: parent
-
+        contentItem: Text {
+            id: buttonLabel
+            text: button.text
+            font: button.font
+            color: "white"
+            //style: Text.Outline
+            //styleColor: "black"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
 
         checkable: true
         checked: false
