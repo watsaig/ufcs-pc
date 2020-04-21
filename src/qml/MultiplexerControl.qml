@@ -9,10 +9,11 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
         Layout.preferredHeight: button1.height
 
-        property int h: 50
+        property int h: 60
         property int w: h*1.2
         RowLayout {
             id: multiplexerButtons
+            anchors.fill: parent
 
             Button {
                 id: button1

@@ -9,15 +9,13 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     Flickable {
         anchors.fill: parent
-        anchors.margins: Style.view.margin
         contentHeight: topLevelColumnLayout.implicitHeight
-        contentWidth: width
         ScrollBar.vertical: ScrollBar {}
 
         ColumnLayout {
             id: topLevelColumnLayout
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            anchors.fill: parent
+            anchors.margins: Style.view.margin
             spacing: 10
             Component.onCompleted: {
                 //Backend.connect()
@@ -35,6 +33,7 @@ Item {
             GridLayout {
                 id: controlLayerValveGrid
                 Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
 
                 columnSpacing: 5
                 rowSpacing: 5
@@ -83,6 +82,8 @@ Item {
 
             MultiplexerControl {
                 id: multiplexerControlElement
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width
             }
 
             Label {
@@ -101,7 +102,6 @@ Item {
                 Label {
                     text: qsTr("Control layer")
                     font.pointSize: 14
-                    horizontalAlignment: Text.AlignHCenter
                     Layout.fillWidth: true
                 }
 
@@ -110,7 +110,6 @@ Item {
                 Label {
                     text: qsTr("Flow layer")
                     font.pointSize: 14
-                    horizontalAlignment: Text.AlignHCenter
                     Layout.fillWidth: true
                 }
 
@@ -120,7 +119,6 @@ Item {
                     text: qsTr("Pumps")
                     font.pointSize: 14
                     bottomPadding: 10
-                    horizontalAlignment: Text.AlignHCenter
                     Layout.fillWidth: true
                 }
 

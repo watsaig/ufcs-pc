@@ -14,7 +14,7 @@ Item {
         id: button
         text: valveNumber
 
-        height: 50
+        height: 60
         width: 1.2*height
 
         checkable: true
