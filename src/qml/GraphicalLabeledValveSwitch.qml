@@ -64,17 +64,24 @@ Item {
         anchors.horizontalCenter: control.horizontalCenter
         anchors.bottom: control.bottom
         anchors.bottomMargin: 12
+        text: qsTr("Input label")
 
         selectByMouse: control.editable
         enabled: control.editable
 
-        text: qsTr("Input label")
-        anchors.horizontalCenterOffset: 0
-        verticalAlignment: Text.AlignVCenter
-        autoScroll: false
-        horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 12
+        autoScroll: false
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
         color: Material.primaryTextColor
+
+        // To do: a better implementation of this where the max. width is set
+        maximumLength: width / fontMetrics.averageCharacterWidth
+
+        FontMetrics {
+            id: fontMetrics
+            font: textInput.font
+        }
 
         onEditingFinished: {
             // Surrender focus to hide the editing cursor
