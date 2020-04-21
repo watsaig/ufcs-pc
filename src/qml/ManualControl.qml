@@ -9,9 +9,9 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     Flickable {
         anchors.fill: parent
+        anchors.margins: Style.view.margin
         contentHeight: topLevelColumnLayout.implicitHeight
         contentWidth: width
-        clip: true
         ScrollBar.vertical: ScrollBar {}
 
         ColumnLayout {

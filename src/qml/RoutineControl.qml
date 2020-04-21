@@ -26,7 +26,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 50
-        anchors.leftMargin: 40
+        anchors.leftMargin: Style.view.margin
         anchors.rightMargin: anchors.leftMargin
 
         Label {

@@ -17,7 +17,6 @@ ApplicationWindow {
 
     SwipeView {
         id: swipeView
-        padding: 20
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
