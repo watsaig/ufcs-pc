@@ -50,6 +50,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    src/qml/GraphicalChipControl.qml \
     src/qml/GraphicalControl.qml \
     src/qml/GraphicalLabeledValveSwitch.qml \
     src/qml/GraphicalValveSwitch.qml \
