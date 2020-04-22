@@ -8,31 +8,50 @@ Item {
     id: control
 
     // When True: buttons are disabled; user can edit labels
-    property bool editingMode : editingModeSwitch.checked
+    property bool editingMode : false
 
     property int minimumWidth : inputValveGrid.implicitWidth + 2*Style.view.margin
+    property int maximumWidth: 1000
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Style.view.margin
 
-        Switch {
-            id: editingModeSwitch
-            text: qsTr("Edit input labels")
-        }
-
         GraphicalChipControl {
             id: graphicalChipControl
             Layout.fillHeight: true
             Layout.fillWidth: true
+            enabled: !editingMode
         }
+
+        RowLayout {
+            Layout.preferredWidth: parent.width
+            Layout.maximumWidth: control.maximumWidth
+            Layout.alignment: Qt.AlignTop
+
+            Label {
+                text: qsTr("Inputs")
+                Layout.fillWidth: true
+                font.pointSize: Style.title.fontSize
+                padding: Style.title.padding
+                leftPadding: Style.title.paddingLeft
+            }
+
+            Button {
+                id: editingModeSwitch
+                text: control.editingMode ? qsTr("Done") : qsTr("Edit labels")
+                flat: true
+                Layout.alignment: Qt.AlignRight
+                onClicked: control.editingMode = !control.editingMode
+            }
+        }
+
 
         GridLayout {
             id: inputValveGrid
-            Layout.fillWidth: true
-            Layout.preferredWidth: parent.width // To do: make this the width of the chip background image, if possible
-
-            //rowSpacing: 5
+            Layout.preferredWidth: parent.width
+            Layout.maximumWidth: control.maximumWidth
+            Layout.alignment: Qt.AlignTop
             columns: 6
 
             GraphicalLabeledValveSwitch {
@@ -106,6 +125,13 @@ Item {
                 valveNumber: 30
                 editable: editingMode
             }
+
+            GraphicalLabeledValveSwitch {
+                id: graphicalLabeledValveSwitch12
+                valveNumber: 31
+                editable: editingMode
+            }
+        }
         }
     }
 }

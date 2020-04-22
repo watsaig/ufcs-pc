@@ -17,8 +17,9 @@ Item {
     // True if user can edit the label
     property bool editable: false
 
-    height: 70
-    width: 100
+    implicitHeight: 70
+    implicitWidth: 100
+    Layout.fillWidth: true
 
     Button {
         id: button

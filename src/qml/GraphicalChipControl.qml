@@ -35,7 +35,6 @@ Item {
         width: 260
         height: 35
         valveNumber: 7
-        enabled: !editingMode
     }
 
 
@@ -46,7 +45,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 12
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -56,7 +54,6 @@ Item {
         width: 260
         height: 35
         valveNumber: 6
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -66,7 +63,6 @@ Item {
         width: 260
         height: 35
         valveNumber: 5
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -76,7 +72,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 11
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -86,7 +81,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 10
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -96,7 +90,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 9
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -106,7 +99,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 8
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -116,7 +108,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 1
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -126,7 +117,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 2
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -136,7 +126,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 3
-        enabled: !editingMode
     }
 
     GraphicalValveSwitch {
@@ -146,7 +135,6 @@ Item {
         width: 35
         height: 44
         valveNumber: 4
-        enabled: !editingMode
     }
 
 }
