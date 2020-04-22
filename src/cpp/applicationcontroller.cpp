@@ -135,7 +135,10 @@ void ApplicationController::connect()
 
 void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* instance)
 {
-    mQmlPressureControllers[controllerNumber] = instance;
+    if (!mQmlPressureControllers.contains(controllerNumber))
+        mQmlPressureControllers[controllerNumber] = QList<PCHelper*>();
+
+    mQmlPressureControllers[controllerNumber].push_back(instance);
 }
 
 void ApplicationController::registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance)
@@ -279,8 +282,11 @@ void ApplicationController::onPumpStateChanged(int pumpNumber, bool on)
 void ApplicationController::onPressureChanged(int controllerNumber, double pressure)
 {
     //qInfo() << "Measured pressure (normalized) on controller" << controllerNumber << ":" << pressure;
-    if (mQmlPressureControllers.contains(controllerNumber))
-        mQmlPressureControllers[controllerNumber]->setMeasuredValue(pressure);
+
+    if (mQmlPressureControllers.contains(controllerNumber)) {
+        for (auto p : mQmlPressureControllers[controllerNumber])
+            p->setMeasuredValue(pressure);
+    }
 }
 
 void ApplicationController::onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus)

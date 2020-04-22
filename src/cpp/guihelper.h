@@ -24,8 +24,8 @@ class PCHelper : public QObject
     Q_PROPERTY(double setPoint MEMBER mSetPoint NOTIFY setPointChanged)
     Q_PROPERTY(double measuredValue READ measuredValue WRITE setMeasuredValue NOTIFY measuredValueChanged)
     Q_PROPERTY(int controllerNumber MEMBER mControllerNumber WRITE setControllerNumber)
-    Q_PROPERTY(double setPointInPsi READ setPointInPsi)
-    Q_PROPERTY(double measuredValueInPsi READ measuredValueInPsi)
+    Q_PROPERTY(double setPointInPsi READ setPointInPsi NOTIFY setPointChanged)
+    Q_PROPERTY(double measuredValueInPsi READ measuredValueInPsi NOTIFY measuredValueChanged)
 
 public:
     double setPoint() const { return mSetPoint ; }

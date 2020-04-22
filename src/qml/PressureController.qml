@@ -11,6 +11,9 @@ Item {
     height: grid1.implicitHeight
     enabled: Backend.connectionStatus == "Connected"
 
+    property double sp : helper.setPointInPsi
+    property double pv : helper.measuredValueInPsi
+
     GridLayout {
         id: grid1
         flow: GridLayout.TopToBottom
@@ -60,7 +63,7 @@ Item {
 
         Label {
             id: measuredValueLabel
-            text: "0 PSI"
+            text: helper.measuredValueInPsi + " PSI"
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter

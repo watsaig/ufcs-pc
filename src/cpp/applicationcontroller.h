@@ -106,7 +106,7 @@ private:
     Communicator * mCommunicator;
     RoutineController * mRoutineController;
 
-    QMap<int, PCHelper*> mQmlPressureControllers;
+    QMap<int, QList<PCHelper*> > mQmlPressureControllers;
     QMap<int, QList<ValveSwitchHelper*> > mQmlValveSwitches;
     QMap<int, PumpSwitchHelper*> mQmlPumpSwitches;
 
