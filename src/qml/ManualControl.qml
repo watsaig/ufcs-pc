@@ -159,12 +159,6 @@ Item {
                 visible: Backend.connectionStatus == "Connected"
             }
 
-            Switch {
-                id: themeSwitcher
-                text: qsTr("Dark theme")
-                onCheckedChanged: Backend.darkMode = checked
-                Component.onCompleted: checked = Backend.darkMode
-            }
         }
     }
 }

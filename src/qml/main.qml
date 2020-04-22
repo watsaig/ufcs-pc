@@ -39,11 +39,16 @@ ApplicationWindow {
         LogScreen {
             id: logScreenView
         }
+
+        Settings {
+            id: settingsView
+        }
     }
 
     footer: TabBar {
         id: tabBar
         currentIndex: swipeView.currentIndex
+
         TabButton {
             text: qsTr("Manual control")
         }
@@ -58,6 +63,12 @@ ApplicationWindow {
 
         TabButton {
             text: qsTr("Log")
+        }
+
+        TabButton {
+            width: 50
+            icon.name: "settings"
+            icon.source: Backend.darkMode ? "qrc:/res/images/settings_icon_dark_theme.png" : "qrc:/res/images/settings_icon_light_theme.png"
         }
     }
 
