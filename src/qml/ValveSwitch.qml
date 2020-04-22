@@ -7,15 +7,17 @@ import org.example.ufcs 1.0
 Item {
     property int valveNumber
 
-    Layout.preferredHeight: button.height
-    Layout.preferredWidth: button.width
+    implicitHeight: height
+    implicitWidth: Style.valveSwitch.defaultWidth
+    height: width * Style.valveSwitch.widthToHeightRatio
+    Layout.fillWidth: true
+    Layout.maximumWidth: Style.valveSwitch.maximumWidth
 
     Button {
         id: button
         text: valveNumber
 
-        height: 60
-        width: 1.2*height
+        anchors.fill: parent
 
         checkable: true
         enabled: Backend.connectionStatus == "Connected"

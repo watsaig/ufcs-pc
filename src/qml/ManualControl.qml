@@ -9,7 +9,7 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     Flickable {
         anchors.fill: parent
-        contentHeight: topLevelColumnLayout.implicitHeight
+        contentHeight: topLevelColumnLayout.height
         ScrollBar.vertical: ScrollBar {}
 
         ColumnLayout {
@@ -27,6 +27,7 @@ Item {
                 padding: Style.title.padding
                 leftPadding: Style.title.paddingLeft
                 topPadding: 0
+                Layout.alignment: Qt.AlignTop
             }
 
 
@@ -34,6 +35,8 @@ Item {
                 id: controlLayerValveGrid
                 Layout.fillWidth: true
                 Layout.preferredWidth: parent.width
+                Layout.alignment: Qt.AlignTop
+                Layout.maximumWidth: Style.valveSwitch.maximumWidth * columns
 
                 columnSpacing: 5
                 rowSpacing: 5
@@ -78,12 +81,15 @@ Item {
                 font.pointSize: Style.title.fontSize
                 padding: Style.title.padding
                 leftPadding: Style.title.paddingLeft
+                Layout.alignment: Qt.AlignTop
             }
 
             MultiplexerControl {
                 id: multiplexerControlElement
                 Layout.fillWidth: true
                 Layout.preferredWidth: parent.width
+                Layout.alignment: Qt.AlignTop
+                Layout.maximumWidth: Style.valveSwitch.maximumWidth * 8
             }
 
             Label {
@@ -91,6 +97,7 @@ Item {
                 font.pointSize: Style.title.fontSize
                 padding: Style.title.padding
                 leftPadding: Style.title.paddingLeft
+                Layout.alignment: Qt.AlignTop
             }
 
             GridLayout {
@@ -98,6 +105,7 @@ Item {
                 rows: 2
                 columnSpacing: 70
                 Layout.maximumWidth: controlLayerValveGrid.width
+                Layout.alignment: Qt.AlignTop
 
                 Label {
                     text: qsTr("Control layer")
