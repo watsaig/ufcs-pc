@@ -7,8 +7,8 @@ import org.example.ufcs 1.0
 
 Item {
     property int controllerNumber
-    width: grid1.width
-    height: grid1.height
+    width: grid1.implicitWidth
+    height: grid1.implicitHeight
     enabled: Backend.connectionStatus == "Connected"
 
     GridLayout {
