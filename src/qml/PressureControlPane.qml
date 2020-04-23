@@ -6,35 +6,10 @@ import QtQuick.Controls.Material 2.0
 Item {
     id: control
 
-    height: columnLayout.implicitHeight
-
-    state: "Collapsed"
-    states: [
-        State {
-            name: "Collapsed"
-            PropertyChanges { target: pressureControllerRow; visible: false }
-        },
-        State {
-            name: "Expanded"
-            PropertyChanges { target: showHideButton; text: qsTr("Hide") }
-            PropertyChanges { target: label1; visible: false }
-            PropertyChanges { target: label2; visible: false }
-            PropertyChanges { target: label3; visible: false }
-            PropertyChanges { target: label4; visible: false }
-
-            PropertyChanges { target: pressureControllerRow; visible: true }
-        }
-
-    ]
-
-    transitions: Transition {
-        from: "Collapsed"
-        to: "Expanded"
-        reversible: true
-    }
+    height: column.implicitHeight
 
     Column {
-        id: columnLayout
+        id: column
         anchors.fill: parent
 
         RowLayout {
@@ -79,12 +54,12 @@ Item {
 
             Button {
                 id: showHideButton
-                text: qsTr("Show")
+                text: pressureControllerRow.shown ? qsTr("Hide") : qsTr("Show")
                 Layout.leftMargin: 20
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 flat: true
                 onClicked: {
-                    control.state = (control.state == "Collapsed" ? "Expanded" : "Collapsed")
+                    pressureControllerRow.shown = !pressureControllerRow.shown
                 }
             }
 
@@ -94,17 +69,26 @@ Item {
             id: pressureControllerRow
             anchors.left: parent.left
             anchors.right: parent.right
-            //visible: false
+            property bool shown: false
+            height: shown ? implicitHeight : 0
+
+            Behavior on height {
+                NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+            }
 
             PressureController {
                 id: pressureControllerControl
                 controllerNumber: 1
+                visible: pressureControllerRow.shown
             }
 
             PressureController {
                 id: pressureControllerFlow
                 controllerNumber: 2
+                visible: pressureControllerRow.shown
             }
+
+
         }
     }
 
