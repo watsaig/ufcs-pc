@@ -18,5 +18,6 @@
         <file>src/qml/Settings.qml</file>
         <file>res/images/settings_icon_dark_theme.png</file>
         <file>res/images/settings_icon_light_theme.png</file>
+        <file>src/qml/PressureControlPane.qml</file>
     </qresource>
 </RCC>

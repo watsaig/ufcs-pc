@@ -58,6 +58,7 @@ DISTFILES += \
     res/qtquickcontrols2.conf \
     src/qml/ManualControl.qml \
     src/qml/PressureController.qml \
+    src/qml/PressureControlPane.qml \
     src/qml/ValveSwitch.qml \
     src/qml/Settings.qml \
     src/qml/Style.qml \
