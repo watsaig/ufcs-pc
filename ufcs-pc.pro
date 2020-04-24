@@ -65,6 +65,7 @@ DISTFILES += \
     src/qml/RoutineControl.qml \
     src/qml/LogScreen.qml \
     src/qml/PumpSwitch.qml \
+    src/qml/MultiplexerButton.qml \
     src/qml/MultiplexerControl.qml
 
 
