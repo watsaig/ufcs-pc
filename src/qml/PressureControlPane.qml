@@ -69,7 +69,7 @@ Item {
 
         }
 
-        Row {
+        RowLayout {
             id: pressureControllerRow
             anchors.left: parent.left
             anchors.right: parent.right
@@ -79,19 +79,44 @@ Item {
                 NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
             }
 
-            PressureController {
-                id: pressureControllerControl
-                controllerNumber: 1
+            Column {
+                Layout.alignment: Qt.AlignHCenter
                 visible: !control.collapsed
+
+                Label {
+                    text : "Control layer"
+                    font.pointSize: 12
+                    bottomPadding: 10
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                PressureController {
+                    id: pressureControllerControl
+                    controllerNumber: 1
+                }
             }
 
-            PressureController {
-                id: pressureControllerFlow
-                controllerNumber: 2
+            Column {
+                Layout.alignment: Qt.AlignHCenter
                 visible: !control.collapsed
+
+                Label {
+                    text : "Flow layer"
+                    font.pointSize: 12
+                    bottomPadding: 10
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                PressureController {
+                    id: pressureControllerFlow
+                    controllerNumber: 2
+                }
+
             }
-
-
         }
     }
 
