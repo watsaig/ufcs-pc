@@ -8,6 +8,8 @@ Item {
 
     height: column.implicitHeight
 
+    property bool collapsed: true
+
     Column {
         id: column
         anchors.fill: parent
@@ -30,6 +32,7 @@ Item {
                 id: label1
                 text: qsTr("Control")
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                visible: control.collapsed
             }
 
             Label {
@@ -37,12 +40,14 @@ Item {
                 text: pressureControllerControl.pv + " PSI"
                 Layout.rightMargin: 15
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                visible: control.collapsed
             }
 
             Label {
                 id: label3
                 text: qsTr("Flow")
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                visible: control.collapsed
             }
 
             Label {
@@ -50,17 +55,16 @@ Item {
                 text: pressureControllerFlow.pv + " PSI"
                 Layout.rightMargin: 15
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                visible: control.collapsed
             }
 
             Button {
                 id: showHideButton
-                text: pressureControllerRow.shown ? qsTr("Hide") : qsTr("Show")
+                text: collapsed ? qsTr("Show") : qsTr("Hide")
                 Layout.leftMargin: 20
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 flat: true
-                onClicked: {
-                    pressureControllerRow.shown = !pressureControllerRow.shown
-                }
+                onClicked: { control.collapsed = !control.collapsed }
             }
 
         }
@@ -69,8 +73,7 @@ Item {
             id: pressureControllerRow
             anchors.left: parent.left
             anchors.right: parent.right
-            property bool shown: false
-            height: shown ? implicitHeight : 0
+            height: control.collapsed ? 0 : implicitHeight
 
             Behavior on height {
                 NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
@@ -79,13 +82,13 @@ Item {
             PressureController {
                 id: pressureControllerControl
                 controllerNumber: 1
-                visible: pressureControllerRow.shown
+                visible: !control.collapsed
             }
 
             PressureController {
                 id: pressureControllerFlow
                 controllerNumber: 2
-                visible: pressureControllerRow.shown
+                visible: !control.collapsed
             }
 
 
