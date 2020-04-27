@@ -25,7 +25,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             Layout.maximumWidth: control.maximumWidth
 
-            enabled: !editingMode
+            enabled: !editingMode && Backend.connectionStatus == "Connected"
         }
 
         Column {

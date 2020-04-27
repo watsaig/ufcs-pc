@@ -32,7 +32,7 @@ Item {
         checkable: true
         checked: false
 
-        enabled: !control.editable
+        enabled: !control.editable && Backend.connectionStatus == "Connected"
 
         onClicked: Backend.setValve(valveNumber, checked);
     }
@@ -47,7 +47,7 @@ Item {
 
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: 13
-        color: Material.primaryTextColor
+        color: button.enabled ? Material.primaryTextColor : Material.hintTextColor
     }
 
     Rectangle {
@@ -74,10 +74,10 @@ Item {
         autoScroll: false
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
-        color: Material.primaryTextColor
+        color: button.enabled ? Material.primaryTextColor : Material.hintTextColor
 
         // To do: a better implementation of this where the max. width is set
-        maximumLength: width / fontMetrics.averageCharacterWidth
+        maximumLength: Math.max(12, width / fontMetrics.averageCharacterWidth)
 
         FontMetrics {
             id: fontMetrics
