@@ -77,22 +77,6 @@ Item {
             }
 
             Label {
-                text: qsTr("Multiplexer")
-                font.pointSize: Style.title.fontSize
-                padding: Style.title.padding
-                leftPadding: Style.title.paddingLeft
-                Layout.alignment: Qt.AlignTop
-            }
-
-            MultiplexerControl {
-                id: multiplexerControlElement
-                Layout.fillWidth: true
-                Layout.preferredWidth: parent.width
-                Layout.alignment: Qt.AlignTop
-                Layout.maximumWidth: Style.valveSwitch.maximumWidth * 8
-            }
-
-            Label {
                 text: qsTr("Pressure control")
                 font.pointSize: Style.title.fontSize
                 padding: Style.title.padding
