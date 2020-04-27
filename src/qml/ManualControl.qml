@@ -81,6 +81,7 @@ Item {
             Column {
                 Layout.alignment: Qt.AlignTop
                 Layout.maximumWidth: controlLayerValveGrid.width
+                Layout.fillWidth: true
 
                 Label {
                     text: qsTr("Pressure control")
@@ -91,36 +92,46 @@ Item {
                 }
 
                 GridLayout {
-                    flow: GridLayout.TopToBottom
-                    rows: 2
-                    columnSpacing: 70
+                    id: pressureControlLayout
+                    columns: controlLayerValveGrid.columns == 4 ? 2 : 3
                     anchors.left: parent.left
                     anchors.right: parent.right
+                    rowSpacing: 20
 
-                    Label {
-                        text: qsTr("Control layer")
-                        font.pointSize: 14
+                    Column {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        Label {
+                            text: qsTr("Control layer")
+                            font.pointSize: 14
+                        }
+
+                        PressureController { controllerNumber: 1 }
                     }
 
-                    PressureController { controllerNumber: 1 }
-
-                    Label {
-                        text: qsTr("Flow layer")
-                        font.pointSize: 14
+                    Column {
                         Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignTop
+
+                        Label {
+                            text: qsTr("Flow layer")
+                            font.pointSize: 14
+                        }
+
+                        PressureController { controllerNumber: 2 }
                     }
 
-                    PressureController { controllerNumber: 2 }
-
-                    Label {
-                        text: qsTr("Pumps")
-                        font.pointSize: 14
-                        bottomPadding: 10
+                    Column {
                         Layout.fillWidth: true
-                    }
+                        Layout.alignment: Qt.AlignTop
 
-                    ColumnLayout {
+                        Label {
+                            text: qsTr("Pumps")
+                            font.pointSize: 14
+                            bottomPadding: 10
+                        }
+
                         PumpSwitch { pumpNumber: 1 }
                         PumpSwitch { pumpNumber: 2 }
                     }

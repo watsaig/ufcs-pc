@@ -7,8 +7,8 @@ import org.example.ufcs 1.0
 Item {
     property int pumpNumber
 
-    Layout.preferredHeight: button.height
-    Layout.preferredWidth: button.width
+    implicitHeight: button.height
+    implicitWidth: button.width
 
     enabled: Backend.connectionStatus == "Connected"
 
