@@ -14,7 +14,9 @@ Item {
 
         ColumnLayout {
             id: topLevelColumnLayout
-            anchors.fill: parent
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.margins: Style.view.margin
             spacing: 10
             Component.onCompleted: {
@@ -76,81 +78,83 @@ Item {
                 ValveSwitch { valveNumber: 32 }
             }
 
-            Label {
-                text: qsTr("Pressure control")
-                font.pointSize: Style.title.fontSize
-                padding: Style.title.padding
-                leftPadding: Style.title.paddingLeft
+            Column {
                 Layout.alignment: Qt.AlignTop
-            }
-
-            GridLayout {
-                flow: GridLayout.TopToBottom
-                rows: 2
-                columnSpacing: 70
                 Layout.maximumWidth: controlLayerValveGrid.width
-                Layout.alignment: Qt.AlignTop
 
                 Label {
-                    text: qsTr("Control layer")
-                    font.pointSize: 14
-                    Layout.fillWidth: true
+                    text: qsTr("Pressure control")
+                    font.pointSize: Style.title.fontSize
+                    padding: Style.title.padding
+                    leftPadding: Style.title.paddingLeft
+                    anchors.left: parent.left
                 }
 
-                PressureController { controllerNumber: 1 }
+                GridLayout {
+                    flow: GridLayout.TopToBottom
+                    rows: 2
+                    columnSpacing: 70
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Label {
+                        text: qsTr("Control layer")
+                        font.pointSize: 14
+                        Layout.fillWidth: true
+                    }
+
+                    PressureController { controllerNumber: 1 }
+
+                    Label {
+                        text: qsTr("Flow layer")
+                        font.pointSize: 14
+                        Layout.fillWidth: true
+                    }
+
+                    PressureController { controllerNumber: 2 }
+
+                    Label {
+                        text: qsTr("Pumps")
+                        font.pointSize: 14
+                        bottomPadding: 10
+                        Layout.fillWidth: true
+                    }
+
+                    ColumnLayout {
+                        PumpSwitch { pumpNumber: 1 }
+                        PumpSwitch { pumpNumber: 2 }
+                    }
+                }
+
 
                 Label {
-                    text: qsTr("Flow layer")
-                    font.pointSize: 14
-                    Layout.fillWidth: true
+                    text: qsTr("Status")
+                    font.pointSize: Style.title.fontSize
+                    padding: Style.title.padding
+                    leftPadding: Style.title.paddingLeft
                 }
-
-                PressureController { controllerNumber: 2 }
 
                 Label {
-                    text: qsTr("Pumps")
-                    font.pointSize: 14
-                    bottomPadding: 10
-                    Layout.fillWidth: true
+                    text: "Microcontroller is " + Backend.connectionStatus
+                    leftPadding: Style.title.paddingLeft
                 }
 
-                ColumnLayout {
-                    PumpSwitch { pumpNumber: 1 }
-                    PumpSwitch { pumpNumber: 2 }
+                Button {
+                    id: reconnectButton
+                    text: qsTr("Reconnect")
+                    onClicked: Backend.connect()
+                    padding: 12
+                    visible: Backend.connectionStatus == "Disconnected"
+                }
+
+                Button {
+                    id: refreshButton
+                    text: qsTr("Refresh component statuses")
+                    onClicked: Backend.requestRefresh()
+                    padding: 12
+                    visible: Backend.connectionStatus == "Connected"
                 }
             }
-
-
-            Label {
-                text: qsTr("Status")
-                font.pointSize: Style.title.fontSize
-                padding: Style.title.padding
-                leftPadding: Style.title.paddingLeft
-            }
-
-            Label {
-                text: "Microcontroller is " + Backend.connectionStatus
-                //padding: 12
-                leftPadding: Style.title.paddingLeft
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Button {
-                id: reconnectButton
-                text: qsTr("Reconnect")
-                onClicked: Backend.connect()
-                padding: 12
-                visible: Backend.connectionStatus == "Disconnected"
-            }
-
-            Button {
-                id: refreshButton
-                text: qsTr("Refresh component statuses")
-                onClicked: Backend.requestRefresh()
-                padding: 12
-                visible: Backend.connectionStatus == "Connected"
-            }
-
         }
     }
 }
