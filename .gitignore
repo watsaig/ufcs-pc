@@ -1,6 +1,7 @@
 *.swp
 *.vim
 *.user
+*.autosave
 build/
 obj/
 test-builds/
