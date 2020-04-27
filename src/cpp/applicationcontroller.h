@@ -32,6 +32,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(int windowWidth READ loadWindowWidth WRITE saveWindowWidth NOTIFY windowWidthChanged)
     Q_PROPERTY(int windowHeight READ loadWindowHeight WRITE saveWindowHeight NOTIFY windowHeightChanged)
     Q_PROPERTY(bool showGraphicalControl READ loadShowGraphicalControl WRITE saveShowGraphicalControl)
+    Q_PROPERTY(int baudRate READ loadBaudRate WRITE saveBaudRate)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -85,6 +86,9 @@ public:
 
     bool loadShowGraphicalControl();
     void saveShowGraphicalControl(bool show);
+
+    int loadBaudRate();
+    void saveBaudRate(int rate);
 
     QSettings* settings() { return mSettings; }
 

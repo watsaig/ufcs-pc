@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Material 2.0
 
 import org.example.ufcs 1.0
 
@@ -50,6 +51,27 @@ Item {
                     Component.onCompleted: checked = Backend.showGraphicalControl
                 }
             }
+
+            RowLayout {
+                ColumnLayout {
+                    Label {
+                        text: qsTr("Serial communication baud rate (requires restart)")
+                        Layout.fillWidth: true
+                    }
+                    Label {
+                        text: qsTr("Must match the microcontroller's baud rate")
+                        font.pointSize: 10
+                        color: Material.hintTextColor
+                    }
+                }
+
+                ComboBox {
+                    model: [38400, 57600, 115200]
+                    onActivated: Backend.baudRate = currentValue
+                    Component.onCompleted: currentIndex = indexOfValue(Backend.baudRate)
+                }
+            }
+
         }
 
     }

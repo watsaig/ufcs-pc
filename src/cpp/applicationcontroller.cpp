@@ -278,6 +278,24 @@ void ApplicationController::saveShowGraphicalControl(bool show)
     mSettings->setValue("showGraphicalControl", show);
 }
 
+/**
+ * @brief Load the baud rate for USB communication from settings
+ * @return The baud rate; default value is 115200
+ */
+int ApplicationController::loadBaudRate()
+{
+    return mSettings->value("baudRate", 115200).toInt();
+}
+
+/**
+ * @brief Save the baud rate to be used for USB communication
+ * @param rate The rate
+ */
+void ApplicationController::saveBaudRate(int rate)
+{
+    mSettings->setValue("baudRate", rate);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");
