@@ -25,6 +25,7 @@ QtObject {
         //property int defaultHeight : defaultWidth*0.8
         property double widthToHeightRatio : 0.8
         property int maximumWidth : 150
+        property int minimumWidth: 50
     }
 
 }

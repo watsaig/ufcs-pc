@@ -38,11 +38,11 @@ Item {
                 Layout.fillWidth: true
                 Layout.preferredWidth: parent.width
                 Layout.alignment: Qt.AlignTop
-                Layout.maximumWidth: Style.valveSwitch.maximumWidth * columns
+                Layout.maximumWidth: Style.valveSwitch.maximumWidth * 8
 
                 columnSpacing: 5
                 rowSpacing: 5
-                columns: 8
+                columns: width < Style.valveSwitch.minimumWidth * 8 ? 4 : 8
 
                 ValveSwitch { valveNumber: 1 }
                 ValveSwitch { valveNumber: 2 }
