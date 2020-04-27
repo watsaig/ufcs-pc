@@ -173,6 +173,10 @@ Item {
             }
         }
     }
+    Component.onCompleted: {
+        // Bit of a hack but I don't know how to do this from mainWindow
+        mainWindow.minimumWidth = Qt.binding(function() { return minimumWidth})
+    }
 }
 
 

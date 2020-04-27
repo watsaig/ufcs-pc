@@ -11,7 +11,7 @@ ApplicationWindow {
     title: qsTr("Microfluidics control system")
 
     // if necessary, set this to be the max of the minimum widths of each view
-    minimumWidth: graphicalControlView.minimumWidth
+    minimumWidth: 300
     minimumHeight: 500
 
     Material.theme: Backend.darkMode ? Material.Dark : Material.Light
@@ -26,10 +26,6 @@ ApplicationWindow {
 
         ManualControl{
             id: manualControlView
-        }
-
-        GraphicalControl {
-            id: graphicalControlView
         }
 
         RoutineControl {
@@ -54,10 +50,6 @@ ApplicationWindow {
         }
 
         TabButton {
-            text: qsTr("Graphical control")
-        }
-
-        TabButton {
             text: qsTr("Routines")
         }
 
@@ -72,8 +64,23 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: graphicalControlTab
+        TabButton { text: "Graphical control" }
+    }
+
+    Component {
+        id: graphicalControlViewComponent
+        GraphicalControl {}
+    }
+
     Component.onCompleted: {
         console.info("Application version: " + Backend.appVersion)
         console.info("Writing to log file at: " + Backend.logFilePath)
+
+        if (Backend.showGraphicalControl) {
+            swipeView.insertItem(1, graphicalControlViewComponent.createObject(swipeView))
+            tabBar.insertItem(1, graphicalControlTab.createObject(tabBar))
+        }
     }
 }

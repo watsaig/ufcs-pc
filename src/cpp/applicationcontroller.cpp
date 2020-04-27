@@ -261,6 +261,23 @@ void ApplicationController::saveValveLabel(int valveNumber, QString label)
     mSettings->setValue(key, label);
 }
 
+/**
+ * @brief Get setting for showing or hiding the graphical control view
+ * @return True if the view should be shown
+ */
+bool ApplicationController::loadShowGraphicalControl()
+{
+    return mSettings->value("showGraphicalControl", false).toBool();
+}
+
+/**
+ * @brief Show or hide the graphical control view
+ */
+void ApplicationController::saveShowGraphicalControl(bool show)
+{
+    mSettings->setValue("showGraphicalControl", show);
+}
+
 void ApplicationController::onValveStateChanged(int valveNumber, bool open)
 {
     qInfo() << "Valve" << valveNumber << (open ? "opened" : "closed");

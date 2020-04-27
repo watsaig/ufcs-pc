@@ -31,6 +31,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(bool darkMode READ darkMode WRITE setDarkMode NOTIFY darkModeChanged)
     Q_PROPERTY(int windowWidth READ loadWindowWidth WRITE saveWindowWidth NOTIFY windowWidthChanged)
     Q_PROPERTY(int windowHeight READ loadWindowHeight WRITE saveWindowHeight NOTIFY windowHeightChanged)
+    Q_PROPERTY(bool showGraphicalControl READ loadShowGraphicalControl WRITE saveShowGraphicalControl)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -81,6 +82,9 @@ public:
 
     Q_INVOKABLE QString loadValveLabel(int valveNumber);
     Q_INVOKABLE void saveValveLabel(int valveNumber, QString label);
+
+    bool loadShowGraphicalControl();
+    void saveShowGraphicalControl(bool show);
 
     QSettings* settings() { return mSettings; }
 

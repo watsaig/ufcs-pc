@@ -25,24 +25,29 @@ Item {
             }
 
             RowLayout {
-                id: rowLayout
-                width: 100
-                height: 100
-
                 Label {
-                    id: label
                     text: qsTr("Dark theme")
                     Layout.fillWidth: true
                 }
 
                 Switch {
                     id: themeSwitcher
-                    text: qsTr("")
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    display: AbstractButton.TextBesideIcon
-                    Layout.fillWidth: false
                     onCheckedChanged: Backend.darkMode = checked
                     Component.onCompleted: checked = Backend.darkMode
+                }
+            }
+
+            RowLayout {
+                Label {
+                    text: qsTr("Show graphical control screen (requires restart)")
+                    Layout.fillWidth: true
+                }
+
+                Switch {
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    onCheckedChanged: Backend.showGraphicalControl = checked
+                    Component.onCompleted: checked = Backend.showGraphicalControl
                 }
             }
         }
