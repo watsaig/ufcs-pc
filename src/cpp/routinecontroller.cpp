@@ -337,19 +337,10 @@ void RoutineController::run(bool dummyRun)
                 reportError("Line " + QString::number(i+1) + ": line starting with \"multiplexer\" should contain 2 arguments. For example, \"multiplexer 4\"");
                 continue;
             }
-            int channel(-1);
 
-            if (list[1] == "all")
-                channel = 0;
-            else {
-                bool ok;
-                channel = list[1].toInt(&ok);
-                if (!ok || channel < 1 || channel > 8) {
-                    reportError("Line " + QString::number(i+1) + ": invalid channel: " + list[1]
-                                + ". Must be 'all' or an integer between 1 and 8");
-                    continue;
-                }
-            }
+            QString channel = list[1];
+
+            // To do: re-implement error checking
 
             if (dummyRun)
                 mValidSteps << line;

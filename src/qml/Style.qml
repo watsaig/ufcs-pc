@@ -22,7 +22,7 @@ QtObject {
 
     property QtObject valveSwitch : QtObject {
         property int defaultWidth: 72
-        //property int defaultHeight : defaultWidth*0.8
+        property int defaultHeight : 58
         property double widthToHeightRatio : 0.8
         property int maximumWidth : 150
         property int minimumWidth: 50

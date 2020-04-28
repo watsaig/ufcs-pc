@@ -41,19 +41,9 @@ Item {
                 Layout.alignment: Qt.AlignTop
             }
 
-            RowLayout {
-                id: multiplexerButtons
+            MultiplexerControl {
                 anchors.left: parent.left
                 anchors.right: parent.right
-
-                MultiplexerButton { id: b1; number: 1; resizeProportionally: false}
-                MultiplexerButton { number: 2; resizeProportionally: false}
-                MultiplexerButton { number: 3; resizeProportionally: false}
-                MultiplexerButton { number: 4; resizeProportionally: false}
-                MultiplexerButton { number: 5; resizeProportionally: false}
-                MultiplexerButton { number: 6; resizeProportionally: false}
-                MultiplexerButton { number: 7; resizeProportionally: false}
-                MultiplexerButton { number: 8; resizeProportionally: false}
             }
 
 

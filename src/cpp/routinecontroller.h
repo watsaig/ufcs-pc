@@ -120,7 +120,7 @@ signals:
 
     void setValve(int valveNumber, bool open);
     void setPressure(int controllerNumber, double value);
-    void setMultiplexer(int channels);
+    void setMultiplexer(QString label);
 
 private:
     void reset();
