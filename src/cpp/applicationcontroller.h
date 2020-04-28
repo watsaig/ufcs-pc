@@ -33,6 +33,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(int windowHeight READ loadWindowHeight WRITE saveWindowHeight NOTIFY windowHeightChanged)
     Q_PROPERTY(bool showGraphicalControl READ loadShowGraphicalControl WRITE saveShowGraphicalControl)
     Q_PROPERTY(int baudRate READ loadBaudRate WRITE saveBaudRate)
+    Q_PROPERTY(bool useBluetooth READ useBluetooth CONSTANT)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -67,6 +68,8 @@ public:
 
     Q_INVOKABLE QVariantList log() { return mLog; }
     void addToLog(QVariant entry);
+
+    bool useBluetooth() { return mUseBluetooth; }
 
     // Settings
     bool darkMode();
@@ -110,6 +113,8 @@ private slots:
     void onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus);
 
 private:
+    /// True if the communicator uses bluetooth; false if USB
+    bool mUseBluetooth;
 
     Communicator * mCommunicator;
     RoutineController * mRoutineController;

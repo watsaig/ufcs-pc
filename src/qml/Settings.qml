@@ -42,6 +42,7 @@ Item {
             RowLayout {
                 Label {
                     text: qsTr("Show graphical control screen (requires restart)")
+                    wrapMode: Text.WordWrap
                     Layout.fillWidth: true
                 }
 
@@ -53,13 +54,16 @@ Item {
             }
 
             RowLayout {
+                visible: !Backend.useBluetooth
                 ColumnLayout {
                     Label {
                         text: qsTr("Serial communication baud rate (requires restart)")
+                        wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
                     Label {
                         text: qsTr("Must match the microcontroller's baud rate")
+                        wrapMode: Text.WordWrap
                         font.pointSize: 10
                         color: Material.hintTextColor
                     }

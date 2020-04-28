@@ -82,13 +82,16 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     // For other platforms, use whichever one you prefer.
     // This has to be specified at compile time for now; run-time switching may be supported later.
 
-#if defined(Q_OS_WIN)
-    mCommunicator = new SerialCommunicator();
-#elif defined(Q_OS_ANDROID)
-    mCommunicator = new BluetoothCommunicator();
+#if defined(Q_OS_ANDROID)
+    mUseBluetooth = true;
 #else
-    mCommunicator = new SerialCommunicator();
+    mUseBluetooth = false;
 #endif
+
+    if (mUseBluetooth)
+        mCommunicator = new BluetoothCommunicator();
+    else
+        mCommunicator = new SerialCommunicator();
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
