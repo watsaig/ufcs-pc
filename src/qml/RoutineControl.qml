@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Material 2.12
 
-import QtQml.StateMachine 1.0
+import QtQml.StateMachine 1.0 as DSM
 
 import org.example.ufcs 1.0 // for the Style singleton
 
@@ -191,12 +191,12 @@ Item {
         }
 }
 
-StateMachine {
+DSM.StateMachine {
     id: stateMachine
     initialState: noFileLoaded
     running: true
 
-    State {
+    DSM.State {
         id: noFileLoaded
         onEntered: {
             console.log("Routine UI: Entered state 'noFileLoaded'")
@@ -215,14 +215,14 @@ StateMachine {
             browseButton.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: checkingRoutine
             signal: fileDialog.fileOpened
         }
 
     }
 
-    State {
+    DSM.State {
         id: checkingRoutine
         property int nErrors
 
@@ -245,19 +245,19 @@ StateMachine {
             description.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: routineLoadedSuccessfully
             signal: checkingRoutine.noErrorsFound
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: routineLoadedWithErrors
             signal: checkingRoutine.errorsFound
         }
 
     }
 
-    State {
+    DSM.State {
         id: routineLoadedSuccessfully
 
         onEntered: {
@@ -282,18 +282,18 @@ StateMachine {
             returnToHomeButton.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: beginRoutine
             signal: runButton.clicked
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: noFileLoaded
             signal: returnToHomeButton.clicked
         }
     }
 
-    State {
+    DSM.State {
         id: routineLoadedWithErrors
 
         onEntered: {
@@ -315,17 +315,17 @@ StateMachine {
             runYesNoButtons.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: beginRoutine
             signal: yes.clicked
         }
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: noFileLoaded
             signal: no.clicked
         }
     }
 
-    State {
+    DSM.State {
         id: beginRoutine
         // This state simply starts the routine then switches to "runningRoutine"
         signal routineStarted
@@ -336,13 +336,13 @@ StateMachine {
             routineStarted();
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: runningRoutine
             signal: beginRoutine.routineStarted
         }
     }
 
-    State {
+    DSM.State {
         id: runningRoutine
 
 
@@ -368,12 +368,12 @@ StateMachine {
             pauseButton.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: finishedRunning
             signal: RoutineController.finished
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: routinePaused
             signal: RoutineController.paused
         }
@@ -408,7 +408,7 @@ StateMachine {
 
     }
 
-    State {
+    DSM.State {
         id: routinePaused
         onEntered: {
             console.log("Routine UI: Entered state 'routinePaused'");
@@ -429,14 +429,14 @@ StateMachine {
             }
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: runningRoutine
             signal: RoutineController.resumed
         }
 
     }
 
-    State {
+    DSM.State {
         id: finishedRunning
         signal restartRoutine
 
@@ -465,17 +465,17 @@ StateMachine {
             stepsList.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: noFileLoaded
             signal: returnToHomeButton.clicked
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: beginRoutine
             signal: runButton.clicked
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: beginRoutine
             signal: finishedRunning.restartRoutine
         }
