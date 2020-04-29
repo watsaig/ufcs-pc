@@ -331,26 +331,11 @@ DSM.StateMachine {
     }
 
     DSM.State {
+        // The routine can be running normally, or running while
+        // waiting to either pause or stop at the end of the current step
         id: runningRoutine
+        initialState: activelyRunning
 
-
-        onEntered: {
-            console.log("Routine UI: Entered state 'runningRoutine'")
-            title.text = "Running routine"
-            description.text = RoutineController.routineName()
-            stepCounter.visible = true
-            listViewBackground.visible = true
-            stepsList.visible = true
-            runForeverSwitch.visible = true
-            stopAndPauseButtons.visible = true
-
-        }
-
-        onExited: {
-            stepCounter.visible = false
-            runForeverSwitch.visible = false
-            stopAndPauseButtons.visible = false
-        }
 
         DSM.SignalTransition {
             targetState: finishedRunning
@@ -362,15 +347,49 @@ DSM.StateMachine {
             signal: RoutineController.paused
         }
 
-        Connections {
-            target: stopButton
-            onClicked: {
+        DSM.SignalTransition {
+            targetState: stopRequested
+            signal: stopButton.clicked
+        }
+
+        DSM.SignalTransition {
+            targetState: pauseRequested
+            signal: pauseButton.clicked
+        }
+
+        onEntered: {
+            stepCounter.visible = true
+            listViewBackground.visible = true
+            stepsList.visible = true
+            runForeverSwitch.visible = true
+            stopAndPauseButtons.visible = true
+        }
+
+        onExited: {
+            stepCounter.visible = false
+            runForeverSwitch.visible = false
+            stopAndPauseButtons.visible = false
+            stopAndPauseButtons.enabled = true
+        }
+
+        DSM.State {
+            id: activelyRunning
+            onEntered: {
+                console.log("Routine UI: Entered state 'activelyRunning'")
+                title.text = "Running routine"
+                description.text = RoutineController.routineName()
+            }
+        }
+
+        DSM.State {
+            id: stopRequested
+            onEntered: {
                 console.log("Routine UI: stop requested")
                 title.text = "Stop requested"
                 description.text = "Routine will end after current step"
                 runForeverSwitch.checked = false
                 runForeverSwitch.visible = false
-                stopAndPauseButtons.visible = false
+                stopAndPauseButtons.enabled = false
 
                 // RoutineController then emits finished signal after the current step
                 // to transition to next state (this may take some time)
@@ -378,17 +397,16 @@ DSM.StateMachine {
             }
         }
 
-        Connections {
-            target: pauseButton
-            onClicked: {
+        DSM.State {
+            id: pauseRequested
+            onEntered: {
                 console.log("Routine UI: pause requested")
                 title.text = "Pause requested"
                 description.text = "Routine will pause after the current step"
                 RoutineController.pause()
-                stopAndPauseButtons.visible = false
+                stopAndPauseButtons.enabled = false
             }
         }
-
     }
 
     DSM.State {
