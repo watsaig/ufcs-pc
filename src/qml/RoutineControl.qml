@@ -108,6 +108,8 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                 }
+
+                ScrollBar.vertical: ScrollBar {}
             }
 
             ListView {
@@ -378,6 +380,7 @@ DSM.StateMachine {
                 console.log("Routine UI: Entered state 'activelyRunning'")
                 title.text = "Running routine"
                 description.text = RoutineController.routineName()
+                stepsList.positionViewAtBeginning()
             }
         }
 
