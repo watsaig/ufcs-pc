@@ -44,6 +44,20 @@ Item {
             MultiplexerControl {
                 anchors.left: parent.left
                 anchors.right: parent.right
+
+                valves: [13, 14, 15, 16, 17, 18]
+                muxModel: ListModel {
+                    ListElement { label: "1"; config: "010101" }
+                    ListElement { label: "2"; config: "010110" }
+                    ListElement { label: "3"; config: "011001" }
+                    ListElement { label: "4"; config: "011010" }
+                    ListElement { label: "5"; config: "100101" }
+                    ListElement { label: "6"; config: "100110" }
+                    ListElement { label: "7"; config: "101001" }
+                    ListElement { label: "8"; config: "101010" }
+                    ListElement { label: "All"; config: "000000" }
+                    ListElement { label: "None"; config: "111111" }
+                }
             }
 
 
