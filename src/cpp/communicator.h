@@ -59,6 +59,7 @@ signals:
     void valveStateChanged(int valveNumber, bool open);
     void pumpStateChanged(int pumpNumber, bool on);
     void pressureChanged(int controllerNumber, double pressure);
+    void pressureSetpointChanged(int controllerNumber, double pressure);
 
     void connectionStatusChanged(ConnectionStatus newStatus);
 

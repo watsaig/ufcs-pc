@@ -106,6 +106,7 @@ private slots:
     void onValveStateChanged(int valveNumber, bool open);
     void onPumpStateChanged(int pumpNumber, bool on);
     void onPressureChanged(int controllerNumber, double pressure);
+    void onPressureSetpointChanged(int controllerNumber, double pressure);
 
     void onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus);
 

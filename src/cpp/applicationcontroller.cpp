@@ -95,6 +95,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
+    QObject::connect(mCommunicator, &Communicator::pressureSetpointChanged, this, &ApplicationController::onPressureSetpointChanged);
     QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
@@ -323,6 +324,14 @@ void ApplicationController::onPressureChanged(int controllerNumber, double press
     if (mQmlPressureControllers.contains(controllerNumber)) {
         for (auto p : mQmlPressureControllers[controllerNumber])
             p->setMeasuredValue(pressure);
+    }
+}
+
+void ApplicationController::onPressureSetpointChanged(int controllerNumber, double pressure)
+{
+    if (mQmlPressureControllers.contains(controllerNumber)) {
+        for (auto p : mQmlPressureControllers[controllerNumber])
+            p->setSetPoint(pressure);
     }
 }
 

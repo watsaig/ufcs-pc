@@ -195,6 +195,20 @@ void Communicator::parseBuffer(QByteArray buffer)
                     emit pressureChanged(index, pressure);
                 }
 
+                else if (item == PR1_SP || item == PR2_SP || item == PR3_SP) {
+                    double pressure = double(value)/double(PR_MAX_VALUE);
+                    if (pressure < 0)
+                        qDebug() << "Pressure invalid:" << value;
+
+                    int index = 1;
+                    if (item == PR2_SP)
+                        index = 2;
+                    else if (item == PR3_SP)
+                        index = 3;
+
+                    emit pressureSetpointChanged(index, pressure);
+                }
+
                 else if (item == ERROR) {
                     switch (value) {
                         case PRESSURE_REGULATOR_NOT_RESPONDING:

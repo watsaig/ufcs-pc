@@ -55,7 +55,7 @@ double PCHelper::measuredValueInPsi() const
  */
 void PCHelper::setSetPoint(double val)
 {
-    qDebug() << "PCHelper: Setting pressure to " << val;
+    //qDebug() << "PCHelper: Setting pressure to " << val;
     mSetPoint = val;
     emit setPointChanged(val);
 }

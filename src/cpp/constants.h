@@ -57,6 +57,9 @@ enum Component : uint8_t {
     PR1,
     PR2,
     PR3,
+    PR1_SP,
+    PR2_SP,
+    PR3_SP,
     PUMP1,
     PUMP2,
     ALL_COMPONENTS // leave this as the last element, to allow iterating over the enum
