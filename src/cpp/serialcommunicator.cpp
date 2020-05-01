@@ -47,7 +47,8 @@ void SerialCommunicator::connect()
         qDebug().noquote() << s;
 
         // The following line may need to be customized depending on your specific ESP32 board.
-        if((info.description().contains("UART Bridge") || info.description().contains("USB Serial Port") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
+        if((info.description().contains("UART Bridge") || info.description().contains("USB Serial Port")
+            || info.description().contains("FT231X") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
             portToUse = info;
             break;
         }
