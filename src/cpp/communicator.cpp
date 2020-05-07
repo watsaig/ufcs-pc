@@ -279,7 +279,12 @@ void Communicator::handleCommand(uint8_t command, QList<QByteArray> parameters)
 
         case UPTIME:
             // Should have one 4-byte parameter
-            qDebug() << "Uptime command received";
+            if (nParameters != 1)
+                qWarning() << "Invalid number of parameters for UPTIME command:" << nParameters;
+            else if (parameters[0].length() != 4)
+                qWarning() << "Invalid parameter size for UPTIME command";
+            else
+                emit uptimeChanged(parameters[0].toULong());
             break;
 
         case ERROR:

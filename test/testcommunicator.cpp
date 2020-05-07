@@ -275,6 +275,24 @@ void TestCommunicator::frameMessage()
     QCOMPARE(result, mFramed);
 }
 
+void TestCommunicator::uptime()
+{
+    // Uptime is 4-byte parameter giving the time since last boot of the microcontroller
+    // in seconds (unsigned 32 bit type)
+
+    uint32_t time = 4582;
+    uint8_t command = UPTIME;
+    QList<QByteArray> params;
+    params.push_back(QByteArray::number(time));
+
+    QSignalSpy spy(c, SIGNAL(uptimeChanged(ulong)));
+    c->handleCommand(command, params);
+
+    QCOMPARE(spy.count(), 1);
+    QVariantList args = spy.takeFirst();
+    QCOMPARE(args[0].toUInt(), time);
+
+}
 
 void TestCommunicator::cleanupTestCase()
 {

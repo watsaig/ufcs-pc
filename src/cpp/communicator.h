@@ -60,6 +60,7 @@ signals:
     void pumpStateChanged(uint pumpNumber, bool on);
     void pressureChanged(uint controllerNumber, double pressure);
     void pressureSetpointChanged(uint controllerNumber, double pressure);
+    void uptimeChanged(ulong seconds);
 
     void connectionStatusChanged(ConnectionStatus newStatus);
 

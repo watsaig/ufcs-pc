@@ -98,6 +98,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::pressureSetpointChanged, this, &ApplicationController::onPressureSetpointChanged);
     QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+    QObject::connect(mCommunicator, &Communicator::uptimeChanged, this, &ApplicationController::onUptimeChanged);
 
     mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
 
@@ -333,6 +334,14 @@ void ApplicationController::onPressureSetpointChanged(int controllerNumber, doub
         for (auto p : mQmlPressureControllers[controllerNumber])
             p->setSetPoint(pressure);
     }
+}
+
+void ApplicationController::onUptimeChanged(ulong seconds)
+{
+    int h = seconds/3600;
+    int m = (seconds % 3600)/60;
+    int s = seconds % 60;
+    qInfo() << "Current uptime:" << h << "h" << m << "min" << s << "s";
 }
 
 void ApplicationController::onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus)

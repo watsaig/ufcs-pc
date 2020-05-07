@@ -27,8 +27,8 @@ private slots:
 
     void frameMessage();
 
+    void uptime();
     // To do:
-    // void uptime();
     // void error();
 
 private:
