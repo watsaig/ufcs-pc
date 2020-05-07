@@ -50,25 +50,45 @@ public:
 
 public slots:
     virtual void connect() = 0;
-    void setValve(int valveNumber, bool open);
-    void setPressure(int controllerNumber, double pressure);
-    void setPump(int pumpNumber, bool on);
-    virtual void refreshAll() = 0; // request status of all components
+    void setValve(uint valveNumber, bool open);
+    void setPressure(uint controllerNumber, double pressure);
+    void setPump(uint pumpNumber, bool on);
+    void requestStatus();
 
 signals:
-    void valveStateChanged(int valveNumber, bool open);
-    void pumpStateChanged(int pumpNumber, bool on);
-    void pressureChanged(int controllerNumber, double pressure);
-    void pressureSetpointChanged(int controllerNumber, double pressure);
+    void valveStateChanged(uint valveNumber, bool open);
+    void pumpStateChanged(uint pumpNumber, bool on);
+    void pressureChanged(uint controllerNumber, double pressure);
+    void pressureSetpointChanged(uint controllerNumber, double pressure);
 
     void connectionStatusChanged(ConnectionStatus newStatus);
 
 protected:
-    virtual void setComponentState(Component c, int val) = 0;
+    //virtual void setComponentState(Component c, int val) = 0;
     void setConnectionStatus(ConnectionStatus status);
-    virtual void parseBuffer(QByteArray buffer);
+    //virtual void parseBuffer(QByteArray buffer);
+    QByteArray frameMessage(QByteArray message);
+    virtual void sendMessage(QByteArray message) = 0;
 
     ConnectionStatus mConnectionStatus;
+
+    /// The buffer of incoming data, populated by the serial port backend
+    QByteArray mBuffer;
+
+    // Message parser-related members
+    QByteArray decodeBuffer();
+    void parseDecodedBuffer(QByteArray buffer);
+    void handleCommand(uint8_t command, QList<QByteArray> parameters);
+
+    QByteArray mDecodedBuffer;
+    bool mDecoderRecording;
+    bool mDecoderEscaped;
+    int mDecoderIndex;
+
+#ifdef TESTING
+    friend class TestCommunicator;
+#endif
+
 };
 
 #endif

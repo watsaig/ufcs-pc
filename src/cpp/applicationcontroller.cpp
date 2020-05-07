@@ -340,7 +340,7 @@ void ApplicationController::onCommunicatorStatusChanged(Communicator::Connection
     qDebug() << "App controller: communicator status changed to" << mCommunicator->getConnectionStatusString();
 
     if (newStatus == Communicator::Connected)
-        mCommunicator->refreshAll();
+        mCommunicator->requestStatus();
 
     emit connectionStatusChanged(mCommunicator->getConnectionStatusString());
 }

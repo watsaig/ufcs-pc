@@ -50,7 +50,7 @@ public:
     Q_INVOKABLE void setPump(int pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
     Q_INVOKABLE void setPressure(int controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
 
-    Q_INVOKABLE void requestRefresh() { mCommunicator->refreshAll(); }
+    Q_INVOKABLE void requestRefresh() { mCommunicator->requestStatus(); }
 
     double minPressure(int controllerNumber) { return mCommunicator->minPressure(controllerNumber); }
     double maxPressure(int controllerNumber) { return mCommunicator->maxPressure(controllerNumber); }

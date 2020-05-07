@@ -94,13 +94,6 @@ QString SerialCommunicator::devicePort() const
     return mSerialPort->portName();
 }
 
-void SerialCommunicator::refreshAll()
-{
-    qDebug() << "Requesting status of all components";
-    char toSend[2] = {(uint8_t)STATUS, (uint8_t)ALL_COMPONENTS};
-    mSerialPort->write(toSend, 2);
-}
-
 void SerialCommunicator::handleSerialError(QSerialPort::SerialPortError error)
 {
     if (!mSerialPort)
@@ -131,24 +124,20 @@ void SerialCommunicator::handleSerialError(QSerialPort::SerialPortError error)
  */
 void SerialCommunicator::onSerialReady()
 {
-    QByteArray buffer = mSerialPort->readAll();
+    mBuffer.append(mSerialPort->readAll());
 
-    if (buffer.size() >= 4)
-        parseBuffer(buffer);
-}
-
-void SerialCommunicator::setComponentState(Component c, int val)
-{
-    if (mConnectionStatus == Disconnected) {
-        qWarning() << "Can't set requested component state: device is disconnected";
-        return; // TODO: (?) throw exception
+    while (mBuffer.size() >= 4) {
+        QByteArray b = decodeBuffer();
+        if (b.length() > 0)
+            parseDecodedBuffer(b);
     }
-    //qDebug() << "setComponentState: setting component" << c << "to" << val;
-
-    char toSend[2] = {(uint8_t)c, (uint8_t)val};
-    mSerialPort->write(toSend, 2);
 }
 
+void SerialCommunicator::sendMessage(QByteArray message)
+{
+    qDebug() << "Serial communicator sending message:" << message;
+    mSerialPort->write(message);
+}
 
 void SerialCommunicator::initSerialPort()
 {
