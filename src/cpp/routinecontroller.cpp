@@ -11,8 +11,8 @@ RoutineController::RoutineController(Communicator *communicator)
     , mTotalWaitTime(0)
 {
 
-    QObject::connect(this, SIGNAL(setValve(int,bool)), mCommunicator, SLOT(setValve(int,bool)));
-    QObject::connect(this, SIGNAL(setPressure(int,double)), mCommunicator, SLOT(setPressure(int,double)));
+    QObject::connect(this, &RoutineController::setValve, mCommunicator, &Communicator::setValve);
+    QObject::connect(this, &RoutineController::setPressure, mCommunicator, &Communicator::setPressure);
 
 }
 
