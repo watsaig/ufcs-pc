@@ -219,7 +219,7 @@ void Communicator::parseDecodedBuffer(QByteArray buffer)
         uint8_t paramSize = buffer[i];
         i++;
 
-        if (i + paramSize >= buffer.size()) {
+        if (i + paramSize <= buffer.size()) {
             QByteArray paramData = buffer.mid(i, paramSize);
             parameters.push_back(paramData);
         }

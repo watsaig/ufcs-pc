@@ -28,6 +28,8 @@ private slots:
     void frameMessage();
 
     void uptime();
+
+    void parseDecodedBuffer();
     // To do:
     // void error();
 

@@ -294,6 +294,32 @@ void TestCommunicator::uptime()
 
 }
 
+void TestCommunicator::parseDecodedBuffer()
+{
+    // Parse a valid buffer, and execute the command in it.
+
+    uint8_t command(VALVE);
+    uint8_t number(25);
+    uint8_t state(true);
+    QByteArray b;
+
+    b.push_back(command);
+    b.push_back(uint8_t(1));
+    b.push_back(number);
+    b.push_back(uint8_t(1));
+    b.push_back(state);
+
+
+    QSignalSpy spy(c, SIGNAL(valveStateChanged(uint, bool)));
+
+    c->parseDecodedBuffer(b);
+
+    QCOMPARE(spy.count(), 1);
+    QList<QVariant> arguments = spy.takeFirst();
+    QCOMPARE(arguments[0].toUInt(), number);
+    QCOMPARE(arguments[1].toBool(), state);
+}
+
 void TestCommunicator::cleanupTestCase()
 {
     delete c;
