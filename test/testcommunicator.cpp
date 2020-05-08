@@ -130,9 +130,7 @@ void TestCommunicator::decodeSeveralMessages()
     // (via the init() function).
 
     // This test, on the other hand, makes sure that in normal operation,
-    // the decoder can handle severalmessages in a row with no issue.
-    // The expected usage of decodeBuffer() is to call it until it returns true, then
-    // process mDecodedBuffer, then clear it.
+    // the decoder can handle several messages in a row with no issue.
 
     QByteArray m1 = QByteArrayLiteral("\x00\xf0\x96\x72\x37\x55\x0c\x3f");
     QByteArray m2 = QByteArrayLiteral("\x01\xf1\x95\x71\x35\x52\x0b\x3e");
@@ -142,18 +140,18 @@ void TestCommunicator::decodeSeveralMessages()
     c->mBuffer.append(m1);
     c->mBuffer.append(STOP_BYTE);
 
-    QCOMPARE(c->decodeBuffer(), m1);
 
     c->mBuffer.append(START_BYTE);
     c->mBuffer.append(m2);
     c->mBuffer.append(STOP_BYTE);
 
-    QCOMPARE(c->decodeBuffer(), m2);
 
     c->mBuffer.append(START_BYTE);
     c->mBuffer.append(m3);
     c->mBuffer.append(STOP_BYTE);
 
+    QCOMPARE(c->decodeBuffer(), m1);
+    QCOMPARE(c->decodeBuffer(), m2);
     QCOMPARE(c->decodeBuffer(), m3);
 }
 

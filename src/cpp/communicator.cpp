@@ -168,6 +168,7 @@ QByteArray Communicator::decodeBuffer()
             else if (c == STOP_BYTE) {
                 foundCompleteMessage = true;
                 mDecoderRecording = false;
+                break;
             }
 
             else
