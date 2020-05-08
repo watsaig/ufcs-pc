@@ -129,6 +129,35 @@ QByteArray Communicator::frameMessage(QByteArray message)
 }
 
 /**
+ * @brief Display a log message received from the microcontroller
+ * @param level How bad it is
+ * @param message The message that was received
+ *
+ * The message is passed to qCritical, qWarning etc. based on its level
+ */
+void Communicator::logMicrocontrollerMessage(LogLevel level, const QByteArray &message)
+{
+    switch (level) {
+        case LOG_FATAL:
+        case LOG_ERROR:
+            qCritical().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_WARNING:
+            qWarning().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_INFO:
+            qInfo().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_DEBUG:
+            qDebug().noquote() << "Microcontroller: " << message;
+            break;
+        default:
+            qDebug().noquote() << "Message from microcontroller with unknown level:" << message;
+            break;
+    }
+}
+
+/**
  * @brief Parse the buffer to remove escape characters, start and stop bytes
  * @returns The first valid message found (or an empty QByteArray if no valid message is found)
  *
@@ -302,6 +331,12 @@ void Communicator::handleCommand(uint8_t command, QList<QByteArray> parameters)
             qDebug() << "Error received";
             break;
 
+        case LOG:
+            if (nParameters != 2)
+                qWarning() << "Invalid number of parameters for LOG command" << nParameters;
+            else
+                logMicrocontrollerMessage(LogLevel((uint8_t)parameters[0][0]), parameters[1]);
+            break;
         default:
             qWarning() << "Unknown command received:" << int(command);
             break;

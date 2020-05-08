@@ -87,6 +87,7 @@ protected:
     void setConnectionStatus(ConnectionStatus status);
     QByteArray frameMessage(QByteArray message);
     virtual void sendMessage(QByteArray message) = 0;
+    void logMicrocontrollerMessage(LogLevel level, QByteArray const& message);
 
     ConnectionStatus mConnectionStatus;
 

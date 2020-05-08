@@ -135,7 +135,6 @@ void SerialCommunicator::onSerialReady()
 
 void SerialCommunicator::sendMessage(QByteArray message)
 {
-    qDebug() << "Serial communicator sending message:" << message;
     mSerialPort->write(message);
 }
 

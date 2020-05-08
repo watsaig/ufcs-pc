@@ -1,6 +1,10 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#ifndef uint8_t
+typedef unsigned char uint8_t;
+#endif
+
 #define PR_MAX_VALUE UINT8_MAX
 
 /// Number of valves, pressure regulators, and pumps defined below
@@ -24,7 +28,16 @@ enum Command : uint8_t {
     STATUS,
     UPTIME,
     ERROR,
+    LOG,
     NUM_COMMANDS
+};
+
+enum LogLevel : uint8_t {
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR,
+    LOG_FATAL
 };
 
 const uint8_t START_BYTE = 250;
