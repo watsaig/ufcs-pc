@@ -195,7 +195,7 @@ QByteArray Communicator::decodeBuffer()
 }
 
 /**
- * @brief Parse the decoded message buffer and execute whatever command was requested
+ * @brief Parse the decoded message buffer and call handleCommand for each command found
  *
  * The buffer is cleared after use.
  */
@@ -214,27 +214,37 @@ void Communicator::parseDecodedBuffer(QByteArray buffer)
 
     uint8_t command = buffer[0];
 
-    int i(1);
 
-    while (i < buffer.size()) {
-        uint8_t paramSize = buffer[i];
-        i++;
+    if (command < NUM_COMMANDS) {
+        int i(1);
 
-        if (i + paramSize <= buffer.size()) {
-            QByteArray paramData = buffer.mid(i, paramSize);
-            parameters.push_back(paramData);
+        while (i < buffer.size()) {
+            uint8_t paramSize = buffer[i];
+            i++;
+
+            if (i + paramSize <= buffer.size()) {
+                QByteArray paramData = buffer.mid(i, paramSize);
+                parameters.push_back(paramData);
+            }
+
+            i += paramSize;
         }
 
-        i += paramSize;
+        handleCommand(command, parameters);
     }
 
-    handleCommand(command, parameters);
+    else {
+        qDebug() << "Unknown command received. Full buffer: " << buffer;
+    }
 }
 
 /**
- * @brief Communicator::handleCommand
- * @param command
- * @param parameters
+ * @brief Handle a command received from the microcontroller, passing it on higher
+ * @param command The command, e.g. PUMP, VALVE,...
+ * @param parameters A list with each item being a parameter, represented by a QByteArray
+ *
+ * This function emits signals based on the commands received, e.g. calling valveStateChanged
+ * when a valid VALVE command is received. Incorrect commands trigger an error message.
  */
 void Communicator::handleCommand(uint8_t command, QList<QByteArray> parameters)
 {

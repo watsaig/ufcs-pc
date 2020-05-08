@@ -23,7 +23,8 @@ enum Command : uint8_t {
     PUMP,
     STATUS,
     UPTIME,
-    ERROR
+    ERROR,
+    NUM_COMMANDS
 };
 
 const uint8_t START_BYTE = 250;
