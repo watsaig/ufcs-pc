@@ -20,6 +20,7 @@ private slots:
     void decodeJunk();
     void decodeFragmentedMessage();
     void decodeSeveralMessages();
+    void decodeUnknownMessage();
 
     void valveChange();
     void pumpChange();

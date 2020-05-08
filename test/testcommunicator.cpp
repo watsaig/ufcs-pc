@@ -154,6 +154,26 @@ void TestCommunicator::decodeSeveralMessages()
     QCOMPARE(c->decodeBuffer(), m3);
 }
 
+void TestCommunicator::decodeUnknownMessage()
+{
+    // If a message starts with an unknown command, it should be discarded, rather
+    // than parsed until a stop byte is found.
+    // This makes it less likely (though not impossible) that random junk (e.g. the ESP32's
+    // boot message) is detected as a command, and thus the first valid command that arrives
+    // being ignored.
+
+    QByteArray message;
+    message.push_back(START_BYTE);
+    message.push_back(NUM_COMMANDS+10);
+    message.append(QByteArrayLiteral("\x00\xf0\x96\x72\x37\x55\x0c\x3f"));
+    message.push_back(STOP_BYTE);
+
+    c->mBuffer = message;
+
+    // decodeBuffer should return nothing, despite there being a start and end byte in the buffer
+    QCOMPARE(c->decodeBuffer(), QByteArray());
+}
+
 void TestCommunicator::valveChange()
 {
     // Construct a command to toggle a valve.

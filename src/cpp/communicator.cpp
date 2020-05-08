@@ -200,12 +200,22 @@ QByteArray Communicator::decodeBuffer()
                 break;
             }
 
+            else if (mLastByteWasStart && c >= NUM_COMMANDS) {
+                // Invalid command, we stop right there
+                mDecoderRecording = false;
+                mLastByteWasStart = false;
+                break;
+            }
+
             else
                 mDecodedBuffer.append(c);
+
+            mLastByteWasStart = false;
         }
 
         else if (c == START_BYTE) {
             mDecoderRecording = true;
+            mLastByteWasStart = true;
         }
 
         decoderIndex++;

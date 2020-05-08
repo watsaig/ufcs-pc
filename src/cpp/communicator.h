@@ -102,6 +102,7 @@ protected:
     QByteArray mDecodedBuffer;
     bool mDecoderRecording;
     bool mDecoderEscaped;
+    bool mLastByteWasStart;
 
 #ifdef TESTING
     friend class TestCommunicator;
