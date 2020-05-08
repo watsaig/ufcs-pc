@@ -153,7 +153,7 @@ QByteArray Communicator::decodeBuffer()
     // and end byte) is found, it is returned.
 
     bool foundCompleteMessage(false);
-    mDecoderIndex = 0;
+    int decoderIndex(0);
 
     for (uint8_t c: mBuffer) {
         if (mDecoderRecording) {
@@ -179,11 +179,11 @@ QByteArray Communicator::decodeBuffer()
             mDecoderRecording = true;
         }
 
-        mDecoderIndex++;
+        decoderIndex++;
     }
 
     // Everything that was parsed already should be removed from mBuffer
-    mBuffer.remove(0, mDecoderIndex);
+    mBuffer.remove(0, decoderIndex);
 
     if (foundCompleteMessage) {
         QByteArray decodedBuffer = mDecodedBuffer;

@@ -15,7 +15,6 @@ void TestCommunicator::initTestCase()
 
 void TestCommunicator::init()
 {
-    c->mDecoderIndex = 0;
     c->mDecoderRecording  = false;
     c->mDecoderEscaped = false;
     c->mBuffer.clear();

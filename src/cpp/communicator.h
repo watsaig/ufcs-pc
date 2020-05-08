@@ -33,8 +33,19 @@
  * Valves, pumps and pressure controllers are 1-indexed. I.e valveNumber will be between 1 and 32;
  * pumpNumber between 1 and 2; controllerNumber between 1 and 3.
  *
+ * Commands exchanged between the host and microcontroller have the following format:
+ *
+ *   Start byte | Command [1 Byte] | Param size [1B] | Param data [nB] | [...] | Stop byte
+ *
+ * Param size and param data can be repeated if the command needs several parameters.
+ *
+ * On the decoding side, messages are received by whatever mechanism the subclasses
+ * (Serial/BluetoothCommunicator) uses; they are added to mBuffer, then the following methods
+ * are called: decodeBuffer -> parseDecodedBuffer -> handleCommand.
+ *
  */
-class Communicator : public QObject {
+class Communicator : public QObject
+{
     Q_OBJECT
 
 public:
@@ -90,7 +101,6 @@ protected:
     QByteArray mDecodedBuffer;
     bool mDecoderRecording;
     bool mDecoderEscaped;
-    int mDecoderIndex;
 
 #ifdef TESTING
     friend class TestCommunicator;
