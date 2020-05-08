@@ -266,6 +266,11 @@ void Communicator::parseDecodedBuffer(QByteArray buffer)
                 parameters.push_back(paramData);
             }
 
+            else {
+                qWarning() << "Command parameter incomplete; ignoring command";
+                return;
+            }
+
             i += paramSize;
         }
 
