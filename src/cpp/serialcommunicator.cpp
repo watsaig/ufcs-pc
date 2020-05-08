@@ -126,7 +126,7 @@ void SerialCommunicator::onSerialReady()
 {
     mBuffer.append(mSerialPort->readAll());
 
-    while (mBuffer.size() >= 4) {
+    while (mBuffer.size() > 0) {
         QByteArray b = decodeBuffer();
         if (b.length() > 0)
             parseDecodedBuffer(b);
