@@ -26,9 +26,9 @@ Item {
             }
 
             RowLayout {
-                Label {
-                    text: qsTr("Dark theme")
+                SettingsLabel {
                     Layout.fillWidth: true
+                    primaryText: "Dark theme"
                 }
 
                 Switch {
@@ -40,10 +40,10 @@ Item {
             }
 
             RowLayout {
-                Label {
-                    text: qsTr("Show graphical control screen (requires restart)")
-                    wrapMode: Text.WordWrap
+                SettingsLabel {
                     Layout.fillWidth: true
+                    primaryText: "Show graphical control screen"
+                    secondaryText: "Requires restart"
                 }
 
                 Switch {
@@ -60,10 +60,9 @@ Item {
                 height: 100
                 visible: showGraphicalControlSwitch.checked
 
-                Label {
-                    text: qsTr("Graphical control layout")
-                    wrapMode: Text.WordWrap
+                SettingsLabel {
                     Layout.fillWidth: true
+                    primaryText: "Graphical control layout"
                 }
 
                 ComboBox {
@@ -91,17 +90,11 @@ Item {
 
             RowLayout {
                 visible: !Backend.bluetoothEnabled
-                ColumnLayout {
-                    Label {
-                        text: qsTr("Serial communication baud rate (requires restart)")
-                        wrapMode: Text.WordWrap
-                        Layout.fillWidth: true
-                    }
-                    Label {
-                        text: qsTr("Must match the microcontroller's baud rate")
-                        wrapMode: Text.WordWrap
-                        color: Material.hintTextColor
-                    }
+
+                SettingsLabel {
+                    Layout.fillWidth: true
+                    primaryText: "Serial communication baud rate"
+                    secondaryText: "Must match the microcontroller's baud rate"
                 }
 
                 ComboBox {
