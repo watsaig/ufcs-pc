@@ -4,9 +4,15 @@ import QtQuick 2.12
 
 QtObject {
 
-    property QtObject title: QtObject {
-        property int fontSize: 18
+    property QtObject heading1: QtObject {
+        property int fontSize: 16
         property int padding: 15
+        property int paddingLeft: 0
+    }
+
+    property QtObject heading2: QtObject {
+        property int fontSize: 13
+        property int padding: 10
         property int paddingLeft: 0
     }
 

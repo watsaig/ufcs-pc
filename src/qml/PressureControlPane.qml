@@ -3,6 +3,8 @@ import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.0
 
+import org.example.ufcs 1.0 // for the Style singleton
+
 Item {
     id: control
 
@@ -24,7 +26,7 @@ Item {
                 text: qsTr("Pressure")
                 Layout.rightMargin: 100
                 Layout.fillWidth: true
-                font.pointSize: 15
+                font.pointSize: Style.heading1.fontSize
 
             }
 
@@ -85,7 +87,7 @@ Item {
 
                 Label {
                     text : "Control layer"
-                    font.pointSize: 12
+                    font.pointSize: Style.heading2.fontSize
                     bottomPadding: 10
                     anchors.right: parent.right
                     anchors.left: parent.left
@@ -104,7 +106,7 @@ Item {
 
                 Label {
                     text : "Flow layer"
-                    font.pointSize: 12
+                    font.pointSize: Style.heading2.fontSize
                     bottomPadding: 10
                     anchors.right: parent.right
                     anchors.left: parent.left

@@ -25,9 +25,9 @@ Item {
 
             Label {
                 text: qsTr("Valves")
-                font.pointSize: Style.title.fontSize
-                padding: Style.title.padding
-                leftPadding: Style.title.paddingLeft
+                font.pointSize: Style.heading1.fontSize
+                padding: Style.heading1.padding
+                leftPadding: Style.heading1.paddingLeft
                 topPadding: 0
                 Layout.alignment: Qt.AlignTop
             }
@@ -85,9 +85,9 @@ Item {
 
                 Label {
                     text: qsTr("Pressure control")
-                    font.pointSize: Style.title.fontSize
-                    padding: Style.title.padding
-                    leftPadding: Style.title.paddingLeft
+                    font.pointSize: Style.heading1.fontSize
+                    padding: Style.heading1.padding
+                    leftPadding: Style.heading1.paddingLeft
                     anchors.left: parent.left
                 }
 
@@ -104,7 +104,7 @@ Item {
 
                         Label {
                             text: qsTr("Control layer")
-                            font.pointSize: 14
+                            font.pointSize: Style.heading2.fontSize
                         }
 
                         PressureController { controllerNumber: 1 }
@@ -116,7 +116,7 @@ Item {
 
                         Label {
                             text: qsTr("Flow layer")
-                            font.pointSize: 14
+                            font.pointSize: Style.heading2.fontSize
                         }
 
                         PressureController { controllerNumber: 2 }
@@ -128,7 +128,7 @@ Item {
 
                         Label {
                             text: qsTr("Pumps")
-                            font.pointSize: 14
+                            font.pointSize: Style.heading2.fontSize
                             bottomPadding: 10
                         }
 
@@ -140,14 +140,14 @@ Item {
 
                 Label {
                     text: qsTr("Status")
-                    font.pointSize: Style.title.fontSize
-                    padding: Style.title.padding
-                    leftPadding: Style.title.paddingLeft
+                    font.pointSize: Style.heading1.fontSize
+                    padding: Style.heading1.padding
+                    leftPadding: Style.heading1.paddingLeft
                 }
 
                 Label {
                     text: "Microcontroller is " + Backend.connectionStatus
-                    leftPadding: Style.title.paddingLeft
+                    leftPadding: Style.heading1.paddingLeft
                 }
 
                 Button {

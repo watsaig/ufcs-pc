@@ -35,9 +35,9 @@ Item {
 
             Label {
                 text: qsTr("Multiplexer")
-                font.pointSize: Style.title.fontSize
-                padding: Style.title.padding
-                leftPadding: Style.title.paddingLeft
+                font.pointSize: Style.heading1.fontSize
+                padding: Style.heading1.padding
+                leftPadding: Style.heading1.paddingLeft
                 Layout.alignment: Qt.AlignTop
             }
 
@@ -68,9 +68,9 @@ Item {
                 Label {
                     text: qsTr("Inputs")
                     Layout.fillWidth: true
-                    font.pointSize: Style.title.fontSize
-                    padding: Style.title.padding
-                    leftPadding: Style.title.paddingLeft
+                    font.pointSize: Style.heading1.fontSize
+                    padding: Style.heading1.padding
+                    leftPadding: Style.heading1.paddingLeft
                 }
 
                 Button {

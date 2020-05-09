@@ -37,11 +37,11 @@ Item {
                 text: qsTr("Title")
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: Style.title.fontSize
+                font.pointSize: Style.heading1.fontSize
 
                 anchors.left: parent.left
                 anchors.right: parent.right
-                padding: Style.title.padding
+                padding: Style.heading1.padding
                 leftPadding: 0
                 rightPadding: 0
             }
