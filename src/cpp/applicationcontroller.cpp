@@ -83,12 +83,12 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     // This has to be specified at compile time for now; run-time switching may be supported later.
 
 #if defined(Q_OS_ANDROID)
-    mUseBluetooth = true;
+    mBluetoothEnabled = true;
 #else
-    mUseBluetooth = false;
+    mBluetoothEnabled = false;
 #endif
 
-    if (mUseBluetooth)
+    if (mBluetoothEnabled)
         mCommunicator = new BluetoothCommunicator();
     else
         mCommunicator = new SerialCommunicator();
@@ -169,7 +169,7 @@ void ApplicationController::addToLog(QVariant entry)
     emit newLogMessage(entry);
 }
 
-bool ApplicationController::darkMode()
+bool ApplicationController::isDarkModeEnabled()
 {
     return mSettings->value("darkMode", false).toBool();
 }
@@ -181,7 +181,7 @@ bool ApplicationController::darkMode()
  * This is handled in C++ so that the change can be persisted, and the appropriate QML elements
  * updated at application startup.
  */
-void ApplicationController::setDarkMode(bool enabled)
+void ApplicationController::setDarkModeEnabled(bool enabled)
 {
     mSettings->setValue("darkMode", enabled);
     qInfo() << "Setting theme to" << (enabled ? "dark" : "light") << "mode";
@@ -191,7 +191,7 @@ void ApplicationController::setDarkMode(bool enabled)
 /**
  * @brief Load the window width from settings
  */
-int ApplicationController::loadWindowWidth()
+int ApplicationController::windowWidth()
 {
     return mSettings->value("windowWidth", 580).toInt();
 }
@@ -199,7 +199,7 @@ int ApplicationController::loadWindowWidth()
 /**
  * @brief Persist the window width to settings
  */
-void ApplicationController::saveWindowWidth(int width)
+void ApplicationController::setWindowWidth(int width)
 {
     mSettings->setValue("windowWidth", width);
 }
@@ -207,7 +207,7 @@ void ApplicationController::saveWindowWidth(int width)
 /**
  * @brief Load the window height from settings
  */
-int ApplicationController::loadWindowHeight()
+int ApplicationController::windowHeight()
 {
     return mSettings->value("windowHeight", 850).toInt();
 }
@@ -215,7 +215,7 @@ int ApplicationController::loadWindowHeight()
 /**
  * @brief Persist the window height to settings
  */
-void ApplicationController::saveWindowHeight(int height)
+void ApplicationController::setWindowHeight(int height)
 {
     mSettings->setValue("windowHeight", height);
 }
@@ -225,7 +225,7 @@ void ApplicationController::saveWindowHeight(int height)
  *
  * This is the path that the dialog box for loading routines will first display
  */
-QUrl ApplicationController::loadRoutineFolder()
+QUrl ApplicationController::routineFolder()
 {
     return mSettings->value("routineFolder", "").toUrl();
 }
@@ -235,7 +235,7 @@ QUrl ApplicationController::loadRoutineFolder()
  *
  * This is the path that the dialog box for loading routines will first display
  */
-void ApplicationController::saveRoutineFolder(QUrl folder)
+void ApplicationController::setRoutineFolder(QUrl folder)
 {
     mSettings->setValue("routineFolder", folder);
 }
@@ -246,7 +246,7 @@ void ApplicationController::saveRoutineFolder(QUrl folder)
  * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
  * @return The user-defined label, or "Unlabeled input" if none is set
  */
-QString ApplicationController::loadValveLabel(int valveNumber)
+QString ApplicationController::valveLabel(int valveNumber)
 {
     QString key = QString("valveLabels/") + QString::number(valveNumber);
     return mSettings->value(key, "Unlabeled input").toString();
@@ -257,7 +257,7 @@ QString ApplicationController::loadValveLabel(int valveNumber)
  * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
  * @param label The label to be saved
  */
-void ApplicationController::saveValveLabel(int valveNumber, QString label)
+void ApplicationController::setValveLabel(int valveNumber, QString label)
 {
     QString key = QString("valveLabels/") + QString::number(valveNumber);
     mSettings->setValue(key, label);
@@ -267,7 +267,7 @@ void ApplicationController::saveValveLabel(int valveNumber, QString label)
  * @brief Get setting for showing or hiding the graphical control view
  * @return True if the view should be shown
  */
-bool ApplicationController::loadShowGraphicalControl()
+bool ApplicationController::isGraphicalControlEnabled()
 {
     return mSettings->value("graphicalControl/enabled", false).toBool();
 }
@@ -275,7 +275,7 @@ bool ApplicationController::loadShowGraphicalControl()
 /**
  * @brief Show or hide the graphical control view
  */
-void ApplicationController::saveShowGraphicalControl(bool show)
+void ApplicationController::setGraphicalControlEnabled(bool show)
 {
     mSettings->setValue("graphicalControl/enabled", show);
 }
@@ -347,16 +347,16 @@ void ApplicationController::setCurrentGraphicalControlScreen(QString label)
  * @brief Load the baud rate for USB communication from settings
  * @return The baud rate; default value is 115200
  */
-int ApplicationController::loadBaudRate()
+uint ApplicationController::serialBaudRate()
 {
-    return mSettings->value("baudRate", 115200).toInt();
+    return mSettings->value("baudRate", 115200).toUInt();
 }
 
 /**
  * @brief Save the baud rate to be used for USB communication
  * @param rate The rate
  */
-void ApplicationController::saveBaudRate(int rate)
+void ApplicationController::setSerialBaudRate(int rate)
 {
     mSettings->setValue("baudRate", rate);
 }

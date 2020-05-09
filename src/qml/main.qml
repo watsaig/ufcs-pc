@@ -78,7 +78,7 @@ ApplicationWindow {
         console.info("Application version: " + Backend.appVersion)
         console.info("Writing to log file at: " + Backend.logFilePath)
 
-        if (Backend.showGraphicalControl) {
+        if (Backend.graphicalControlEnabled) {
             swipeView.insertItem(1, gcLoaderComponent.createObject(swipeView));
             tabBar.insertItem(1, graphicalControlTab.createObject(tabBar))
         }

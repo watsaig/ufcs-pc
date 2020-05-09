@@ -60,7 +60,7 @@ void SerialCommunicator::connect()
         return;
     }
 
-    qint32 baudRate = ApplicationController::appController()->loadBaudRate();
+    qint32 baudRate = ApplicationController::appController()->serialBaudRate();
     qDebug() << "Serial communicator baud rate set to" << baudRate;
 
     mSerialPort->setPortName(portToUse.portName());

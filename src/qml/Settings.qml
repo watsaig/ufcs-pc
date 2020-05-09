@@ -49,8 +49,8 @@ Item {
                 Switch {
                     id: showGraphicalControlSwitch
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    onCheckedChanged: Backend.showGraphicalControl = checked
-                    Component.onCompleted: checked = Backend.showGraphicalControl
+                    onCheckedChanged: Backend.graphicalControlEnabled = checked
+                    Component.onCompleted: checked = Backend.graphicalControlEnabled
                 }
             }
 
@@ -90,7 +90,7 @@ Item {
             }
 
             RowLayout {
-                visible: !Backend.useBluetooth
+                visible: !Backend.bluetoothEnabled
                 ColumnLayout {
                     Label {
                         text: qsTr("Serial communication baud rate (requires restart)")
@@ -100,7 +100,6 @@ Item {
                     Label {
                         text: qsTr("Must match the microcontroller's baud rate")
                         wrapMode: Text.WordWrap
-                        font.pointSize: 10
                         color: Material.hintTextColor
                     }
                 }
@@ -111,6 +110,7 @@ Item {
                     Component.onCompleted: currentIndex = indexOfValue(Backend.baudRate)
                 }
             }
+
 
         }
 

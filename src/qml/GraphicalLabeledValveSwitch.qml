@@ -90,7 +90,7 @@ Item {
         }
 
         onTextEdited: {
-            Backend.saveValveLabel(valveNumber, text);
+            Backend.setValveLabel(valveNumber, text);
         }
 
     }
@@ -102,7 +102,7 @@ Item {
 
     Component.onCompleted: {
         helper.valveNumber = valveNumber
-        textInput.text = Backend.loadValveLabel(valveNumber);
+        textInput.text = Backend.valveLabel(valveNumber);
     }
 }
 

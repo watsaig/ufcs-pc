@@ -10,10 +10,15 @@
 #include "routinecontroller.h"
 
 /*
+ * ApplicationController is the backend of the application. Either the brains of the operation or middle management,
+ * depending on who you ask.
  *
- * Application controller interfaces between the GUI (QML) and the Communicator, which talks to the microcontroller.
- * To be able to update the right GUI element when new information comes from the microcontroller, it has a list of pointers to the GUI elements
- * (switches and other elements). Actually a map. So that when Communicator says "valve number 3 was switched on", it can find the right GUI element and toggle it.
+ * It relays commands between the user interface and the serial communicator, saves and loads settings, etc.
+ *
+ * To be able to update GUI elements based on information received from the microcontroller, AC has QMaps of
+ * components, with a label (the valve number, for example) referring to a pointer to a GUI Helper object.
+ * These are the backend of the controls (valve switches, pump switches and pressure controllers) shown in the GUI.
+ *
  * */
 
 class PCHelper;
@@ -28,12 +33,12 @@ class ApplicationController : public QObject
     Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
     Q_PROPERTY(QString appVersion READ appVersion)
     Q_PROPERTY(QString logFilePath READ logFilePath)
-    Q_PROPERTY(bool darkMode READ darkMode WRITE setDarkMode NOTIFY darkModeChanged)
-    Q_PROPERTY(int windowWidth READ loadWindowWidth WRITE saveWindowWidth NOTIFY windowWidthChanged)
-    Q_PROPERTY(int windowHeight READ loadWindowHeight WRITE saveWindowHeight NOTIFY windowHeightChanged)
-    Q_PROPERTY(bool showGraphicalControl READ loadShowGraphicalControl WRITE saveShowGraphicalControl)
-    Q_PROPERTY(int baudRate READ loadBaudRate WRITE saveBaudRate)
-    Q_PROPERTY(bool useBluetooth READ useBluetooth CONSTANT)
+    Q_PROPERTY(bool darkMode READ isDarkModeEnabled WRITE setDarkModeEnabled NOTIFY darkModeChanged)
+    Q_PROPERTY(int windowWidth READ windowWidth WRITE setWindowWidth NOTIFY windowWidthChanged)
+    Q_PROPERTY(int windowHeight READ windowHeight WRITE setWindowHeight NOTIFY windowHeightChanged)
+    Q_PROPERTY(bool graphicalControlEnabled READ isGraphicalControlEnabled WRITE setGraphicalControlEnabled)
+    Q_PROPERTY(int baudRate READ serialBaudRate WRITE setSerialBaudRate)
+    Q_PROPERTY(bool bluetoothEnabled READ isBluetoothEnabled CONSTANT)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -69,26 +74,26 @@ public:
     Q_INVOKABLE QVariantList log() { return mLog; }
     void addToLog(QVariant entry);
 
-    bool useBluetooth() { return mUseBluetooth; }
+    bool isBluetoothEnabled() { return mBluetoothEnabled; }
 
     // Settings
-    bool darkMode();
-    void setDarkMode(bool enabled = false);
+    bool isDarkModeEnabled();
+    void setDarkModeEnabled(bool enabled = false);
 
-    int loadWindowWidth();
-    void saveWindowWidth(int width);
+    int windowWidth();
+    void setWindowWidth(int width);
+    int windowHeight();
+    void setWindowHeight(int height);
 
-    int loadWindowHeight();
-    void saveWindowHeight(int height);
+    Q_INVOKABLE QUrl routineFolder();
+    Q_INVOKABLE void setRoutineFolder(QUrl folder);
 
-    Q_INVOKABLE QUrl loadRoutineFolder();
-    Q_INVOKABLE void saveRoutineFolder(QUrl folder);
+    Q_INVOKABLE QString valveLabel(int valveNumber);
+    Q_INVOKABLE void setValveLabel(int valveNumber, QString label);
 
-    Q_INVOKABLE QString loadValveLabel(int valveNumber);
-    Q_INVOKABLE void saveValveLabel(int valveNumber, QString label);
+    bool isGraphicalControlEnabled(); // isGraphicalControlEnabled
+    void setGraphicalControlEnabled(bool show); // setGraphicalControlEnabled
 
-    bool loadShowGraphicalControl();
-    void saveShowGraphicalControl(bool show);
     QMap<QString, QUrl> graphicalControlScreenSources();
     Q_INVOKABLE void setGraphicalControlScreenSources(QMap<QString, QUrl> sources);
     Q_INVOKABLE QVariantList graphicalControlScreenLabels();
@@ -96,8 +101,8 @@ public:
     Q_INVOKABLE void setCurrentGraphicalControlScreen(QString label);
     Q_INVOKABLE QUrl currentGraphicalControlScreenURL();
 
-    int loadBaudRate();
-    void saveBaudRate(int rate);
+    uint serialBaudRate();
+    void setSerialBaudRate(int rate);
 
     QSettings* settings() { return mSettings; }
 
@@ -118,7 +123,7 @@ private slots:
 
 private:
     /// True if the communicator uses bluetooth; false if USB
-    bool mUseBluetooth;
+    bool mBluetoothEnabled;
 
     Communicator * mCommunicator;
     RoutineController * mRoutineController;

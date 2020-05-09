@@ -480,11 +480,11 @@ DSM.StateMachine {
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
-        folder: Backend.loadRoutineFolder()
+        folder: Backend.routineFolder()
         selectMultiple: false
         visible: false
         onAccepted: {
-            Backend.saveRoutineFolder(folder)
+            Backend.setRoutineFolder(folder)
             if (RoutineController.loadFile(fileUrl))
                 fileOpened()
             else {
