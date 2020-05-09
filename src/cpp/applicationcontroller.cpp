@@ -113,10 +113,9 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QByteArray path = mLogFilePath.toLocal8Bit();
     fprintf(stdout, "Log file location: %s\n", path.constData());
 
-    // This is used by mSettings
+    // Application/organization name are used by mSettings
     QCoreApplication::setApplicationName("ufcs-pc");
-    QCoreApplication::setOrganizationName("Watsaig");
-    QCoreApplication::setOrganizationDomain("watsaig.com");
+    QCoreApplication::setOrganizationName("ufcs");
     mSettings = new QSettings();
 }
 
@@ -270,7 +269,7 @@ void ApplicationController::saveValveLabel(int valveNumber, QString label)
  */
 bool ApplicationController::loadShowGraphicalControl()
 {
-    return mSettings->value("showGraphicalControl", false).toBool();
+    return mSettings->value("graphicalControl/enabled", false).toBool();
 }
 
 /**
@@ -278,8 +277,71 @@ bool ApplicationController::loadShowGraphicalControl()
  */
 void ApplicationController::saveShowGraphicalControl(bool show)
 {
-    mSettings->setValue("showGraphicalControl", show);
+    mSettings->setValue("graphicalControl/enabled", show);
 }
+
+QVariantList ApplicationController::graphicalControlScreenLabels()
+{
+    QVariantList labels;
+    for (auto key : graphicalControlScreenSources().keys())
+        labels.push_back(key);
+
+    return labels;
+}
+
+QMap<QString, QUrl> ApplicationController::graphicalControlScreenSources()
+{
+    QMap<QString, QUrl> sources;
+
+    mSettings->beginGroup("graphicalControl");
+    mSettings->beginGroup("sources");
+
+    for (QString const& k : mSettings->childKeys())
+        sources[k] = mSettings->value(k).toString();
+
+    mSettings->endGroup();
+    mSettings->endGroup();
+
+    // Default values, in case no sources are specified
+    if (sources.isEmpty()) {
+        sources["Co-culture chip v4"] = "qrc:/src/qml/GraphicalControl.qml";
+        setGraphicalControlScreenSources(sources);
+    }
+
+    return sources;
+}
+
+void ApplicationController::setGraphicalControlScreenSources(QMap<QString, QUrl> sources)
+{
+    mSettings->beginGroup("graphicalControl");
+    mSettings->beginGroup("sources");
+
+    for (QString const& key : sources.keys())
+        // Saved as string rather than QUrl to make it more human-friendly
+        mSettings->setValue(key, sources[key].toString());
+
+    mSettings->endGroup();
+    mSettings->endGroup();
+}
+
+QString ApplicationController::currentGraphicalControlScreenLabel()
+{
+    QMap<QString, QUrl> allSources = graphicalControlScreenSources();
+
+    return mSettings->value("graphicalControl/currentLabel", allSources.keys().first()).toString();
+
+}
+
+QUrl ApplicationController::currentGraphicalControlScreenURL()
+{
+    return graphicalControlScreenSources()[currentGraphicalControlScreenLabel()];
+}
+
+void ApplicationController::setCurrentGraphicalControlScreen(QString label)
+{
+    mSettings->setValue("graphicalControl/currentLabel", label);
+}
+
 
 /**
  * @brief Load the baud rate for USB communication from settings

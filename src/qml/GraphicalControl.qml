@@ -177,6 +177,15 @@ Item {
             }
         }
     }
+
+    Component.onCompleted: {
+        // Note: it appears that a Qt bug causes the minimum window width to be miscalculated at
+        // startup, on High DPI displays on Windows. For example: if minimumWidth is 800, and the app is
+        // opened on a display with scaling set to 125%, then the window will be resized to (minimum) 1000.
+        // (if the window was bigger than 1000, then nothing happens, as expected)
+        // So, if you observe unexpected resizing of the window just after launch, this is probably why.
+        mainWindow.minimumWidth = Qt.binding(function() { return minimumWidth })
+    }
 }
 
 

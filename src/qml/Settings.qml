@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.0
@@ -47,9 +47,45 @@ Item {
                 }
 
                 Switch {
+                    id: showGraphicalControlSwitch
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                     onCheckedChanged: Backend.showGraphicalControl = checked
                     Component.onCompleted: checked = Backend.showGraphicalControl
+                }
+            }
+
+            RowLayout {
+                id: rowLayout
+                width: 100
+                height: 100
+                visible: showGraphicalControlSwitch.checked
+
+                Label {
+                    text: qsTr("Graphical control layout")
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                }
+
+                ComboBox {
+                    id: graphicalControlComboBox
+                    model: Backend.graphicalControlScreenLabels()
+                    onActivated: Backend.setCurrentGraphicalControlScreen(currentValue)
+                    Component.onCompleted: currentIndex = indexOfValue(Backend.currentGraphicalControlScreenLabel())
+                    Layout.preferredWidth: width
+
+                    // Below: resize combo box to its contents
+                    TextMetrics { id: textMetrics }
+                    property int modelWidth
+
+                    width: modelWidth + leftPadding + rightPadding + implicitIndicatorWidth
+
+                    onModelChanged: {
+                        textMetrics.font = graphicalControlComboBox.font
+                        for(var i = 0; i < model.length; i++){
+                            textMetrics.text = model[i]
+                            modelWidth = Math.max(textMetrics.width, modelWidth)
+                        }
+                    }
                 }
             }
 

@@ -89,6 +89,12 @@ public:
 
     bool loadShowGraphicalControl();
     void saveShowGraphicalControl(bool show);
+    QMap<QString, QUrl> graphicalControlScreenSources();
+    Q_INVOKABLE void setGraphicalControlScreenSources(QMap<QString, QUrl> sources);
+    Q_INVOKABLE QVariantList graphicalControlScreenLabels();
+    Q_INVOKABLE QString currentGraphicalControlScreenLabel();
+    Q_INVOKABLE void setCurrentGraphicalControlScreen(QString label);
+    Q_INVOKABLE QUrl currentGraphicalControlScreenURL();
 
     int loadBaudRate();
     void saveBaudRate(int rate);
