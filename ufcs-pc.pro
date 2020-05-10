@@ -28,7 +28,7 @@ RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH = C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2
-QML_IMPORT_PATH += C:/science/ufcs/software/pc/ufcs-pc/src/qml
+QML_IMPORT_PATH += $$PWD/src/qml
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 #QML_DESIGNER_IMPORT_PATH += C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2/designer
@@ -54,6 +54,7 @@ DISTFILES += \
     src/qml/GraphicalControl.qml \
     src/qml/GraphicalLabeledValveSwitch.qml \
     src/qml/GraphicalValveSwitch.qml \
+    src/qml/SettingsLabel.qml \
     src/qml/main.qml \
     res/qtquickcontrols2.conf \
     src/qml/ManualControl.qml \
