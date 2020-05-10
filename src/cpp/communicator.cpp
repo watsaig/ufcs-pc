@@ -338,8 +338,15 @@ void Communicator::handleCommand(uint8_t command, QList<QByteArray> parameters)
                 qWarning() << "Invalid number of parameters for UPTIME command:" << nParameters;
             else if (parameters[0].length() != 4)
                 qWarning() << "Invalid parameter size for UPTIME command";
-            else
-                emit uptimeChanged(parameters[0].toULong());
+            else {
+                uint8_t value0 = parameters[0][0];
+                uint8_t value1 = parameters[0][1];
+                uint8_t value2 = parameters[0][2];
+                uint8_t value3 = parameters[0][3];
+                long uptime = value0 << 24 | value1 << 16 | value2 << 8 | value3;
+
+                emit uptimeChanged(uptime);
+            }
             break;
 
         case ERROR:
