@@ -18,6 +18,8 @@ Item {
             Layout.preferredWidth: 800
             Layout.maximumWidth: 1000
 
+            spacing: Backend.denseThemeEnabled ? 0 : 10
+
             Label {
                 text: qsTr("Settings")
                 font.pointSize: Style.heading1.fontSize
@@ -37,6 +39,20 @@ Item {
                     onCheckedChanged: Backend.darkMode = checked
                     Component.onCompleted: checked = Backend.darkMode
                 }
+            }
+
+            RowLayout {
+                SettingsLabel {
+                    Layout.fillWidth: true
+                    primaryText: "Compact view"
+                    secondaryText: "Requires restart"
+                }
+
+                Switch {
+                    onCheckedChanged: Backend.denseThemeEnabled = checked
+                    Component.onCompleted: checked = Backend.denseThemeEnabled
+                }
+
             }
 
             RowLayout {

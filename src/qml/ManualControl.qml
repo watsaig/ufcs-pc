@@ -154,7 +154,6 @@ Item {
                     id: reconnectButton
                     text: qsTr("Reconnect")
                     onClicked: Backend.connect()
-                    padding: 12
                     visible: Backend.connectionStatus == "Disconnected"
                 }
 
@@ -162,7 +161,6 @@ Item {
                     id: refreshButton
                     text: qsTr("Refresh component statuses")
                     onClicked: Backend.requestRefresh()
-                    padding: 12
                     visible: Backend.connectionStatus == "Connected"
                 }
             }

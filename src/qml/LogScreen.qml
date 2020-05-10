@@ -53,14 +53,14 @@ Item {
 
                     Text {
                         id: timestamp
-                        font.pointSize: 10
+                        font.pointSize: Style.text.fontSize
                         color: mainWindow.darkMode ? "#EEEEEE" : "#9E9E9E" // Material.Grey
                         text: modelData[0] + " "
                     }
 
                     Text {
                         id: messageType
-                        font.pointSize: 10
+                        font.pointSize: Style.text.fontSize
                         font.bold: true
                         text: modelData[1] + ": "
                         color: messageTypeColor()
@@ -68,7 +68,7 @@ Item {
 
                     Text {
                         id: messageText
-                        font.pointSize: 10
+                        font.pointSize: Style.text.fontSize
                         text: modelData[2]
                         wrapMode: Text.Wrap
                         width: parent.width - timestamp.width - messageType.width

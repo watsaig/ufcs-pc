@@ -117,6 +117,9 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QCoreApplication::setApplicationName("ufcs-pc");
     QCoreApplication::setOrganizationName("ufcs");
     mSettings = new QSettings();
+
+    if (isDenseThemeEnabled())
+        qputenv("QT_QUICK_CONTROLS_MATERIAL_VARIANT", "Dense");
 }
 
 ApplicationController::~ApplicationController()
@@ -186,6 +189,22 @@ void ApplicationController::setDarkModeEnabled(bool enabled)
     mSettings->setValue("darkMode", enabled);
     qInfo() << "Setting theme to" << (enabled ? "dark" : "light") << "mode";
     emit darkModeChanged(enabled);
+}
+
+bool ApplicationController::isDenseThemeEnabled()
+{
+    return mSettings->value("denseThemeEnabled", false).toBool();
+}
+
+void ApplicationController::setDenseThemeEnabled(bool enabled)
+{
+    mSettings->setValue("denseThemeEnabled", enabled);
+
+    // The only way to set the "Dense" variant of the Qt Quick controls material theme
+    // is on application startup. So this signal is not emitted since it would cause
+    // only some UI elements to update to the dense theme. But if it is one day possible
+    // to set the variant at run time, this line should be uncommented.
+    // emit denseThemeChanged(enabled);
 }
 
 /**

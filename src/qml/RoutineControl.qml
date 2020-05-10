@@ -101,7 +101,7 @@ Item {
                     id: delegateText
                     text: modelData
 
-                    font.pointSize: 10
+                    font.pointSize: Style.text.fontSize
                     font.bold: RoutineController.currentStep == index
                     color: RoutineController.currentStep == index ? Material.foreground : "gray"
 
@@ -124,7 +124,7 @@ Item {
                     text: modelData
                     bottomPadding: 3
 
-                    font.pointSize: 10
+                    font.pointSize: Style.text.fontSize
                     color: Material.foreground
 
                     wrapMode: Text.WordWrap

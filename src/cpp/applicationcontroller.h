@@ -39,6 +39,7 @@ class ApplicationController : public QObject
     Q_PROPERTY(bool graphicalControlEnabled READ isGraphicalControlEnabled WRITE setGraphicalControlEnabled)
     Q_PROPERTY(int baudRate READ serialBaudRate WRITE setSerialBaudRate)
     Q_PROPERTY(bool bluetoothEnabled READ isBluetoothEnabled CONSTANT)
+    Q_PROPERTY(bool denseThemeEnabled READ isDenseThemeEnabled WRITE setDenseThemeEnabled NOTIFY denseThemeChanged)
 
 private:
     ApplicationController(QObject *parent = nullptr);
@@ -80,6 +81,9 @@ public:
     bool isDarkModeEnabled();
     void setDarkModeEnabled(bool enabled = false);
 
+    bool isDenseThemeEnabled();
+    void setDenseThemeEnabled(bool enabled);
+
     int windowWidth();
     void setWindowWidth(int width);
     int windowHeight();
@@ -110,6 +114,7 @@ signals:
     void connectionStatusChanged(QString newStatus);
     void newLogMessage(QVariant newMessage);
     void darkModeChanged(bool enabled);
+    void denseThemeChanged(bool enabled);
     void windowWidthChanged(int width);
     void windowHeightChanged(int height);
 

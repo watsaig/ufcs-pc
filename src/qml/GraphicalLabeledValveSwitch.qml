@@ -17,9 +17,11 @@ Item {
     // True if user can edit the label
     property bool editable: false
 
-    implicitHeight: 70
-    implicitWidth: 100
+    implicitHeight: dense ? 55 : 70
+    implicitWidth: dense ? 80 : 100
     Layout.fillWidth: true
+
+    property bool dense : Backend.denseThemeEnabled
 
     Button {
         id: button
@@ -42,11 +44,11 @@ Item {
         text: valveNumber
 
         anchors.top: control.top
-        anchors.topMargin: 12
+        anchors.topMargin: dense ? 10 : 12
         anchors.horizontalCenter: control.horizontalCenter
 
         horizontalAlignment: Text.AlignHCenter
-        font.pixelSize: 13
+        font.pointSize: dense ? 6 : 8
         color: button.enabled ? Material.primaryTextColor : Material.hintTextColor
     }
 
@@ -70,7 +72,7 @@ Item {
         selectByMouse: control.editable
         enabled: control.editable
 
-        font.pixelSize: 12
+        font.pointSize: dense ? 6 : 8
         autoScroll: false
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
