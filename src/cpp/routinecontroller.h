@@ -117,8 +117,8 @@ signals:
     /// Emitted when the estimated total run time is updated
     void totalRunTimeChanged(long time);
 
-    void setValve(int valveNumber, bool open);
-    void setPressure(int controllerNumber, double value);
+    void setValve(uint valveNumber, bool open);
+    void setPressure(uint controllerNumber, double value);
     void setMultiplexer(QString label);
 
 private:

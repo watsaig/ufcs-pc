@@ -191,8 +191,8 @@ void RoutineController::run(bool dummyRun)
         mTotalWaitTime = 0;
     }
 
-    int nValves = ApplicationController::appController()->nValves();
-    int nPressureControllers = ApplicationController::appController()->nPressureControllers();
+    uint nValves = ApplicationController::appController()->nValves();
+    uint nPressureControllers = ApplicationController::appController()->nPressureControllers();
 
     for (int i(0); i < mLines.size(); ++i) {
 
@@ -213,7 +213,7 @@ void RoutineController::run(bool dummyRun)
                 continue;
             }
 
-            int valveNumber(0);
+            uint valveNumber(0);
             bool toggleAll = false;
 
             if (list[1] == "all")
@@ -221,7 +221,7 @@ void RoutineController::run(bool dummyRun)
 
             else {
                 bool ok;
-                valveNumber = list[1].toInt(&ok);
+                valveNumber = list[1].toUInt(&ok);
                 if (!ok || valveNumber < 1 || valveNumber > nValves) {
                     reportError("Line " + QString::number(i+1) + ": invalid valve ID: " + list[1]
                                 + ". Must be 'all' or an integer between 1 and " + QString::number(nValves));
@@ -242,7 +242,7 @@ void RoutineController::run(bool dummyRun)
                 setCurrentStep(mCurrentStep+1);
 
                 if (toggleAll) {
-                    for (int v(1); v <= nValves; v++)
+                    for (uint v(1); v <= nValves; v++)
                         emit setValve(v, (state == "open"));
                 }
 
@@ -262,7 +262,7 @@ void RoutineController::run(bool dummyRun)
                 continue;
             }
             bool ok;
-            int controllerNumber = list[1].toInt(&ok);
+            uint controllerNumber = list[1].toUInt(&ok);
             if (!ok || controllerNumber < 1 || controllerNumber > nPressureControllers) {
                 reportError("Line " + QString::number(i+1) + ": invalid pressure controller ID: " + list[1]
                             + ". Must be an integer between 1 and " + QString::number(nPressureControllers));

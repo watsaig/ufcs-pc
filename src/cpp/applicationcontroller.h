@@ -109,9 +109,9 @@ public:
     QSettings* settings() { return mSettings; }
 
 public slots:
-    void setValve(int valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
-    void setPump(int pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
-    void setPressure(int controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
+    void setValve(uint valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
+    void setPump(uint pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
+    void setPressure(uint controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
 
 signals:
     void connectionStatusChanged(QString newStatus);
