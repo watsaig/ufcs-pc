@@ -8,7 +8,6 @@ Communicator::Communicator()
 
 Communicator::~Communicator()
 {
-    qDebug() << "deleting communicator";
 }
 
 Communicator::ConnectionStatus Communicator::getConnectionStatus() const
@@ -35,210 +34,329 @@ QString Communicator::getConnectionStatusString() const
 
 /**
  * @brief Open or close a specific valve
- * @param valveNumber The valve number, between 1 and N_VALVES (32)
+ * @param valveNumber The valve number
  * @param open If true, valve will be opened; otherwise, valve will be closed
  */
-void Communicator::setValve(int valveNumber, bool open)
+void Communicator::setValve(uint valveNumber, bool open)
 {
-    //qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
+    qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
 
-    Component c;
-    ValveStates state;
+    QByteArray message;
+    message.push_back(VALVE);
+    message.push_back(1);
+    message.push_back((uint8_t)valveNumber);
+    message.push_back(1);
+    message.push_back((uint8_t)open);
 
-    if (valveNumber >= 1 && valveNumber <= N_VALVES)
-        c = (Component)(VALVE1 + valveNumber - 1);
-
-    else {
-        qWarning() << "Unknown valve ID: " << valveNumber;
-        return;
-    }
-
-    state = (open ? OPEN : CLOSED);
-
-    setComponentState(c, state);
+    sendMessage(frameMessage(message));
 }
 
 /**
  * @brief Switch a given pump on or off.
- * @param pumpNumber Either 1 or 2
+ * @param pumpNumber The pump number
  * @param on If true, the pump will be turned on; otherwise, the pump will be turned off.
- *
- *
- * Note: this functionality may be abandoned soon, as the pumps will be switched on and off automatically based on pressure requirements.
  */
-void Communicator::setPump(int pumpNumber, bool on)
+void Communicator::setPump(uint pumpNumber, bool on)
 {
-    //qDebug() << "Communicator: setting pump" << pumpNumber << (on ? "on" : "off");
+    qDebug() << "Communicator: setting pump" << pumpNumber << (on ? "on" : "off");
 
-    Component c;
-    PumpStates state;
+    QByteArray message;
+    message.push_back(PUMP);
+    message.push_back(1);
+    message.push_back((uint8_t)pumpNumber);
+    message.push_back(1);
+    message.push_back((uint8_t)on);
 
-    if (pumpNumber == 1)
-        c = PUMP1;
-    else if (pumpNumber == 2)
-        c = PUMP2;
-    else {
-        qWarning() << "Unknown pump ID: " << pumpNumber;
-        return;
-    }
-
-    state = (on ? ON : OFF);
-
-    setComponentState(c, state);
+    sendMessage(frameMessage(message));
 }
 
 /**
  * @brief Set the pressure setpoint of a given controller
- * @param controllerNumber The controller number, between 1 and 3
+ * @param controllerNumber The controller number
  * @param pressure A double between 0 and 1.0, with 0 being the minimum and 1 being the maximum pressures allowed by the controller
  */
-void Communicator::setPressure(int controllerNumber, double pressure)
+void Communicator::setPressure(uint controllerNumber, double pressure)
 {
-    //qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure;
+    qDebug() << "Communicator: setting pressure controller" << controllerNumber << " to " << pressure;
 
-    Component c;
-
-    switch (controllerNumber) {
-        case 1:
-            c = PR1;
-            break;
-        case 2:
-            c = PR2;
-            break;
-        case 3:
-            c = PR3;
-            break;
-        default:
-            qWarning() << "Unknown pressure controller ID: " << controllerNumber;
-            return;
-    }
-
-    if (pressure < 0 || pressure > 1) {
-        qWarning() << "Invalid pressure. Must be between 0 and 1.";
+    if (pressure < 0. || pressure > 1.) {
+        qWarning() << "Pressure invalid. Must be between 0 and 1.";
         return;
     }
 
-    setComponentState(c, int(round(pressure*PR_MAX_VALUE)));
+    uint8_t sp = pressure*PR_MAX_VALUE;
+
+    QByteArray message;
+    message.push_back(PRESSURE);
+    message.push_back(1);
+    message.push_back((uint8_t)controllerNumber);
+    message.push_back(1);
+    message.push_back(sp);
+
+    sendMessage(frameMessage(message));
 }
 
 /**
- * @brief Communicator::parseBuffer
- *
- * Parse the buffer of received serial messages; execute any valid commands
- * and print any other data to the console.
+ * @brief Request status of all components
  */
-void Communicator::parseBuffer(QByteArray buffer)
+void Communicator::requestStatus()
 {
-    // How it works:
-    // - Scan through buffer until we find a start byte
-    // - If there is a valid command following it, execute the command and delete that data
-    // - If there was any data at the beginning of the buffer, before the start byte, print it
-    //   then delete it
+    qDebug() << "Communicator: requesting status of all components";
+    QByteArray message;
+    message.push_back(STATUS);
+    sendMessage(frameMessage(message));
+}
 
-    // Valid messages are of the form: START_BYTE, ITEM, VALUE, END_BYTE
-    // An exception to this is the "uptime" message, which requires 4 bytes to represent the value
-    // (time in seconds since boot). In that case, the message is of the form:
-    // START_BYTE, ITEM, VALUE0, VALUE1, VALUE2, VALUE3, END_BYTE
-    // where VALUE0 is the MSB.
+/**
+ * @brief Frame a message, i.e. add start and stop bytes, and escapes
+ * @param message The message to be framed
+ * @return The framed message, ready to send with sendMessage(QByteArray)
+ */
+QByteArray Communicator::frameMessage(QByteArray message)
+{
+    QByteArray framedMessage;
+    framedMessage.push_back(START_BYTE);
 
-    uint8_t START_BYTE = 249;
-    uint8_t END_BYTE = 250;
-
-    for (int i(0); i < buffer.size() - 3; ++i) {
-        if ((uint8_t)(buffer[i]) == START_BYTE) {
-            bool decrementI = false;
-
-            // Check for uptime message
-            if ((uint8_t)(buffer[i+1]) == UPTIME) {
-
-                if ((i < buffer.size() - 6) && (uint8_t)(buffer[i+6]) == END_BYTE) {
-                    uint8_t value0 = buffer[i+2];
-                    uint8_t value1 = buffer[i+3];
-                    uint8_t value2 = buffer[i+4];
-                    uint8_t value3 = buffer[i+5];
-
-                    long uptime = value0 << 24 | value1 << 16 | value2 << 8 | value3;
-
-                    int hours = uptime/3600;
-                    int minutes = (uptime % 3600)/60;
-                    int seconds = uptime % 60;
-
-                    qInfo() << "Current uptime:" << hours << "h" << minutes << "min" << seconds << "s";
-
-                    buffer.remove(i, 4);
-                    decrementI = true;
-                }
-
-            }
-
-            else if ((uint8_t)(buffer[i+3]) == END_BYTE) {
-
-                uint8_t item = buffer[i+1];
-                uint8_t value = buffer[i+2];
-
-                if ((item >= VALVE1 && item <= VALVE32) && (value == OPEN || value == CLOSED))
-                    emit valveStateChanged((item - VALVE1 + 1), value == OPEN);
-
-                else if ((item == PUMP1 || item == PUMP2) && (value == ON || value == OFF))
-                    emit pumpStateChanged(item - PUMP1 + 1, value == ON);
-
-                else if (item == PR1 || item == PR2 || item == PR3) {
-                    double pressure = double(value)/double(PR_MAX_VALUE);
-                    if (pressure < 0)
-                        qDebug() << "Pressure invalid:" << value;
-                    int index = 1;
-                    if (item == PR2)
-                        index = 2;
-                    else if (item == PR3)
-                        index = 3;
-
-                    emit pressureChanged(index, pressure);
-                }
-
-                else if (item == PR1_SP || item == PR2_SP || item == PR3_SP) {
-                    double pressure = double(value)/double(PR_MAX_VALUE);
-                    if (pressure < 0)
-                        qDebug() << "Pressure invalid:" << value;
-
-                    int index = 1;
-                    if (item == PR2_SP)
-                        index = 2;
-                    else if (item == PR3_SP)
-                        index = 3;
-
-                    emit pressureSetpointChanged(index, pressure);
-                }
-
-                else if (item == ERROR) {
-                    switch (value) {
-                        case PRESSURE_REGULATOR_NOT_RESPONDING:
-                            qWarning() << "Pressure regulator not responding";
-                            break;
-                        default:
-                            qWarning() << "Unkown error signaled by microcontroller";
-                            break;
-                    }
-                }
-
-                else
-                    qWarning() << "Unknown command: " << item << " ; " << value;
-
-                buffer.remove(i, 4);
-                decrementI = true;
-            }
-
-            if (i > 0) {
-                // Extra characters before the actual message => print them and remove them.
-                qInfo() << "Unknown message received: " << buffer.left(i);
-                buffer.remove(0, i);
-                decrementI = false;
-                i = -1; // return to beginning of array when i is incremented
-            }
-
-            if (decrementI)
-                i -= 1;
-        }
+    for (uint8_t c : message) {
+        if (c == STOP_BYTE || c == ESCAPE_BYTE)
+            framedMessage.push_back(ESCAPE_BYTE);
+        framedMessage.push_back(c);
     }
+
+    framedMessage.push_back(STOP_BYTE);
+
+    return framedMessage;
+}
+
+/**
+ * @brief Display a log message received from the microcontroller
+ * @param level How bad it is
+ * @param message The message that was received
+ *
+ * The message is passed to qCritical, qWarning etc. based on its level
+ */
+void Communicator::logMicrocontrollerMessage(LogLevel level, const QByteArray &message)
+{
+    switch (level) {
+        case LOG_FATAL:
+        case LOG_ERROR:
+            qCritical().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_WARNING:
+            qWarning().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_INFO:
+            qInfo().noquote() << "Microcontroller: " << message;
+            break;
+        case LOG_DEBUG:
+            qDebug().noquote() << "Microcontroller: " << message;
+            break;
+        default:
+            qDebug().noquote() << "Message from microcontroller with unknown level:" << message;
+            break;
+    }
+}
+
+/**
+ * @brief Parse the buffer to remove escape characters, start and stop bytes
+ * @returns The first valid message found (or an empty QByteArray if no valid message is found)
+ *
+ * This method should be called whenever new data arrives on the serial buffer (mBuffer).
+ *
+ * If a start byte is found, but no valid end byte is found, this method returns an
+ * empty buffer; when it is next called, it will continue where it left off.
+ *
+ * Since the portion of mBuffer that was successfully parsed is erased, this method
+ * can be called repeatedly as long as there is data left in mBuffer.
+ *
+ * The parseDecodedBuffer method should be called when this method returns data.
+ */
+QByteArray Communicator::decodeBuffer()
+{
+    // Data is framed with a start and end byte, and can contain
+    // escape bytes (to escape a stop byte or another escape byte)
+
+    // Data is effectively moved from mBuffer to mDecodedBuffer, minus
+    // start bytes, escape bytes and stop bytes. Any data preceding a start
+    // byte is discarded. When a valid message (i.e. any data framed by a start
+    // and end byte) is found, it is returned.
+
+    bool foundCompleteMessage(false);
+    int decoderIndex(0);
+
+    for (uint8_t c: mBuffer) {
+        if (mDecoderRecording) {
+            if (mDecoderEscaped) {
+                mDecodedBuffer.append(c);
+                mDecoderEscaped = false;
+            }
+
+            else if (c == ESCAPE_BYTE)
+                mDecoderEscaped = true;
+
+            else if (c == STOP_BYTE) {
+                foundCompleteMessage = true;
+                mDecoderRecording = false;
+                break;
+            }
+
+            else if (mLastByteWasStart && c >= NUM_COMMANDS) {
+                // Invalid command, we stop right there
+                mDecoderRecording = false;
+                mLastByteWasStart = false;
+                break;
+            }
+
+            else
+                mDecodedBuffer.append(c);
+
+            mLastByteWasStart = false;
+        }
+
+        else if (c == START_BYTE) {
+            mDecoderRecording = true;
+            mLastByteWasStart = true;
+        }
+
+        decoderIndex++;
+    }
+
+    // Everything that was parsed already should be removed from mBuffer
+    mBuffer.remove(0, decoderIndex);
+
+    if (foundCompleteMessage) {
+        QByteArray decodedBuffer = mDecodedBuffer;
+        mDecodedBuffer.clear();
+        return decodedBuffer;
+    }
+
+    return QByteArray();
+}
+
+/**
+ * @brief Parse the decoded message buffer and call handleCommand for each command found
+ *
+ * The buffer is cleared after use.
+ */
+void Communicator::parseDecodedBuffer(QByteArray buffer)
+{
+    // Messages have the format:
+    //     command parameter_size param_data [param_size] [param_data] ....
+    // With one or more parameters.
+
+    if (buffer.size() < 2) {
+        qWarning() << "parseDecodedBuffer called when the buffer is too short to contain a message";
+        return;
+    }
+
+    QList<QByteArray> parameters;
+
+    uint8_t command = buffer[0];
+
+
+    if (command < NUM_COMMANDS) {
+        int i(1);
+
+        while (i < buffer.size()) {
+            uint8_t paramSize = buffer[i];
+            i++;
+
+            if (i + paramSize <= buffer.size()) {
+                QByteArray paramData = buffer.mid(i, paramSize);
+                parameters.push_back(paramData);
+            }
+
+            else {
+                qWarning() << "Command parameter incomplete; ignoring command";
+                return;
+            }
+
+            i += paramSize;
+        }
+
+        handleCommand(command, parameters);
+    }
+
+    else {
+        qDebug() << "Unknown command received. Full buffer: " << buffer;
+    }
+}
+
+/**
+ * @brief Handle a command received from the microcontroller, passing it on higher
+ * @param command The command, e.g. PUMP, VALVE,...
+ * @param parameters A list with each item being a parameter, represented by a QByteArray
+ *
+ * This function emits signals based on the commands received, e.g. calling valveStateChanged
+ * when a valid VALVE command is received. Incorrect commands trigger an error message.
+ */
+void Communicator::handleCommand(uint8_t command, QList<QByteArray> parameters)
+{
+    int nParameters = parameters.size();
+
+    switch (command) {
+        case VALVE:
+            // Should have 2 one-byte parameters: valve number and valve state.
+            // State is 0 (closed) or 1 (open)
+            if (nParameters != 2)
+                qWarning() << "Invalid number of parameters for VALVE command:" << nParameters;
+            else if (parameters[0].length() != 1 || parameters[1].length() != 1)
+                qWarning() << "Invalid parameter sizes for VALVE command";
+            else
+                emit valveStateChanged((uint8_t)parameters[0][0], (bool)parameters[1][0]);
+            break;
+
+        case PUMP:
+            // Should have 2 one-byte parameters: number and state (0 (off) or 1 (on))
+            if (nParameters != 2)
+                qWarning() << "Invalid number of parameters for PUMP command:" << nParameters;
+            else if (parameters[0].length() != 1 || parameters[1].length() != 1)
+                qWarning() << "Invalid parameter sizes for PUMP command";
+            else
+                emit pumpStateChanged((uint8_t)parameters[0][0], (bool)parameters[1][0]);
+            break;
+
+        case PRESSURE:
+            // Should have 3 one-byte parameters: number, setpoint and measured value
+            if (nParameters != 3)
+                qWarning() << "Invalid number of parameters for PRESSURE command:" << nParameters;
+            else if (parameters[0].length() != 1 || parameters[1].length() != 1 || parameters[2].length() != 1)
+                qWarning() << "Invalid parameter sizes for PRESSURE command";
+            else {
+                uint8_t number = parameters[0][0];
+                uint8_t sp = parameters[1][0];
+                uint8_t pv = parameters[2][0];
+
+                emit pressureSetpointChanged(number, double(sp)/PR_MAX_VALUE);
+                emit pressureChanged(number, double(pv)/PR_MAX_VALUE);
+            }
+            break;
+
+        case UPTIME:
+            // Should have one 4-byte parameter
+            if (nParameters != 1)
+                qWarning() << "Invalid number of parameters for UPTIME command:" << nParameters;
+            else if (parameters[0].length() != 4)
+                qWarning() << "Invalid parameter size for UPTIME command";
+            else
+                emit uptimeChanged(parameters[0].toULong());
+            break;
+
+        case ERROR:
+            qDebug() << "Error received";
+            break;
+
+        case LOG:
+            if (nParameters != 2)
+                qWarning() << "Invalid number of parameters for LOG command" << nParameters;
+            else
+                logMicrocontrollerMessage(LogLevel((uint8_t)parameters[0][0]), parameters[1]);
+            break;
+        default:
+            qWarning() << "Unknown command received:" << int(command);
+            break;
+    }
+
 }
 
 

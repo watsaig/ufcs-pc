@@ -36,8 +36,6 @@ public slots:
     void connect(const QBluetoothAddress &address, quint16 port);
     void connect(const QBluetoothAddress &address, const QBluetoothUuid& uuid);
 
-    void refreshAll();
-
 private slots:
     void onSocketReady();
     void onSocketError(QBluetoothSocket::SocketError error);
@@ -53,7 +51,8 @@ private slots:
     void onDeviceDiscoveryFinished();
 
 protected:
-    void setComponentState(Component c, int val);
+    //void setComponentState(Component c, int val);
+    void sendMessage(QByteArray message);
 
 private:
     void initSocket();

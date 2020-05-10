@@ -19,13 +19,6 @@ BluetoothCommunicator::~BluetoothCommunicator()
     // TODO: close and kill socket, if necessary
 }
 
-
-void BluetoothCommunicator::refreshAll()
-{
-    char toSend[2] = {(uint8_t)STATUS, (uint8_t)ALL_COMPONENTS};
-    mSocket->write(toSend, 2);
-}
-
 /**
  * @brief Connect to the ESP32, if it's available
  *
@@ -128,8 +121,13 @@ void BluetoothCommunicator::onSocketReady()
 {
     //qDebug() << "Received" << mSocket->bytesAvailable() << "bytes on serial port";
 
-    QByteArray buffer = mSocket->readAll();
-    parseBuffer(buffer);
+    mBuffer.append(mSocket->readAll());
+
+    while (mBuffer.size() >= 4) {
+        QByteArray b = decodeBuffer();
+        if (b.length() > 0)
+            parseDecodedBuffer(b);
+    }
 }
 
 void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)
@@ -262,16 +260,9 @@ void BluetoothCommunicator::onDeviceDiscoveryFinished()
 
 }
 
-void BluetoothCommunicator::setComponentState(Component c, int val)
+void BluetoothCommunicator::sendMessage(QByteArray message)
 {
-    if (mConnectionStatus == Disconnected) {
-        qWarning() << "Can't set requested component state: device is disconnected";
-        return; // TODO: (?) throw exception
-    }
-    //qDebug() << "setComponentState: setting component" << c << "to" << val;
-
-    char toSend[2] = {(uint8_t)c, (uint8_t)val};
-    mSocket->write(toSend, 2);
+    mSocket->write(message);
 }
 
 /**

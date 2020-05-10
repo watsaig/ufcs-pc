@@ -51,7 +51,7 @@ public:
     static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
     Q_INVOKABLE void connect();
-    Q_INVOKABLE void requestRefresh() { mCommunicator->refreshAll(); }
+    Q_INVOKABLE void requestRefresh() { mCommunicator->requestStatus(); }
 
     int nValves();
     int nPumps();
@@ -126,6 +126,7 @@ private slots:
     void onPumpStateChanged(int pumpNumber, bool on);
     void onPressureChanged(int controllerNumber, double pressure);
     void onPressureSetpointChanged(int controllerNumber, double pressure);
+    void onUptimeChanged(ulong seconds);
 
     void onCommunicatorStatusChanged(BluetoothCommunicator::ConnectionStatus newStatus);
 

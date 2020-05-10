@@ -1,8 +1,9 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// The following are constants for the serial communicator. Not necessarily for the whole program.
-// TODO: possibly move this to within the Communicator class
+#ifndef uint8_t
+typedef unsigned char uint8_t;
+#endif
 
 #define PR_MAX_VALUE UINT8_MAX
 
@@ -20,75 +21,27 @@
 #define PR2_MAX_PRESSURE 4.8 // Flow layer valves
 #define PR3_MAX_PRESSURE 14
 
-// this enum could also be split into valves/prs/pumps
-enum Component : uint8_t {
-    VALVE1 = 0,
-    VALVE2,
-    VALVE3,
-    VALVE4,
-    VALVE5,
-    VALVE6,
-    VALVE7,
-    VALVE8,
-    VALVE9,
-    VALVE10,
-    VALVE11,
-    VALVE12,
-    VALVE13,
-    VALVE14,
-    VALVE15,
-    VALVE16,
-    VALVE17,
-    VALVE18,
-    VALVE19,
-    VALVE20,
-    VALVE21,
-    VALVE22,
-    VALVE23,
-    VALVE24,
-    VALVE25,
-    VALVE26,
-    VALVE27,
-    VALVE28,
-    VALVE29,
-    VALVE30,
-    VALVE31,
-    VALVE32,
-    PR1,
-    PR2,
-    PR3,
-    PR1_SP,
-    PR2_SP,
-    PR3_SP,
-    PUMP1,
-    PUMP2,
-    ALL_COMPONENTS // leave this as the last element, to allow iterating over the enum
+enum Command : uint8_t {
+    VALVE,
+    PRESSURE,
+    PUMP,
+    STATUS,
+    UPTIME,
+    ERROR,
+    LOG,
+    NUM_COMMANDS
 };
 
-enum ValveStates : uint8_t {
-    OPEN = ALL_COMPONENTS+1,
-    CLOSED
+enum LogLevel : uint8_t {
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR,
+    LOG_FATAL
 };
 
-enum PumpStates : uint8_t {
-    ON = CLOSED+1,
-    OFF
-};
-
-enum SerialRequests : uint8_t {
-    STATUS = OFF+1, // request status of a certain component (or all)
-    UPTIME // time in seconds since the microcontroller booted
-};
-
-enum Errors : uint8_t {
-    ERROR = UPTIME+1,
-    NO_ERROR,
-    UNKNOWN,
-    PRESSURE_REGULATOR_NOT_RESPONDING
-};
-
-//
-// ---------------------------------------
-//
+const uint8_t START_BYTE = 250;
+const uint8_t STOP_BYTE = 251;
+const uint8_t ESCAPE_BYTE = 252;
 
 #endif

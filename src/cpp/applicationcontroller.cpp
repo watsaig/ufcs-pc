@@ -98,6 +98,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::pressureSetpointChanged, this, &ApplicationController::onPressureSetpointChanged);
     QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
+    QObject::connect(mCommunicator, &Communicator::uptimeChanged, this, &ApplicationController::onUptimeChanged);
 
     mRoutineController = new RoutineController();
 
@@ -482,12 +483,20 @@ void ApplicationController::onPressureSetpointChanged(int controllerNumber, doub
     }
 }
 
+void ApplicationController::onUptimeChanged(ulong seconds)
+{
+    int h = seconds/3600;
+    int m = (seconds % 3600)/60;
+    int s = seconds % 60;
+    qInfo() << "Current uptime:" << h << "h" << m << "min" << s << "s";
+}
+
 void ApplicationController::onCommunicatorStatusChanged(Communicator::ConnectionStatus newStatus)
 {
     qDebug() << "App controller: communicator status changed to" << mCommunicator->getConnectionStatusString();
 
     if (newStatus == Communicator::Connected)
-        mCommunicator->refreshAll();
+        mCommunicator->requestStatus();
 
     emit connectionStatusChanged(mCommunicator->getConnectionStatusString());
 }

@@ -19,15 +19,12 @@ public:
 
     QString devicePort() const;
 
-public slots:
-    void refreshAll();
-
 private slots:
     void handleSerialError(QSerialPort::SerialPortError error);
     void onSerialReady();
 
 protected:
-    void setComponentState(Component c, int val);
+    void sendMessage(QByteArray message);
 
 private:
     void initSerialPort();
