@@ -70,7 +70,7 @@ public:
 
     QString logFilePath() { return mLogFilePath; }
 
-    Q_INVOKABLE QVariantList log() { return mLog; }
+    QVariantList log() { return mLog; }
     void addToLog(QVariant entry);
 
     bool isBluetoothEnabled() { return mBluetoothEnabled; }
