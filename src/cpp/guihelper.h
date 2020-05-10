@@ -26,12 +26,16 @@ class PCHelper : public QObject
     Q_PROPERTY(int controllerNumber MEMBER mControllerNumber WRITE setControllerNumber)
     Q_PROPERTY(double setPointInPsi READ setPointInPsi NOTIFY setPointChanged)
     Q_PROPERTY(double measuredValueInPsi READ measuredValueInPsi NOTIFY measuredValueChanged)
+    Q_PROPERTY(double minPressure MEMBER mMinPressure);
+    Q_PROPERTY(double maxPressure MEMBER mMaxPressure);
 
 public:
     double setPoint() const { return mSetPoint ; }
     double measuredValue() const { return mMeasuredValue; }
     double setPointInPsi() const;
     double measuredValueInPsi() const;
+    double minPressure() const { return mMinPressure; };
+    double maxPressure() const { return mMaxPressure; };
 
     void setControllerNumber(int controllerNumber);
 
@@ -48,6 +52,10 @@ signals:
 private:
     double mSetPoint;
     double mMeasuredValue;
+
+    // Min and max pressure in PSI
+    double mMinPressure;
+    double mMaxPressure;
     int mControllerNumber;
 };
 

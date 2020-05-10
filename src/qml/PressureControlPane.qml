@@ -97,6 +97,8 @@ Item {
                 PressureController {
                     id: pressureControllerControl
                     controllerNumber: 1
+                    minPressure: 0
+                    maxPressure: 29.5
                 }
             }
 
@@ -116,6 +118,8 @@ Item {
                 PressureController {
                     id: pressureControllerFlow
                     controllerNumber: 2
+                    minPressure: 0
+                    maxPressure: 4.8
                 }
 
             }

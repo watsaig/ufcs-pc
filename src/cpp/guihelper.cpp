@@ -16,18 +16,16 @@ void PCHelper::setControllerNumber(int controllerNumber)
  */
 double PCHelper::setPointInPsi() const
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
     // Number of decimal points displayed. Since there are only 255 steps, it doesn't make
     // sense to display 2 decimal points for pressure regulators with more than  25.5 PSI range.
 
     int decimals = 1;
-    if ((max - min) < 25.5)
+    if ((mMaxPressure - mMinPressure) < 25.5)
         decimals = 2;
     double precision = pow(10, decimals);
 
-    return round(precision*(mSetPoint*(max-min) + min))/precision;
+    return round(precision*(mSetPoint*(mMaxPressure - mMinPressure) + mMinPressure))/precision;
 }
 
 /**
@@ -35,16 +33,13 @@ double PCHelper::setPointInPsi() const
  */
 double PCHelper::measuredValueInPsi() const
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
-
     // Number of decimal points displayed
     int decimals = 1;
-    if ((max - min) < 25.5)
+    if ((mMaxPressure - mMinPressure) < 25.5)
         decimals = 2;
     double precision = pow(10, decimals);
 
-    return round(precision*(mMeasuredValue*(max-min) + min))/precision;
+    return round(precision*(mMeasuredValue*(mMaxPressure - mMinPressure) + mMinPressure))/precision;
 }
 
 /**
@@ -66,15 +61,12 @@ void PCHelper::setSetPoint(double val)
  */
 void PCHelper::setSetPointInPsi(double val)
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
-
-    if (val > max || val < min) {
+    if (val > mMaxPressure || val < mMinPressure) {
         qDebug() << "PCHelper::setSetPointInPsi: value out of bounds";
         return;
     }
 
-    double setPoint = (val - min)/(max - min);
+    double setPoint = (val - mMinPressure)/(mMaxPressure - mMinPressure);
     this->setSetPoint(setPoint);
 }
 
@@ -98,16 +90,13 @@ void PCHelper::setMeasuredValue(double val)
  */
 void PCHelper::setMeasuredValueInPsi(double val)
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
-
-    if (val > max || val < min) {
+    if (val > mMaxPressure || val < mMinPressure) {
         qDebug() << "PCHelper::setMeasuredValueInPsi: value out of bounds";
         return;
     }
 
-    double setPoint = (val - min)/(max - min);
-    this->setMeasuredValue(setPoint);
+    double pv = (val - mMinPressure)/(mMaxPressure - mMinPressure);
+    this->setMeasuredValue(pv);
 }
 
 void ValveSwitchHelper::setValveNumber(int valveNumber)

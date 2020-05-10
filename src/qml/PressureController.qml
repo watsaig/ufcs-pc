@@ -6,7 +6,12 @@ import QtQuick.Controls.Material 2.12
 import org.example.ufcs 1.0
 
 Item {
+    id: control
     property int controllerNumber
+    // To do Qt6: make these properties required
+    property double minPressure
+    property double maxPressure
+
     width: grid1.implicitWidth
     height: grid1.implicitHeight
     enabled: Backend.connectionStatus == "Connected"
@@ -72,6 +77,8 @@ Item {
 
     PCHelper {
         id: helper
+        minPressure: control.minPressure
+        maxPressure: control.maxPressure
 
         onSetPointChanged: {
             slider.value = setPoint // this makes it possible for the C++ helper to update the slider position

@@ -178,15 +178,14 @@ int ApplicationController::nPressureControllers()
  */
 double ApplicationController::minPressure(int controllerNumber)
 {
-    // To do: handle this properly. Nothing hard-coded
+    QList<PCHelper*> pcs = mQmlPressureControllers[controllerNumber];
 
-    switch(controllerNumber) {
-        case 1: return PR1_MIN_PRESSURE;
-        case 2: return PR2_MIN_PRESSURE;
-        case 3: return PR3_MIN_PRESSURE;
+    if (pcs.isEmpty()) {
+        qCritical() << "Tried to access undefined pressure controller";
+        return 0;
     }
 
-    return 0;
+    return pcs.first()->minPressure();
 }
 
 /**
@@ -194,12 +193,14 @@ double ApplicationController::minPressure(int controllerNumber)
  */
 double ApplicationController::maxPressure(int controllerNumber)
 {
-    switch(controllerNumber) {
-        case 1: return PR1_MAX_PRESSURE;
-        case 2: return PR2_MAX_PRESSURE;
-        case 3: return PR3_MAX_PRESSURE;
+    QList<PCHelper*> pcs = mQmlPressureControllers[controllerNumber];
+
+    if (pcs.isEmpty()) {
+        qCritical() << "Tried to access undefined pressure controller";
+        return 0;
     }
-    return 0;
+
+    return pcs.first()->maxPressure();
 }
 
 

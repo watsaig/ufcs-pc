@@ -107,7 +107,11 @@ Item {
                             font.pointSize: Style.heading2.fontSize
                         }
 
-                        PressureController { controllerNumber: 1 }
+                        PressureController {
+                            controllerNumber: 1
+                            minPressure: 0
+                            maxPressure: 29.5
+                        }
                     }
 
                     Column {
@@ -119,7 +123,11 @@ Item {
                             font.pointSize: Style.heading2.fontSize
                         }
 
-                        PressureController { controllerNumber: 2 }
+                        PressureController {
+                            controllerNumber: 2
+                            minPressure: 0
+                            maxPressure: 4.8
+                        }
                     }
 
                     Column {
