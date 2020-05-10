@@ -53,9 +53,9 @@ public:
     Q_INVOKABLE void connect();
     Q_INVOKABLE void requestRefresh() { mCommunicator->refreshAll(); }
 
-    int nValves() { return N_VALVES; }
-    int nPumps() { return N_PUMPS; }
-    int nPressureControllers() { return N_PRS; }
+    int nValves();
+    int nPumps();
+    int nPressureControllers();
     double minPressure(int controllerNumber);
     double maxPressure(int controllerNumber);
 

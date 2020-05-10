@@ -144,6 +144,36 @@ void ApplicationController::connect()
 }
 
 /**
+ * @brief Return the number of valves defined in the GUI
+ *
+ * This reflects the ValveSwitches defined on the QML side
+ */
+int ApplicationController::nValves()
+{
+    return mQmlValveSwitches.size();
+}
+
+/**
+ * @brief Return the number of pumps defined in the GUI
+ *
+ * This reflects the PumpSwitches defined on the QML side
+ */
+int ApplicationController::nPumps()
+{
+    return mQmlPumpSwitches.size();
+}
+
+/**
+ * @brief Return the number of pressure controllers defined in the GUI
+ *
+ * This reflects the PressureControllers defined on the QML side
+ */
+int ApplicationController::nPressureControllers()
+{
+    return mQmlPressureControllers.size();
+}
+
+/**
  * @brief Return the minimum pressure supported by the given pressure controller.
  */
 double ApplicationController::minPressure(int controllerNumber)
