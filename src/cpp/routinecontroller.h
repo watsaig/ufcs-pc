@@ -8,7 +8,6 @@
 #include <QtCore>
 #include <QStringList>
 
-#include "communicator.h"
 
 /**
  * @brief The RoutineController class loads and runs routines, i.e pre-programmed sequences of actions.
@@ -69,7 +68,7 @@ public:
         Paused
     }; Q_ENUM(RunStatus)
 
-    RoutineController(Communicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
+    RoutineController();
     virtual ~RoutineController() {}
 
     Q_INVOKABLE bool loadFile(QString fileUrl);
@@ -127,9 +126,6 @@ private:
     void run(bool dummyRun);
     void reportError(const QString& errorString);
     void setCurrentStep(int stepNumber);
-
-    /// The serial port interface
-    Communicator * mCommunicator;
 
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;

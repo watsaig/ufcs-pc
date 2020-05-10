@@ -42,11 +42,6 @@ public:
     ConnectionStatus getConnectionStatus() const;
     QString getConnectionStatusString() const;
 
-    int nValves() const { return N_VALVES; }
-    int nPumps() const { return N_PUMPS; }
-    int nPressureControllers() const { return N_PRS; }
-    double minPressure(int controllerNumber) const;
-    double maxPressure(int controllerNumber) const;
 
 public slots:
     virtual void connect() = 0;

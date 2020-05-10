@@ -99,7 +99,12 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::pumpStateChanged, this, &ApplicationController::onPumpStateChanged);
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
 
-    mRoutineController = new RoutineController(mCommunicator); // TODO: check if this is really the best way to do this (a singleton may be better)
+    mRoutineController = new RoutineController();
+
+    QObject::connect(mRoutineController, &RoutineController::setValve,
+                     this, &ApplicationController::setValve);
+    QObject::connect(mRoutineController, &RoutineController::setPressure,
+                     this, &ApplicationController::setPressure);
 
     // Initialize log file path
     QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/logs";
@@ -137,6 +142,36 @@ void ApplicationController::connect()
 {
     mCommunicator->connect();
 }
+
+/**
+ * @brief Return the minimum pressure supported by the given pressure controller.
+ */
+double ApplicationController::minPressure(int controllerNumber)
+{
+    // To do: handle this properly. Nothing hard-coded
+
+    switch(controllerNumber) {
+        case 1: return PR1_MIN_PRESSURE;
+        case 2: return PR2_MIN_PRESSURE;
+        case 3: return PR3_MIN_PRESSURE;
+    }
+
+    return 0;
+}
+
+/**
+ * @brief Return the maximum pressure supported by the given pressure controller.
+ */
+double ApplicationController::maxPressure(int controllerNumber)
+{
+    switch(controllerNumber) {
+        case 1: return PR1_MAX_PRESSURE;
+        case 2: return PR2_MAX_PRESSURE;
+        case 3: return PR3_MAX_PRESSURE;
+    }
+    return 0;
+}
+
 
 void ApplicationController::registerPCHelper(int controllerNumber, PCHelper* instance)
 {

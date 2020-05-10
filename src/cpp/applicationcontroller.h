@@ -51,15 +51,13 @@ public:
     static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
     Q_INVOKABLE void connect();
-
-    Q_INVOKABLE void setValve(int valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
-    Q_INVOKABLE void setPump(int pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
-    Q_INVOKABLE void setPressure(int controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
-
     Q_INVOKABLE void requestRefresh() { mCommunicator->refreshAll(); }
 
-    double minPressure(int controllerNumber) { return mCommunicator->minPressure(controllerNumber); }
-    double maxPressure(int controllerNumber) { return mCommunicator->maxPressure(controllerNumber); }
+    int nValves() { return N_VALVES; }
+    int nPumps() { return N_PUMPS; }
+    int nPressureControllers() { return N_PRS; }
+    double minPressure(int controllerNumber);
+    double maxPressure(int controllerNumber);
 
     QString appVersion() { return GIT_VERSION; }
     QString connectionStatus();
@@ -109,6 +107,11 @@ public:
     void setSerialBaudRate(int rate);
 
     QSettings* settings() { return mSettings; }
+
+public slots:
+    void setValve(int valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
+    void setPump(int pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
+    void setPressure(int controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
 
 signals:
     void connectionStatusChanged(QString newStatus);

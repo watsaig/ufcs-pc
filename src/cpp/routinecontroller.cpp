@@ -1,8 +1,8 @@
 #include "routinecontroller.h"
+#include "applicationcontroller.h"
 
-RoutineController::RoutineController(Communicator *communicator)
-    : mCommunicator(communicator)
-    , mRunStatus(NotReady)
+RoutineController::RoutineController()
+    : mRunStatus(NotReady)
     , mCurrentStep(-1)
     , mErrorCount(0)
     , mStopRequested(false)
@@ -10,9 +10,6 @@ RoutineController::RoutineController(Communicator *communicator)
     , mNumberOfSteps(-1)
     , mTotalWaitTime(0)
 {
-
-    QObject::connect(this, SIGNAL(setValve(int,bool)), mCommunicator, SLOT(setValve(int,bool)));
-    QObject::connect(this, SIGNAL(setPressure(int,double)), mCommunicator, SLOT(setPressure(int,double)));
 
 }
 
@@ -194,6 +191,9 @@ void RoutineController::run(bool dummyRun)
         mTotalWaitTime = 0;
     }
 
+    int nValves = ApplicationController::appController()->nValves();
+    int nPressureControllers = ApplicationController::appController()->nPressureControllers();
+
     for (int i(0); i < mLines.size(); ++i) {
 
         QString line = mLines[i];
@@ -222,9 +222,9 @@ void RoutineController::run(bool dummyRun)
             else {
                 bool ok;
                 valveNumber = list[1].toInt(&ok);
-                if (!ok || valveNumber < 1 || valveNumber > mCommunicator->nValves()) {
+                if (!ok || valveNumber < 1 || valveNumber > nValves) {
                     reportError("Line " + QString::number(i+1) + ": invalid valve ID: " + list[1]
-                                + ". Must be 'all' or an integer between 1 and " + QString::number(mCommunicator->nValves()));
+                                + ". Must be 'all' or an integer between 1 and " + QString::number(nValves));
                     continue;
                 }
             }
@@ -242,7 +242,7 @@ void RoutineController::run(bool dummyRun)
                 setCurrentStep(mCurrentStep+1);
 
                 if (toggleAll) {
-                    for (int v(1); v <= mCommunicator->nValves(); v++)
+                    for (int v(1); v <= nValves; v++)
                         emit setValve(v, (state == "open"));
                 }
 
@@ -263,9 +263,9 @@ void RoutineController::run(bool dummyRun)
             }
             bool ok;
             int controllerNumber = list[1].toInt(&ok);
-            if (!ok || controllerNumber < 1 || controllerNumber > mCommunicator->nPressureControllers()) {
+            if (!ok || controllerNumber < 1 || controllerNumber > nPressureControllers) {
                 reportError("Line " + QString::number(i+1) + ": invalid pressure controller ID: " + list[1]
-                            + ". Must be an integer between 1 and " + QString::number(mCommunicator->nPressureControllers()));
+                            + ". Must be an integer between 1 and " + QString::number(nPressureControllers));
                 continue;
             }
 
@@ -274,7 +274,8 @@ void RoutineController::run(bool dummyRun)
                 reportError("Line " + QString::number(i+1) + ": Pressure value invalid: " + list[2]);
                 continue;
             }
-            else if (pressure < mCommunicator->minPressure(controllerNumber) || pressure > mCommunicator->maxPressure(controllerNumber)) {
+            else if (pressure < ApplicationController::appController()->minPressure(controllerNumber)
+                     || pressure > ApplicationController::appController()->maxPressure(controllerNumber)) {
                 reportError("Line " + QString::number(i+1) + ": Pressure value out of bounds for this controller: " + list[2]);
                 continue;
             }
@@ -283,7 +284,8 @@ void RoutineController::run(bool dummyRun)
                 mValidSteps << line;
             else {
                 // TODO: fix this for negative values (vacuum controller).
-                double p = mCommunicator->minPressure(controllerNumber) + (pressure / mCommunicator->maxPressure(controllerNumber));
+                double p = ApplicationController::appController()->minPressure(controllerNumber)
+                        + (pressure / ApplicationController::appController()->maxPressure(controllerNumber));
                 setCurrentStep(mCurrentStep+1);
                 emit setPressure(controllerNumber, p);
             }
