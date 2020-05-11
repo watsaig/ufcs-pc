@@ -30,6 +30,7 @@ class PCHelper : public QObject
     Q_PROPERTY(double maxPressure MEMBER mMaxPressure);
 
 public:
+    PCHelper();
     double setPoint() const { return mSetPoint ; }
     double measuredValue() const { return mMeasuredValue; }
     double setPointInPsi() const;

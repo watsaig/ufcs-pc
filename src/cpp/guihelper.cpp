@@ -1,6 +1,14 @@
 #include "guihelper.h"
 #include "applicationcontroller.h"
 
+PCHelper::PCHelper()
+    : mSetPoint(0)
+    , mMeasuredValue(0)
+    , mMinPressure(0)
+    , mMaxPressure(0)
+    , mControllerNumber(0)
+{}
+
 /**
  * @brief Set the controller's number
  * @param controllerNumber This should correspond to the pins that the actual (physical) pressure controller is plugged into, on the PCB.
