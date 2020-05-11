@@ -93,6 +93,7 @@ Item {
         Button {
             checkable: true
             autoExclusive: true
+            enabled: Backend.connectionStatus == "Connected"
             text: label
             font.capitalization: Font.MixedCase
             onClicked: setMuxToConfig(config)
