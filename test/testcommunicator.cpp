@@ -296,18 +296,32 @@ void TestCommunicator::uptime()
 {
     // Uptime is 4-byte parameter giving the time since last boot of the microcontroller
     // in seconds (unsigned 32 bit type)
+    uint8_t value0, value1, value2, value3;
 
-    uint32_t time = 4582;
+    // The following code is what is implemented on the ESP32 side
+    uint32_t uptime = 4582;
+    value0 = (uptime & 0xFF000000) >> 24;
+    value1 = (uptime & 0x00FF0000) >> 16;
+    value2 = (uptime & 0x0000FF00) >> 8;
+    value3 = (uptime & 0x000000FF);
+
+
     uint8_t command = UPTIME;
+    QByteArray p;
+    p.push_back(value0);
+    p.push_back(value1);
+    p.push_back(value2);
+    p.push_back(value3);
+
     QList<QByteArray> params;
-    params.push_back(QByteArray::number(time));
+    params.push_back(p);
 
     QSignalSpy spy(c, SIGNAL(uptimeChanged(ulong)));
     c->handleCommand(command, params);
 
     QCOMPARE(spy.count(), 1);
     QVariantList args = spy.takeFirst();
-    QCOMPARE(args[0].toUInt(), time);
+    QCOMPARE(args[0].toUInt(), uptime);
 
 }
 
