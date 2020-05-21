@@ -6,17 +6,7 @@ PCHelper::PCHelper()
     , mMeasuredValue(0)
     , mMinPressure(0)
     , mMaxPressure(0)
-    , mControllerNumber(0)
 {}
-
-/**
- * @brief Set the controller's number
- * @param controllerNumber This should correspond to the pins that the actual (physical) pressure controller is plugged into, on the PCB.
- */
-void PCHelper::setControllerNumber(int controllerNumber)
-{
-    mControllerNumber = controllerNumber;
-}
 
 /**
  * @brief Return the value in PSI of the controller's setpoint, rounded to 1 or 2 decimal places
@@ -106,22 +96,12 @@ void PCHelper::setMeasuredValueInPsi(double val)
     this->setMeasuredValue(pv);
 }
 
-void ValveSwitchHelper::setValveNumber(int valveNumber)
-{
-    mValveNumber = valveNumber;
-}
-
 void ValveSwitchHelper::setState(bool newState)
 {
     if (mState != newState) {
         mState = newState;
         emit stateChanged(newState);
     }
-}
-
-void PumpSwitchHelper::setPumpNumber(int pumpNumber)
-{
-    mPumpNumber = pumpNumber;
 }
 
 void PumpSwitchHelper::setState(bool newState)
