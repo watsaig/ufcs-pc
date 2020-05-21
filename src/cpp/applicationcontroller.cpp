@@ -1,69 +1,6 @@
 #include "applicationcontroller.h"
 #include "guihelper.h"
 
-void ApplicationController::messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
-
-    QString date = QDateTime::currentDateTime().toString("yyyy-MM-dd");
-    QString time = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
-
-    QString messageType;
-    QString message;
-
-    switch (type) {
-    case QtDebugMsg:
-        messageType  = "Debug";
-        message = msg;
-        break;
-    case QtInfoMsg:
-        messageType  = "Info";
-        message = msg;
-        break;
-    case QtWarningMsg:
-        messageType  = "Warning";
-        message = msg;
-        break;
-    case QtCriticalMsg:
-        messageType  = "Critical error";
-        message = QString("%1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    case QtFatalMsg:
-        messageType  = "Fatal error";
-        message = QString("%1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
-        break;
-    }
-
-    QString text = date + " " + time + " " + messageType + ": " + message + "\n";
-
-    // Write to console
-#ifdef LOG_TO_TERMINAL
-    QByteArray b = text.toLocal8Bit();
-    fprintf(stdout, b.constData());
-    fflush(stdout); // Force output to be printed right away
-#endif
-
-    // Write to file
-    QFile logFile(appController()->logFilePath());
-    if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
-        QTextStream ts(&logFile);
-        ts << text;
-    }
-
-    else {
-        QByteArray path = appController()->logFilePath().toLocal8Bit();
-        fprintf(stderr, "Could not open log file for writing at %s", path.constData());
-        fflush(stderr);
-    }
-
-    // Write to app
-
-    // Logs are stored in a fragmented way to make rich markup easier in QML.
-    // Date is omitted since not particularly useful within the app
-    QStringList toAdd;
-    toAdd << time << messageType << message;
-    appController()->addToLog(toAdd);
-}
-
 ApplicationController* singleton = nullptr;
 
 ApplicationController* ApplicationController::appController()
@@ -107,21 +44,6 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mRoutineController, &RoutineController::setPressure,
                      this, &ApplicationController::setPressure);
 
-    // Initialize log file path
-    QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/logs";
-    QDir d;
-    if (!d.mkpath(dataLocation))
-        fprintf(stderr, "Could not create directory for log file storage\n");
-
-    QString fileName = "log_" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh-mm-ss") + ".txt";
-    mLogFilePath = QDir::cleanPath(dataLocation + "/" + fileName);
-
-    QByteArray path = mLogFilePath.toLocal8Bit();
-    fprintf(stdout, "Log file location: %s\n", path.constData());
-
-    // Application/organization name are used by mSettings
-    QCoreApplication::setApplicationName("ufcs-pc");
-    QCoreApplication::setOrganizationName("ufcs");
     mSettings = new QSettings();
 
     if (isDenseThemeEnabled())

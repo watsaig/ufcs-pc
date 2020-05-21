@@ -32,7 +32,6 @@ class ApplicationController : public QObject
     Q_PROPERTY(QString connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
     Q_PROPERTY(QVariantList logMessageList READ log NOTIFY newLogMessage)
     Q_PROPERTY(QString appVersion READ appVersion)
-    Q_PROPERTY(QString logFilePath READ logFilePath)
     Q_PROPERTY(bool darkMode READ isDarkModeEnabled WRITE setDarkModeEnabled NOTIFY darkModeChanged)
     Q_PROPERTY(int windowWidth READ windowWidth WRITE setWindowWidth NOTIFY windowWidthChanged)
     Q_PROPERTY(int windowHeight READ windowHeight WRITE setWindowHeight NOTIFY windowHeightChanged)
@@ -47,8 +46,6 @@ private:
 public:
     static ApplicationController* appController();
     virtual ~ApplicationController();
-
-    static void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
     Q_INVOKABLE void connect();
     Q_INVOKABLE void requestRefresh() { mCommunicator->requestStatus(); }
@@ -68,10 +65,7 @@ public:
 
     RoutineController* routineController() { return mRoutineController; }
 
-    QString logFilePath() { return mLogFilePath; }
-
     QVariantList log() { return mLog; }
-    void addToLog(QVariant entry);
 
     bool isBluetoothEnabled() { return mBluetoothEnabled; }
 
@@ -112,6 +106,7 @@ public slots:
     void setValve(uint valveNumber, bool open) { mCommunicator->setValve(valveNumber, open); }
     void setPump(uint pumpNumber, bool on) { mCommunicator->setPump(pumpNumber, on); }
     void setPressure(uint controllerNumber, double pressure) { mCommunicator->setPressure(controllerNumber, pressure); }
+    void addToLog(QVariant entry);
 
 signals:
     void connectionStatusChanged(QString newStatus);
@@ -141,7 +136,6 @@ private:
     QMap<int, QList<ValveSwitchHelper*> > mQmlValveSwitches;
     QMap<int, PumpSwitchHelper*> mQmlPumpSwitches;
 
-    QString mLogFilePath;
     QVariantList mLog;
 
     QSettings * mSettings;

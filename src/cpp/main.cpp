@@ -6,11 +6,19 @@
 #include "src/cpp/communicator.h"
 #include "src/cpp/applicationcontroller.h"
 #include "src/cpp/guihelper.h"
+#include "src/cpp/logger.h"
 
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(ApplicationController::messageHandler);
+    QCoreApplication::setApplicationName("ufcs-pc");
+    QCoreApplication::setOrganizationName("ufcs");
+
+    Logger* logger = Logger::logger();
+    qInstallMessageHandler(Logger::messageHandler);
+
+    ApplicationController* appController = ApplicationController::appController();
+    QObject::connect(logger, &Logger::newLogForGUI, appController, &ApplicationController::addToLog);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);

@@ -10,12 +10,14 @@ HEADERS += \
     src/cpp/communicator.h \
     src/cpp/constants.h \
     src/cpp/applicationcontroller.h \
+    src/cpp/logger.h \
     src/cpp/routinecontroller.h \
     src/cpp/guihelper.h \
     src/cpp/bluetoothcommunicator.h \
     src/cpp/serialcommunicator.h
 
 SOURCES += \
+    src/cpp/logger.cpp \
     src/cpp/main.cpp \
     src/cpp/communicator.cpp \
     src/cpp/applicationcontroller.cpp \
