@@ -1,16 +1,6 @@
 #include "applicationcontroller.h"
 #include "guihelper.h"
 
-ApplicationController* singleton = nullptr;
-
-ApplicationController* ApplicationController::appController()
-{
-    if (singleton == nullptr) {
-        singleton = new ApplicationController();
-    }
-    return singleton;
-}
-
 ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 {
     // Initialize mCommunicator. Can be either USB ("Serial") or Bluetooth. Windows
@@ -26,9 +16,9 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
 #endif
 
     if (mBluetoothEnabled)
-        mCommunicator = new BluetoothCommunicator();
+        mCommunicator = new BluetoothCommunicator(this);
     else
-        mCommunicator = new SerialCommunicator();
+        mCommunicator = new SerialCommunicator(this);
 
     QObject::connect(mCommunicator, &Communicator::valveStateChanged, this, &ApplicationController::onValveStateChanged);
     QObject::connect(mCommunicator, &Communicator::pressureChanged, this, &ApplicationController::onPressureChanged);
@@ -37,7 +27,7 @@ ApplicationController::ApplicationController(QObject *parent) : QObject(parent)
     QObject::connect(mCommunicator, &Communicator::connectionStatusChanged, this, &ApplicationController::onCommunicatorStatusChanged);
     QObject::connect(mCommunicator, &Communicator::uptimeChanged, this, &ApplicationController::onUptimeChanged);
 
-    mRoutineController = new RoutineController();
+    mRoutineController = new RoutineController(this);
 
     QObject::connect(mRoutineController, &RoutineController::setValve,
                      this, &ApplicationController::setValve);

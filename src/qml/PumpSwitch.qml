@@ -25,6 +25,6 @@ Item {
         onStateChanged: button.checked = state
     }
 
-    Component.onCompleted: helper.pumpNumber = pumpNumber
+    Component.onCompleted: Backend.registerPumpSwitchHelper(pumpNumber, helper)
 
 }

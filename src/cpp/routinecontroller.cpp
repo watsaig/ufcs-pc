@@ -1,7 +1,7 @@
 #include "routinecontroller.h"
 #include "applicationcontroller.h"
 
-RoutineController::RoutineController()
+RoutineController::RoutineController(ApplicationController *applicationController)
     : mRunStatus(NotReady)
     , mCurrentStep(-1)
     , mErrorCount(0)
@@ -9,6 +9,7 @@ RoutineController::RoutineController()
     , mPauseRequested(false)
     , mNumberOfSteps(-1)
     , mTotalWaitTime(0)
+    , appController(applicationController)
 {
 
 }
@@ -191,8 +192,8 @@ void RoutineController::run(bool dummyRun)
         mTotalWaitTime = 0;
     }
 
-    uint nValves = ApplicationController::appController()->nValves();
-    uint nPressureControllers = ApplicationController::appController()->nPressureControllers();
+    uint nValves = appController->nValves();
+    uint nPressureControllers = appController->nPressureControllers();
 
     for (int i(0); i < mLines.size(); ++i) {
 
@@ -274,8 +275,8 @@ void RoutineController::run(bool dummyRun)
                 reportError("Line " + QString::number(i+1) + ": Pressure value invalid: " + list[2]);
                 continue;
             }
-            else if (pressure < ApplicationController::appController()->minPressure(controllerNumber)
-                     || pressure > ApplicationController::appController()->maxPressure(controllerNumber)) {
+            else if (pressure < appController->minPressure(controllerNumber)
+                     || pressure > appController->maxPressure(controllerNumber)) {
                 reportError("Line " + QString::number(i+1) + ": Pressure value out of bounds for this controller: " + list[2]);
                 continue;
             }
@@ -284,8 +285,8 @@ void RoutineController::run(bool dummyRun)
                 mValidSteps << line;
             else {
                 // TODO: fix this for negative values (vacuum controller).
-                double p = ApplicationController::appController()->minPressure(controllerNumber)
-                        + (pressure / ApplicationController::appController()->maxPressure(controllerNumber));
+                double p = appController->minPressure(controllerNumber)
+                        + (pressure / appController->maxPressure(controllerNumber));
                 setCurrentStep(mCurrentStep+1);
                 emit setPressure(controllerNumber, p);
             }

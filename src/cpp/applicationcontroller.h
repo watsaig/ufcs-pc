@@ -40,11 +40,9 @@ class ApplicationController : public QObject
     Q_PROPERTY(bool bluetoothEnabled READ isBluetoothEnabled CONSTANT)
     Q_PROPERTY(bool denseThemeEnabled READ isDenseThemeEnabled WRITE setDenseThemeEnabled NOTIFY denseThemeChanged)
 
-private:
-    ApplicationController(QObject *parent = nullptr);
 
 public:
-    static ApplicationController* appController();
+    ApplicationController(QObject *parent = nullptr);
     virtual ~ApplicationController();
 
     Q_INVOKABLE void connect();
@@ -59,9 +57,9 @@ public:
     QString appVersion() { return GIT_VERSION; }
     QString connectionStatus();
 
-    void registerPCHelper(int controllerNumber, PCHelper* instance);
-    void registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance);
-    void registerPumpSwitchHelper(int pumpNumber, PumpSwitchHelper* instance);
+    Q_INVOKABLE void registerPCHelper(int controllerNumber, PCHelper* instance);
+    Q_INVOKABLE void registerValveSwitchHelper(int valveNumber, ValveSwitchHelper* instance);
+    Q_INVOKABLE void registerPumpSwitchHelper(int pumpNumber, PumpSwitchHelper* instance);
 
     RoutineController* routineController() { return mRoutineController; }
 

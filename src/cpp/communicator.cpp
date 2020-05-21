@@ -1,8 +1,10 @@
 #include "communicator.h"
+#include "applicationcontroller.h"
 
 
-Communicator::Communicator()
+Communicator::Communicator(ApplicationController* applicationController)
     : mConnectionStatus(Disconnected)
+    , appController(applicationController)
 {
 }
 

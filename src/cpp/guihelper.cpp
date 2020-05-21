@@ -16,7 +16,6 @@ PCHelper::PCHelper()
 void PCHelper::setControllerNumber(int controllerNumber)
 {
     mControllerNumber = controllerNumber;
-    ApplicationController::appController()->registerPCHelper(controllerNumber, this);
 }
 
 /**
@@ -110,7 +109,6 @@ void PCHelper::setMeasuredValueInPsi(double val)
 void ValveSwitchHelper::setValveNumber(int valveNumber)
 {
     mValveNumber = valveNumber;
-    ApplicationController::appController()->registerValveSwitchHelper(valveNumber, this);
 }
 
 void ValveSwitchHelper::setState(bool newState)
@@ -124,7 +122,6 @@ void ValveSwitchHelper::setState(bool newState)
 void PumpSwitchHelper::setPumpNumber(int pumpNumber)
 {
     mPumpNumber = pumpNumber;
-    ApplicationController::appController()->registerPumpSwitchHelper(pumpNumber, this);
 }
 
 void PumpSwitchHelper::setState(bool newState)

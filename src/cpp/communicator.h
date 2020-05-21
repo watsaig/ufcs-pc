@@ -5,6 +5,7 @@
 
 #include "constants.h"
 
+class ApplicationController;
 
 
 /**
@@ -55,7 +56,7 @@ public:
         Connected
     };
 
-    Communicator ();
+    Communicator(ApplicationController* applicationController);
     virtual ~Communicator ();
 
     ConnectionStatus getConnectionStatus() const;
@@ -98,6 +99,8 @@ protected:
     bool mDecoderRecording;
     bool mDecoderEscaped;
     bool mLastByteWasStart;
+
+    ApplicationController* appController;
 
 #ifdef TESTING
     friend class TestCommunicator;

@@ -2,8 +2,8 @@
 #include "applicationcontroller.h"
 
 
-BluetoothCommunicator::BluetoothCommunicator()
-    : Communicator()
+BluetoothCommunicator::BluetoothCommunicator(ApplicationController *applicationController)
+    : Communicator(applicationController)
     , mSocket(NULL)
     , mServiceDiscoveryAgent(NULL)
     , mDeviceDiscoveryAgent(NULL)
@@ -28,7 +28,7 @@ void BluetoothCommunicator::connect()
 {
     setConnectionStatus(Connecting);
 
-    QSettings* settings = ApplicationController::appController()->settings();
+    QSettings* settings = appController->settings();
 
     if (settings->contains("controllerUuid") && settings->contains("controllerAddress")
             && !mFailedToConnectToSavedDevice)
@@ -167,8 +167,8 @@ void BluetoothCommunicator::onSocketConnected()
 
         qDebug() << "Device UUID and address:" << uuid.toString() << ";" << address.toString();
 
-        ApplicationController::appController()->settings()->setValue("controllerUuid", uuid);
-        ApplicationController::appController()->settings()->setValue("controllerAddress", address.toString());
+        appController->settings()->setValue("controllerUuid", uuid);
+        appController->settings()->setValue("controllerAddress", address.toString());
     }
 
     mConnectingToSavedDevice = false;

@@ -27,7 +27,7 @@ class BluetoothCommunicator : public Communicator
     Q_OBJECT
 
 public:
-    BluetoothCommunicator();
+    BluetoothCommunicator(ApplicationController* applicationController);
     ~BluetoothCommunicator();
 
 public slots:

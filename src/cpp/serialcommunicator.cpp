@@ -1,8 +1,8 @@
 #include "serialcommunicator.h"
 #include "applicationcontroller.h"
 
-SerialCommunicator::SerialCommunicator()
-    : Communicator()
+SerialCommunicator::SerialCommunicator(ApplicationController *applicationController)
+    : Communicator(applicationController)
     , mSerialPort(NULL)
 {
 
@@ -60,7 +60,7 @@ void SerialCommunicator::connect()
         return;
     }
 
-    qint32 baudRate = ApplicationController::appController()->serialBaudRate();
+    qint32 baudRate = appController->serialBaudRate();
     qDebug() << "Serial communicator baud rate set to" << baudRate;
 
     mSerialPort->setPortName(portToUse.portName());

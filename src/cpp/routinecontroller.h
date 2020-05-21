@@ -8,6 +8,7 @@
 #include <QtCore>
 #include <QStringList>
 
+class ApplicationController;
 
 /**
  * @brief The RoutineController class loads and runs routines, i.e pre-programmed sequences of actions.
@@ -68,7 +69,7 @@ public:
         Paused
     }; Q_ENUM(RunStatus)
 
-    RoutineController();
+    RoutineController(ApplicationController* applicationController);
     virtual ~RoutineController() {}
 
     Q_INVOKABLE bool loadFile(QString fileUrl);
@@ -160,6 +161,8 @@ private:
 
     /// Estimated run time of the routine (sum of wait times)
     long mTotalWaitTime;
+
+    ApplicationController* appController;
 };
 
 #endif // ROUTINECONTROLLER_H

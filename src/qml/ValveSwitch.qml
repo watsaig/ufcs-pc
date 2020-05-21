@@ -32,6 +32,6 @@ Item {
         onStateChanged: button.checked = state
     }
 
-    Component.onCompleted: helper.valveNumber = valveNumber
+    Component.onCompleted: Backend.registerValveSwitchHelper(valveNumber, helper)
 
 }

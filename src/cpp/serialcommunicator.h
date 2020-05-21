@@ -12,7 +12,7 @@ class SerialCommunicator : public Communicator
     Q_OBJECT
 
 public:
-    SerialCommunicator();
+    SerialCommunicator(ApplicationController* applicationController);
     virtual ~SerialCommunicator();
 
     void connect();

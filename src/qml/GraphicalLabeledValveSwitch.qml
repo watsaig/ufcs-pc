@@ -103,7 +103,7 @@ Item {
     }
 
     Component.onCompleted: {
-        helper.valveNumber = valveNumber
+        Backend.registerValveSwitchHelper(valveNumber, helper)
         textInput.text = Backend.valveLabel(valveNumber);
     }
 }

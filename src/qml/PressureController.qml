@@ -90,6 +90,6 @@ Item {
         }
     }
     Component.onCompleted: {
-        helper.controllerNumber = controllerNumber
+        Backend.registerPCHelper(controllerNumber, helper)
     }
 }

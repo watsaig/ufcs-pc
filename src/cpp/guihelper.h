@@ -12,8 +12,6 @@
  * and should be instantiated within the actual graphical element it supports.
  */
 
-class ApplicationController;
-
 /**
  * @brief Backend for pressure controller GUI elements
  */
