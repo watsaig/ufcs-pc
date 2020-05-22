@@ -8,16 +8,19 @@ HEADERS += \
     ../src/cpp/constants.h \
     ../src/cpp/applicationcontroller.h \
     ../src/cpp/guihelper.h \
-    ../src/cpp/routinecontroller.h
+    ../src/cpp/routinecontroller.h \
+    testroutines.h
 
 SOURCES += \
+    test_main.cpp \
     testcommunicator.cpp \
     ../src/cpp/bluetoothcommunicator.cpp \
     ../src/cpp/serialcommunicator.cpp \
     ../src/cpp/communicator.cpp \
     ../src/cpp/applicationcontroller.cpp \
     ../src/cpp/guihelper.cpp \
-    ../src/cpp/routinecontroller.cpp
+    ../src/cpp/routinecontroller.cpp \
+    testroutines.cpp
 
 INCLUDEPATH += ../src/cpp/
 

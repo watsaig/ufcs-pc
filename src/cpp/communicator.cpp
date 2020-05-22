@@ -41,7 +41,7 @@ QString Communicator::getConnectionStatusString() const
  */
 void Communicator::setValve(uint valveNumber, bool open)
 {
-    qDebug() << "Communicator: setting valve " << valveNumber << " " << (open ? "open" : "closed");
+    qDebug() << "Communicator: setting valve" << valveNumber << (open ? "open" : "closed");
 
     QByteArray message;
     message.push_back(VALVE);

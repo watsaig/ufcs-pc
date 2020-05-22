@@ -1,5 +1,6 @@
 #include "testcommunicator.h"
 
+
 void noMessageOutput(QtMsgType, const QMessageLogContext&, const QString&)
 {}
 
@@ -8,7 +9,7 @@ void TestCommunicator::initTestCase()
     // Suppress all debug output
     //qInstallMessageHandler(noMessageOutput);
 
-    ApplicationController* controller = new DummyApplicationController();
+    ApplicationController* controller = new CommunicatorMockApplicationController();
 
     // Instantiate serialCommunicator
     c = new SerialCommunicator(controller);
@@ -361,4 +362,3 @@ void TestCommunicator::cleanupTestCase()
 
 
 
-QTEST_MAIN(TestCommunicator)

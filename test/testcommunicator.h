@@ -1,8 +1,13 @@
+#ifndef TESTCOMMUNICATOR_H
+#define TEST_COMMUNICATOR_H
+
 #include <QtTest/QtTest>
 #include <QtCore/QDebug>
 
-#include "serialcommunicator.h"
+//#include "serialcommunicator.h"
 #include "applicationcontroller.h"
+
+class SerialCommunicator;
 
 class TestCommunicator : public QObject
 {
@@ -41,8 +46,10 @@ private:
 };
 
 
-class DummyApplicationController : public ApplicationController
+class CommunicatorMockApplicationController : public ApplicationController
 {
 public:
-    DummyApplicationController() {}
+    CommunicatorMockApplicationController() {}
 };
+
+#endif

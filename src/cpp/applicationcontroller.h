@@ -48,11 +48,11 @@ public:
     Q_INVOKABLE void connect();
     Q_INVOKABLE void requestRefresh() { mCommunicator->requestStatus(); }
 
-    int nValves();
-    int nPumps();
-    int nPressureControllers();
-    double minPressure(int controllerNumber);
-    double maxPressure(int controllerNumber);
+    virtual int nValves();
+    virtual int nPumps();
+    virtual int nPressureControllers();
+    virtual double minPressure(int controllerNumber);
+    virtual double maxPressure(int controllerNumber);
 
     QString appVersion() { return GIT_VERSION; }
     QString connectionStatus();
