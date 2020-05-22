@@ -2,6 +2,7 @@
 #include <QtCore/QDebug>
 
 #include "serialcommunicator.h"
+#include "applicationcontroller.h"
 
 class TestCommunicator : public QObject
 {
@@ -37,4 +38,11 @@ private slots:
 private:
 
     SerialCommunicator * c;
+};
+
+
+class DummyApplicationController : public ApplicationController
+{
+public:
+    DummyApplicationController() {}
 };

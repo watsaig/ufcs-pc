@@ -8,8 +8,10 @@ void TestCommunicator::initTestCase()
     // Suppress all debug output
     //qInstallMessageHandler(noMessageOutput);
 
+    ApplicationController* controller = new DummyApplicationController();
+
     // Instantiate serialCommunicator
-    c = new SerialCommunicator();
+    c = new SerialCommunicator(controller);
 
 }
 
