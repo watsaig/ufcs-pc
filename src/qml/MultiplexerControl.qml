@@ -121,7 +121,7 @@ Item {
 
     Component {
         id: muxDelegateLabeled
-        GraphicalLabeledValveSwitch {
+        LabeledValveSwitch {
             onClicked: setMuxToConfig(config)
             valveNumber: parseInt(label)
             autoExclusive: true

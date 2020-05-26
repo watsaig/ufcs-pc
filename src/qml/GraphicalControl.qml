@@ -99,80 +99,67 @@ Item {
                 anchors.right: parent.right
                 columns: 6
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch
+                LabeledValveSwitch {
                     valveNumber: 19
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch1
+                LabeledValveSwitch {
                     valveNumber: 20
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch2
+                LabeledValveSwitch {
                     valveNumber: 21
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch3
+                LabeledValveSwitch {
                     valveNumber: 22
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch4
+                LabeledValveSwitch {
                     valveNumber: 23
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch5
+                LabeledValveSwitch {
                     valveNumber: 24
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch6
+                LabeledValveSwitch {
                     valveNumber: 25
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch7
+                LabeledValveSwitch {
                     valveNumber: 26
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch8
+                LabeledValveSwitch {
                     valveNumber: 27
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch9
+                LabeledValveSwitch {
                     valveNumber: 28
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch10
+                LabeledValveSwitch {
                     valveNumber: 29
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch11
+                LabeledValveSwitch {
                     valveNumber: 30
                     editable: editingMode
                 }
 
-                GraphicalLabeledValveSwitch {
-                    id: graphicalLabeledValveSwitch12
+                LabeledValveSwitch {
                     valveNumber: 31
                     editable: editingMode
                 }

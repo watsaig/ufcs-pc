@@ -9,7 +9,7 @@ import org.example.ufcs 1.0
 
 Item {
     /*
-      GraphicalLabeledValveSwitch is similar to a ValveSwitch, but includes a user-editable
+      LabeledValveSwitch is similar to a ValveSwitch, but includes a user-editable
       text label in addition to a valve number.
 
       This is especially useful for valves that control fluidic inputs, since different fluids
@@ -20,7 +20,7 @@ Item {
       has changed state, as well as to signal to the backend to toggle that valve when the switch is
       clicked.
 
-      However, it is possible to customize the function of the GraphicalLabeledValveSwitch: just set the
+      However, it is possible to customize the function of the LabeledValveSwitch: just set the
       'registerWithBackend' property to false, and define onClicked to do whatever you want.
       For example, this is used by MultiplexerControl to offer a multiplexer control switch with an
       editable label.
