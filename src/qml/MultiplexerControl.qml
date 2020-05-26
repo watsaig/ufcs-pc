@@ -83,6 +83,7 @@ Item {
     }
 
     property int columns: 8
+    property bool labeledSwitches: false
 
     property string currentLabel: ""
 
@@ -118,14 +119,36 @@ Item {
 
     }
 
+    Component {
+        id: muxDelegateLabeled
+        GraphicalLabeledValveSwitch {
+            onClicked: setMuxToConfig(config)
+            valveNumber: parseInt(label)
+            autoExclusive: true
+            width: muxGridView.cellWidth - 6
+            height: muxGridView.cellHeight
+            editable: editingMode
+
+            registerWithBackend: false
+
+            Component.onCompleted: {
+                if (config.length !== valves.length)
+                    console.error("Multiplexer channel configuration for channel '" + label + "' does not match number of valves defined")
+                if (isNaN(parseInt(label)))
+                    console.error("Label for multiplexer channel '" + label + "' must be an integer")
+
+            }
+        }
+    }
+
     GridView {
         id: muxGridView
         model: muxModel
-        delegate: muxDelegate
+        delegate: labeledSwitches ? muxDelegateLabeled : muxDelegate
 
         anchors.fill: parent
         cellWidth: width/muxControl.columns
-        cellHeight: Style.valveSwitch.defaultHeight
+        cellHeight: labeledSwitches ? Style.labeledValveSwitch.defaultHeight : Style.valveSwitch.defaultHeight
         interactive: false
 
         implicitHeight: cellHeight * (Math.ceil(count/muxControl.columns))
@@ -155,11 +178,4 @@ Item {
             console.warn("No multiplexer channel found with label: " + label)
     }
 
-    Connections {
-        target: RoutineController
-        onSetMultiplexer: {
-            //console.log("Caught setMultiplexer signal, channel: " + label)
-            setMuxToLabel(label);
-        }
-    }
 }

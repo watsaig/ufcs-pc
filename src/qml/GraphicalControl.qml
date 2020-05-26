@@ -42,6 +42,7 @@ Item {
             }
 
             MultiplexerControl {
+                id: muxControl
                 anchors.left: parent.left
                 anchors.right: parent.right
 
@@ -57,6 +58,15 @@ Item {
                     ListElement { label: "8"; config: "101010" }
                     ListElement { label: "All"; config: "000000" }
                     ListElement { label: "None"; config: "111111" }
+                }
+                columns: 8
+
+                Connections {
+                    target: RoutineController
+                    onSetMultiplexer: {
+                        //console.log("Caught setMultiplexer signal, channel: " + label)
+                        muxControl.setMuxToLabel(label);
+                    }
                 }
             }
 
