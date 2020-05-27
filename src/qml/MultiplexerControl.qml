@@ -119,24 +119,31 @@ Item {
 
     }
 
+    ButtonGroup { id: labeledButtonGroup }
     Component {
         id: muxDelegateLabeled
         LabeledValveSwitch {
-            onClicked: setMuxToConfig(config)
             valveNumber: parseInt(label)
-            autoExclusive: true
             width: muxGridView.cellWidth - 6
             height: muxGridView.cellHeight
             editable: editingMode
-
             registerWithBackend: false
-
+            buttonGroup: labeledButtonGroup
+            property bool wasChecked: false
+            onClicked: {
+                if (wasChecked) {
+                    labeledButtonGroup.checkState = Qt.Unchecked
+                    closeAllValves()
+                }
+                else
+                    setMuxToConfig(config)
+                wasChecked = !wasChecked
+            }
             Component.onCompleted: {
                 if (config.length !== valves.length)
                     console.error("Multiplexer channel configuration for channel '" + label + "' does not match number of valves defined")
                 if (isNaN(parseInt(label)))
                     console.error("Label for multiplexer channel '" + label + "' must be an integer")
-
             }
         }
     }
@@ -153,6 +160,10 @@ Item {
 
         implicitHeight: cellHeight * (Math.ceil(count/muxControl.columns))
 
+    }
+
+    function closeAllValves() {
+        setMuxToConfig("1".repeat(valves.length))
     }
 
     function setMuxToConfig(configuration) {

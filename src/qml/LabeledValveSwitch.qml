@@ -33,7 +33,7 @@ Item {
     // If true, the valve switch is registered with the backend, toggling the valve
     // that corresponds to valveNumber when clicked. Set to false to override the switch behavior.
     property bool registerWithBackend: true
-    property bool autoExclusive: false
+    property var buttonGroup: 0
     // True if user can edit the label
     property bool editable: false
 
@@ -43,7 +43,9 @@ Item {
     property bool dense : Backend.denseThemeEnabled
 
     signal clicked
-    onClicked: registerWithBackend ? Backend.setValve(valveNumber, button.checked) : NULL
+    onClicked: registerWithBackend ? Backend.setValve(valveNumber, button.checked) : 0
+
+    property bool wasChecked: button.checked
 
     Button {
         id: button
@@ -55,7 +57,7 @@ Item {
 
         checkable: true
         checked: false
-        autoExclusive: control.autoExclusive
+        ButtonGroup.group: control.buttonGroup
 
         enabled: !control.editable && Backend.connectionStatus == "Connected"
         onClicked: control.clicked()
