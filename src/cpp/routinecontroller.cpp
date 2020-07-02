@@ -219,7 +219,6 @@ void RoutineController::run(bool dummyRun)
 
             if (list[1] == "all")
                 toggleAll = true;
-
             else {
                 bool ok;
                 valveNumber = list[1].toUInt(&ok);
@@ -235,7 +234,6 @@ void RoutineController::run(bool dummyRun)
                 reportError("Line " + QString::number(i+1) + ": valve status not recognized: " + state);
                 continue;
             }
-
 
             if (dummyRun)
                 mValidSteps << line;

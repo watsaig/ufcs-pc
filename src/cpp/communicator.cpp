@@ -85,7 +85,6 @@ void Communicator::setPressure(uint controllerNumber, double pressure)
         qWarning() << "Pressure invalid. Must be between 0 and 1.";
         return;
     }
-
     uint8_t sp = pressure*PR_MAX_VALUE;
 
     QByteArray message;
@@ -124,7 +123,6 @@ QByteArray Communicator::frameMessage(QByteArray message)
             framedMessage.push_back(ESCAPE_BYTE);
         framedMessage.push_back(c);
     }
-
     framedMessage.push_back(STOP_BYTE);
 
     return framedMessage;
@@ -192,37 +190,29 @@ QByteArray Communicator::decodeBuffer()
                 mDecodedBuffer.append(c);
                 mDecoderEscaped = false;
             }
-
             else if (c == ESCAPE_BYTE)
                 mDecoderEscaped = true;
-
             else if (c == STOP_BYTE) {
                 foundCompleteMessage = true;
                 mDecoderRecording = false;
                 break;
             }
-
             else if (mLastByteWasStart && c >= NUM_COMMANDS) {
                 // Invalid command, we stop right there
                 mDecoderRecording = false;
                 mLastByteWasStart = false;
                 break;
             }
-
             else
                 mDecodedBuffer.append(c);
-
             mLastByteWasStart = false;
         }
-
         else if (c == START_BYTE) {
             mDecoderRecording = true;
             mLastByteWasStart = true;
         }
-
         decoderIndex++;
     }
-
     // Everything that was parsed already should be removed from mBuffer
     mBuffer.remove(0, decoderIndex);
 
@@ -231,7 +221,6 @@ QByteArray Communicator::decodeBuffer()
         mDecodedBuffer.clear();
         return decodedBuffer;
     }
-
     return QByteArray();
 }
 
@@ -262,26 +251,20 @@ void Communicator::parseDecodedBuffer(QByteArray buffer)
         while (i < buffer.size()) {
             uint8_t paramSize = buffer[i];
             i++;
-
             if (i + paramSize <= buffer.size()) {
                 QByteArray paramData = buffer.mid(i, paramSize);
                 parameters.push_back(paramData);
             }
-
             else {
                 qWarning() << "Command parameter incomplete; ignoring command";
                 return;
             }
-
             i += paramSize;
         }
-
         handleCommand(command, parameters);
     }
-
-    else {
+    else
         qDebug() << "Unknown command received. Full buffer: " << buffer;
-    }
 }
 
 /**
