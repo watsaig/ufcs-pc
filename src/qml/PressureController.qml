@@ -33,10 +33,12 @@ Item {
             live: true
             stepSize: 1./256.
 
+            onMoved: {
+                Backend.setPressure(controllerNumber, value);
+            }
             onValueChanged: {
                 helper.setPoint = value
                 setPointLabel.text = helper.setPointInPsi + " PSI"
-                Backend.setPressure(controllerNumber, value);
             }
         }
 
