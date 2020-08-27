@@ -54,6 +54,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     src/qml/GraphicalChipControl.qml \
     src/qml/GraphicalControl.qml \
+    src/qml/GraphicalControlv5Chip.qml \
     src/qml/LabeledValveSwitch.qml \
     src/qml/GraphicalValveSwitch.qml \
     src/qml/SettingsLabel.qml \

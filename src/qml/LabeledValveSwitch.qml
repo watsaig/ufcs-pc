@@ -33,7 +33,7 @@ Item {
     // If true, the valve switch is registered with the backend, toggling the valve
     // that corresponds to valveNumber when clicked. Set to false to override the switch behavior.
     property bool registerWithBackend: true
-    property var buttonGroup: 0
+    property var buttonGroup: null
     // True if user can edit the label
     property bool editable: false
 
@@ -46,6 +46,8 @@ Item {
     onClicked: registerWithBackend ? Backend.setValve(valveNumber, button.checked) : 0
 
     property bool wasChecked: button.checked
+
+    function setChecked(isChecked) { button.checked = isChecked; }
 
     Button {
         id: button

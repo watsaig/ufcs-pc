@@ -145,6 +145,13 @@ Item {
                 if (isNaN(parseInt(label)))
                     console.error("Label for multiplexer channel '" + label + "' must be an integer")
             }
+            Connections {
+                target: muxControl
+                onCurrentLabelChanged: {
+                    if (muxControl.currentLabel.toUpperCase() === label.toUpperCase())
+                        setChecked(true)
+                }
+            }
         }
     }
 
@@ -164,6 +171,10 @@ Item {
 
     function closeAllValves() {
         setMuxToConfig("1".repeat(valves.length))
+        if (muxControl.labeledSwitches) {
+            labeledButtonGroup.checkState = Qt.Unchecked
+            console.log("Unchecking labeled mux switches")
+        }
     }
 
     function setMuxToConfig(configuration) {
@@ -184,9 +195,14 @@ Item {
                 break
             }
         }
-
-        if (!found)
-            console.warn("No multiplexer channel found with label: " + label)
+        if (!found) {
+            if (label.toUpperCase() === "NONE") {
+                console.log("Closing all multiplexer channels")
+                closeAllValves()
+            }
+            else
+                console.warn("No multiplexer channel found with label: " + label)
+        }
     }
 
 }
