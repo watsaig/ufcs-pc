@@ -18,7 +18,7 @@ Item {
         anchors.margins: Style.view.margin
         anchors.horizontalCenter: parent.horizontalCenter
 
-        GraphicalChipControl {
+        GraphicalChipControlv5 {
             id: graphicalChipControl
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -46,18 +46,49 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
-                valves: [13, 14, 15, 16, 17, 18]
+                valves: [3, 4, 5, 6, 7, 8, 9, 10, 12, 13]
                 muxModel: ListModel {
-                    ListElement { label: "1"; config: "010101" }
-                    ListElement { label: "2"; config: "010110" }
-                    ListElement { label: "3"; config: "011001" }
-                    ListElement { label: "4"; config: "011010" }
-                    ListElement { label: "5"; config: "100101" }
-                    ListElement { label: "6"; config: "100110" }
-                    ListElement { label: "7"; config: "101001" }
-                    ListElement { label: "8"; config: "101010" }
-                    ListElement { label: "All"; config: "000000" }
-                    ListElement { label: "None"; config: "111111" }
+                    ListElement { label: "1"; config: "1010101010" }
+                    ListElement { label: "2"; config: "1010101001" }
+                    ListElement { label: "3"; config: "1010100110" }
+                    ListElement { label: "4"; config: "1010100101" }
+                    ListElement { label: "5"; config: "1010011010" }
+                    ListElement { label: "6"; config: "1010011001" }
+                    ListElement { label: "7"; config: "1010010110" }
+                    ListElement { label: "8"; config: "1010010101" }
+                    ListElement { label: "9"; config: "1001101010" }
+                    ListElement { label: "10"; config: "1001101001" }
+                    ListElement { label: "11"; config: "1001100110" }
+                    ListElement { label: "12"; config: "1001100101" }
+                    ListElement { label: "13"; config: "1001011010" }
+                    ListElement { label: "14"; config: "1001011001" }
+                    ListElement { label: "15"; config: "1001010110" }
+                    ListElement { label: "16"; config: "1001010101" }
+                    ListElement { label: "17"; config: "0110101010" }
+                    ListElement { label: "18"; config: "0110101001" }
+                    ListElement { label: "19"; config: "0110100110" }
+                    ListElement { label: "20"; config: "0110100101" }
+                    ListElement { label: "21"; config: "0110011010" }
+                    ListElement { label: "22"; config: "0110011001" }
+                    ListElement { label: "23"; config: "0110010110" }
+                    ListElement { label: "24"; config: "0110010101" }
+                    ListElement { label: "25"; config: "0101101010" }
+                    ListElement { label: "26"; config: "0101101001" }
+                    ListElement { label: "27"; config: "0101100110" }
+                    ListElement { label: "28"; config: "0101100101" }
+                    ListElement { label: "29"; config: "0101011010" }
+                    ListElement { label: "30"; config: "0101011001" }
+                    ListElement { label: "31"; config: "0101010110" }
+                    ListElement { label: "32"; config: "0101010101" }
+                    ListElement { label: "All"; config: "0000000000" }
+                    ListElement { label: "None"; config: "1111111111" }
+                    ListElement { label: "1-8"; config: "1010000000" }
+                    ListElement { label: "9-16"; config: "1001000000" }
+                    ListElement { label: "17-24"; config: "0110000000" }
+                    ListElement { label: "25-32"; config: "0101000000" }
+                    ListElement { label: "Odd"; config: "0000000010" }
+                    ListElement { label: "Even"; config: "0000000001" }
+
                 }
                 columns: 8
 

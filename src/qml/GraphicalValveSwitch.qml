@@ -13,13 +13,14 @@ Item {
 
     property color normalColor: "#e60000"
     property color highlightedColor: "#d10000"
+    property string customLabel
 
     height: 50
     width: 30
 
     Button {
         id: button
-        text: valveNumber
+        text: valveNumber + customLabel
         anchors.fill: parent
         contentItem: Text {
             id: buttonLabel
