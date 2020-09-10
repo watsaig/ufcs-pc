@@ -45,8 +45,6 @@ Item {
     signal clicked
     onClicked: registerWithBackend ? Backend.setValve(valveNumber, button.checked) : 0
 
-    property bool wasChecked: button.checked
-
     function setChecked(isChecked) { button.checked = isChecked; }
 
     Button {

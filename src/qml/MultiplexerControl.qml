@@ -62,6 +62,9 @@ Item {
        if the multiplexer uses valves 10 through 18, and valve #16 is toggled via the manual control
        screen or elsewhere, then the buttons on this screen will not update.
 
+       The buttons in MultiplexerControl can have either a simple, pre-defined label, or a label along
+       with a second, user-editable label (used primarily for fluidic inputs to the chip). In the former
+       case, muxDelegate manages the buttons. In the latter case, muxDelegateLabeled manages them.
     */
     id: muxControl
 
@@ -119,25 +122,31 @@ Item {
 
     }
 
-    ButtonGroup { id: labeledButtonGroup }
+    ButtonGroup {
+        id: labeledButtonGroup
+        property LabeledValveSwitch lastButtonChecked: null
+    }
+
     Component {
         id: muxDelegateLabeled
         LabeledValveSwitch {
+            id: lvs
             valveNumber: parseInt(label)
             width: muxGridView.cellWidth - 6
             height: muxGridView.cellHeight
             editable: editingMode
             registerWithBackend: false
             buttonGroup: labeledButtonGroup
-            property bool wasChecked: false
             onClicked: {
-                if (wasChecked) {
+                if (labeledButtonGroup.lastButtonChecked === this) {
                     labeledButtonGroup.checkState = Qt.Unchecked
+                    labeledButtonGroup.lastButtonChecked = null
                     closeAllValves()
                 }
-                else
+                else {
                     setMuxToConfig(config)
-                wasChecked = !wasChecked
+                    labeledButtonGroup.lastButtonChecked = this
+                }
             }
             Component.onCompleted: {
                 if (config.length !== valves.length)
@@ -148,8 +157,10 @@ Item {
             Connections {
                 target: muxControl
                 onCurrentLabelChanged: {
-                    if (muxControl.currentLabel.toUpperCase() === label.toUpperCase())
+                    if (muxControl.currentLabel.toUpperCase() === label.toUpperCase()) {
                         setChecked(true)
+                        labeledButtonGroup.lastButtonChecked = lvs
+                    }
                 }
             }
         }
@@ -171,10 +182,6 @@ Item {
 
     function closeAllValves() {
         setMuxToConfig("1".repeat(valves.length))
-        if (muxControl.labeledSwitches) {
-            labeledButtonGroup.checkState = Qt.Unchecked
-            console.log("Unchecking labeled mux switches")
-        }
     }
 
     function setMuxToConfig(configuration) {

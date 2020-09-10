@@ -132,21 +132,21 @@ Item {
 
                 valves: [22, 23, 24, 25, 26, 27, 28, 29]
                 muxModel: ListModel {
-                    ListElement { label: "1"; config: "01010010" }
-                    ListElement { label: "2"; config: "01011010" }
-                    ListElement { label: "3"; config: "01100010" }
-                    ListElement { label: "4"; config: "01101010" }
-                    ListElement { label: "5"; config: "10010010" }
-                    ListElement { label: "6"; config: "10011010" }
-                    ListElement { label: "7"; config: "10100010" }
-                    ListElement { label: "8"; config: "10101010" }
-                    ListElement { label: "9"; config: "01010010" }
-                    ListElement { label: "10"; config: "01011010" }
-                    ListElement { label: "11"; config: "01100010" }
-                    ListElement { label: "12"; config: "01101010" }
-                    ListElement { label: "13"; config: "10010010" }
-                    ListElement { label: "14"; config: "10011010" }
-                    ListElement { label: "15"; config: "10100010" }
+                    ListElement { label: "1"; config: "01010101" }
+                    ListElement { label: "2"; config: "01010110" }
+                    ListElement { label: "3"; config: "01011001" }
+                    ListElement { label: "4"; config: "01011010" }
+                    ListElement { label: "5"; config: "01100101" }
+                    ListElement { label: "6"; config: "01100110" }
+                    ListElement { label: "7"; config: "01101001" }
+                    ListElement { label: "8"; config: "01101010" }
+                    ListElement { label: "9"; config: "10010101" }
+                    ListElement { label: "10"; config: "10010110" }
+                    ListElement { label: "11"; config: "10010001" }
+                    ListElement { label: "12"; config: "10010110" }
+                    ListElement { label: "13"; config: "10100101" }
+                    ListElement { label: "14"; config: "10100110" }
+                    ListElement { label: "15"; config: "10101001" }
                     ListElement { label: "16"; config: "10101010" }
                     //ListElement { label: "None"; config: "11111111" }
                 }
