@@ -142,8 +142,8 @@ Item {
                     ListElement { label: "8"; config: "01101010" }
                     ListElement { label: "9"; config: "10010101" }
                     ListElement { label: "10"; config: "10010110" }
-                    ListElement { label: "11"; config: "10010001" }
-                    ListElement { label: "12"; config: "10010110" }
+                    ListElement { label: "11"; config: "10011001" }
+                    ListElement { label: "12"; config: "10011010" }
                     ListElement { label: "13"; config: "10100101" }
                     ListElement { label: "14"; config: "10100110" }
                     ListElement { label: "15"; config: "10101001" }
