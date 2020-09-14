@@ -351,6 +351,21 @@ void RoutineController::run(bool dummyRun)
             }
         }
 
+        else if (list[0] == "input") {
+            // Input multiplexer. Expected format: input X, where X is the input label as defined in the GraphicalControl QML file
+            if (length != 2) {
+                reportError("Line " + QString::number(i+1) + ": line starting with \"input\" should contain 2 arguments. For example, \"input 4\"");
+                continue;
+            }
+            QString channel = list[1];
+            if (dummyRun)
+                mValidSteps << line;
+            else {
+                setCurrentStep(mCurrentStep+1);
+                emit setInputMultiplexer(channel);
+            }
+        }
+
         if (mStopRequested)
             break;
 

@@ -62,6 +62,9 @@ Item {
        if the multiplexer uses valves 10 through 18, and valve #16 is toggled via the manual control
        screen or elsewhere, then the buttons on this screen will not update.
 
+       The buttons in MultiplexerControl can have either a simple, pre-defined label, or a label along
+       with a second, user-editable label (used primarily for fluidic inputs to the chip). In the former
+       case, muxDelegate manages the buttons. In the latter case, muxDelegateLabeled manages them.
     */
     id: muxControl
 
@@ -83,6 +86,7 @@ Item {
     }
 
     property int columns: 8
+    property bool labeledSwitches: false
 
     property string currentLabel: ""
 
@@ -118,18 +122,66 @@ Item {
 
     }
 
+    ButtonGroup {
+        id: labeledButtonGroup
+        property LabeledValveSwitch lastButtonChecked: null
+    }
+
+    Component {
+        id: muxDelegateLabeled
+        LabeledValveSwitch {
+            id: lvs
+            valveNumber: parseInt(label)
+            width: muxGridView.cellWidth - 6
+            height: muxGridView.cellHeight
+            editable: editingMode
+            registerWithBackend: false
+            buttonGroup: labeledButtonGroup
+            onClicked: {
+                if (labeledButtonGroup.lastButtonChecked === this) {
+                    labeledButtonGroup.checkState = Qt.Unchecked
+                    labeledButtonGroup.lastButtonChecked = null
+                    closeAllValves()
+                }
+                else {
+                    setMuxToConfig(config)
+                    labeledButtonGroup.lastButtonChecked = this
+                }
+            }
+            Component.onCompleted: {
+                if (config.length !== valves.length)
+                    console.error("Multiplexer channel configuration for channel '" + label + "' does not match number of valves defined")
+                if (isNaN(parseInt(label)))
+                    console.error("Label for multiplexer channel '" + label + "' must be an integer")
+            }
+            Connections {
+                target: muxControl
+                onCurrentLabelChanged: {
+                    if (muxControl.currentLabel.toUpperCase() === label.toUpperCase()) {
+                        setChecked(true)
+                        labeledButtonGroup.lastButtonChecked = lvs
+                    }
+                }
+            }
+        }
+    }
+
     GridView {
         id: muxGridView
         model: muxModel
-        delegate: muxDelegate
+        delegate: labeledSwitches ? muxDelegateLabeled : muxDelegate
 
         anchors.fill: parent
         cellWidth: width/muxControl.columns
-        cellHeight: Style.valveSwitch.defaultHeight
+        cellHeight: labeledSwitches ? Style.labeledValveSwitch.defaultHeight : Style.valveSwitch.defaultHeight
         interactive: false
 
         implicitHeight: cellHeight * (Math.ceil(count/muxControl.columns))
 
+    }
+
+    function closeAllValves() {
+        setMuxToConfig("1".repeat(valves.length))
     }
 
     function setMuxToConfig(configuration) {
@@ -150,16 +202,14 @@ Item {
                 break
             }
         }
-
-        if (!found)
-            console.warn("No multiplexer channel found with label: " + label)
-    }
-
-    Connections {
-        target: RoutineController
-        onSetMultiplexer: {
-            //console.log("Caught setMultiplexer signal, channel: " + label)
-            setMuxToLabel(label);
+        if (!found) {
+            if (label.toUpperCase() === "NONE") {
+                console.log("Closing all multiplexer channels")
+                closeAllValves()
+            }
+            else
+                console.warn("No multiplexer channel found with label: " + label)
         }
     }
+
 }

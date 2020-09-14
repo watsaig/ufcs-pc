@@ -8,20 +8,44 @@ import QtQuick.Controls.Material.impl 2.12
 import org.example.ufcs 1.0
 
 Item {
+    /*
+      LabeledValveSwitch is similar to a ValveSwitch, but includes a user-editable
+      text label in addition to a valve number.
+
+      This is especially useful for valves that control fluidic inputs, since different fluids
+      may be connected by the user.
+
+      By default, the switch functions just like a ValveSwitch: it is registered with the backend
+      so that it can be updated when the microcontroller signals that the corresponding physical valve
+      has changed state, as well as to signal to the backend to toggle that valve when the switch is
+      clicked.
+
+      However, it is possible to customize the function of the LabeledValveSwitch: just set the
+      'registerWithBackend' property to false, and define onClicked to do whatever you want.
+      For example, this is used by MultiplexerControl to offer a multiplexer control switch with an
+      editable label.
+    */
+
     id: control
     property int valveNumber
+    property string text: qsTr("Input label")
 
-    property color normalColor: "#e60000"
-    property color highlightedColor: "#d10000"
-
+    // If true, the valve switch is registered with the backend, toggling the valve
+    // that corresponds to valveNumber when clicked. Set to false to override the switch behavior.
+    property bool registerWithBackend: true
+    property var buttonGroup: null
     // True if user can edit the label
     property bool editable: false
 
-    implicitHeight: dense ? 55 : 70
-    implicitWidth: dense ? 80 : 100
+    implicitHeight: Style.labeledValveSwitch.defaultHeight
+    implicitWidth: Style.labeledValveSwitch.defaultWidth
     Layout.fillWidth: true
-
     property bool dense : Backend.denseThemeEnabled
+
+    signal clicked
+    onClicked: registerWithBackend ? Backend.setValve(valveNumber, button.checked) : 0
+
+    function setChecked(isChecked) { button.checked = isChecked; }
 
     Button {
         id: button
@@ -33,10 +57,10 @@ Item {
 
         checkable: true
         checked: false
+        ButtonGroup.group: control.buttonGroup
 
         enabled: !control.editable && Backend.connectionStatus == "Connected"
-
-        onClicked: Backend.setValve(valveNumber, checked);
+        onClicked: control.clicked()
     }
 
     Text {
@@ -67,7 +91,7 @@ Item {
         anchors.horizontalCenter: control.horizontalCenter
         anchors.bottom: control.bottom
         anchors.bottomMargin: 12
-        text: qsTr("Input label")
+        text: control.text
 
         selectByMouse: control.editable
         enabled: control.editable
@@ -103,8 +127,10 @@ Item {
     }
 
     Component.onCompleted: {
-        Backend.registerValveSwitchHelper(valveNumber, helper)
-        textInput.text = Backend.valveLabel(valveNumber);
+        if (registerWithBackend)
+            Backend.registerValveSwitchHelper(valveNumber, helper)
+
+        control.text = Backend.valveLabel(valveNumber);
     }
 }
 

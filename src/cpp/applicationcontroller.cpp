@@ -241,7 +241,7 @@ void ApplicationController::setRoutineFolder(QUrl folder)
 
 /**
  * @brief Load the label associated with a given valve
- * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
+ * @param valveNumber The _valveNumber_ attribute of the QML LabeledValveSwitch
  * @return The user-defined label, or "Unlabeled input" if none is set
  */
 QString ApplicationController::valveLabel(int valveNumber)
@@ -252,7 +252,7 @@ QString ApplicationController::valveLabel(int valveNumber)
 
 /**
  * @brief Persist a user-defined label for a given valve
- * @param valveNumber The _valveNumber_ attribute of the QML GraphicalLabeledValveSwitch
+ * @param valveNumber The _valveNumber_ attribute of the QML LabeledValveSwitch
  * @param label The label to be saved
  */
 void ApplicationController::setValveLabel(int valveNumber, QString label)

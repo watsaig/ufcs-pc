@@ -10,11 +10,14 @@
         <file>src/qml/ValveSwitch.qml</file>
         <file>src/qml/GraphicalValveSwitch.qml</file>
         <file>src/qml/GraphicalControl.qml</file>
+        <file>src/qml/GraphicalControlv5Chip.qml</file>
         <file>src/qml/Style.qml</file>
         <file alias="qtquickcontrols2.conf">res/qtquickcontrols2.conf</file>
         <file>res/images/v4_flow_layer.png</file>
-        <file>src/qml/GraphicalLabeledValveSwitch.qml</file>
+        <file>res/images/v5_flow_layer.png</file>
+        <file>src/qml/LabeledValveSwitch.qml</file>
         <file>src/qml/GraphicalChipControl.qml</file>
+        <file>src/qml/GraphicalChipControlv5.qml</file>
         <file>src/qml/Settings.qml</file>
         <file>res/images/settings_icon_dark_theme.png</file>
         <file>res/images/settings_icon_light_theme.png</file>

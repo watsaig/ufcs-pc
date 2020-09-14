@@ -36,6 +36,11 @@ QtObject {
         property int minimumWidth: dense ? 28 : 50
     }
 
+    property QtObject labeledValveSwitch : QtObject {
+        property int defaultWidth: dense ? 80 : 100
+        property int defaultHeight: dense ? 55 : 70
+    }
+
     property QtObject text: QtObject {
         // General text, e.g. log messages or routine steps
         property int fontSize: dense ? 8 : 10

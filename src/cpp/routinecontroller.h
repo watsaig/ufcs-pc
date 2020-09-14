@@ -121,6 +121,7 @@ signals:
     void setValve(uint valveNumber, bool open);
     void setPressure(uint controllerNumber, double value);
     void setMultiplexer(QString label);
+    void setInputMultiplexer(QString label);
 
 private:
     void reset();
