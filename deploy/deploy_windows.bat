@@ -13,7 +13,7 @@ set APP_NAME=ufcs-pc
 
 set PROGRAM_FILES=C:\Program Files (x86)
 set VS_BIN=%PROGRAM_FILES%\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build
-set INNO_EXE=%PROGRAM_FILES%\Inno Setup 5\iscc.exe
+set INNO_EXE=%PROGRAM_FILES%\Inno Setup 6\iscc.exe
 
 set SCRIPT_PATH=%~dp0
 set BUILD_DIR=%SCRIPT_PATH%\..\build
@@ -45,6 +45,12 @@ set PATH=%QT_BIN%;%PATH%
 REM QMake places the makefiles and build directories in the current directory.
 REM So the easiest way to change build directories is just to cd to the desired place.
 cd %BUILD_DIR%
+
+echo -------------------------------------------------
+echo Cleaning old build files...
+echo -------------------------------------------------
+rmdir /S /Q release
+mkdir release
 
 echo -------------------------------------------------
 echo Building application...
