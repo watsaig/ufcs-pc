@@ -5,8 +5,6 @@ import QtQuick.Controls 2.13
 
 Item {
     id: control
-    width: 600
-    height: 780
     implicitHeight: chipBackground.height
     implicitWidth: chipBackground.width
 

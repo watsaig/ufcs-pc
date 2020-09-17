@@ -3,13 +3,17 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: element
-    ColumnLayout {
+    GridLayout {
         id: columnLayout
         anchors.fill: parent
+        property bool singleColumn: width < 800
+        columns: singleColumn ? 1 : 2
+        rows: singleColumn ? 2 : 1
 
         Rectangle {
             id: rectangle
             implicitHeight: 200
+            implicitWidth: 200
             color: "#e24444"
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -19,6 +23,8 @@ Item {
         Column {
             id: column
             Layout.fillWidth: true
+            Layout.maximumWidth: Math.min(element.width*0.67, 500)
+
 
             Rectangle {
                 id: rectangle1

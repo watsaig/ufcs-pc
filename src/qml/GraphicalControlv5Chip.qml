@@ -11,26 +11,34 @@ Item {
     property bool editingMode : false
 
     property int minimumWidth: 700 // muxControl.implicitWidth + 2*Style.view.margin
-    property int maximumWidth: 1000
+    //property int maximumWidth: 1000
 
-    ColumnLayout {
+    GridLayout {
+        id: topLevelLayout
         anchors.fill: parent
         anchors.margins: Style.view.margin
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        property bool singleColumn: width < 1000
+        columns: singleColumn ? 1 : 2
+        rows: singleColumn ? 2 : 1
 
         ChipLayoutV5 {
             id: chipLayout
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter
-            Layout.maximumWidth: control.maximumWidth
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.maximumWidth: topLevelLayout.singleColumn ? control.width : control.width - column.maxWidth
 
             enabled: !editingMode && Backend.connectionStatus == "Connected"
         }
 
         Column {
+            id: column
             Layout.fillWidth: true
-            Layout.maximumWidth: control.maximumWidth
+            property int maxWidth: Math.min(topLevelLayout.singleColumn ? control.width : control.width*0.67, 1000)
+            Layout.maximumWidth: maxWidth
             Layout.alignment: Qt.AlignHCenter
 
             Label {
