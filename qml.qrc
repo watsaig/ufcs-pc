@@ -10,6 +10,7 @@
         <file>src/qml/ValveSwitch.qml</file>
         <file>src/qml/GraphicalValveSwitch.qml</file>
         <file>src/qml/GraphicalControl.qml</file>
+        <file>src/qml/GraphicalControlTest.qml</file>
         <file>src/qml/GraphicalControlv5Chip.qml</file>
         <file>src/qml/Style.qml</file>
         <file alias="qtquickcontrols2.conf">res/qtquickcontrols2.conf</file>
