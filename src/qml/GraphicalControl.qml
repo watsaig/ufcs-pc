@@ -18,8 +18,8 @@ Item {
         anchors.margins: Style.view.margin
         anchors.horizontalCenter: parent.horizontalCenter
 
-        GraphicalChipControl {
-            id: graphicalChipControl
+        ChipLayoutV4 {
+            id: chipLayout
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
