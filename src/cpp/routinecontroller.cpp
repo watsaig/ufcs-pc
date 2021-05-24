@@ -9,6 +9,7 @@ RoutineController::RoutineController(ApplicationController *applicationControlle
     , mPauseRequested(false)
     , mNumberOfSteps(-1)
     , mTotalWaitTime(0)
+    , mElapsedTime(0)
     , appController(applicationController)
 {
 
@@ -29,6 +30,7 @@ void RoutineController::reset()
     mErrorCount = 0;
     mRunStatus = NotReady;
     mTotalWaitTime = 0;
+    mElapsedTime = 0;
     mPauseRequested = false;
 }
 
@@ -183,6 +185,7 @@ void RoutineController::run(bool dummyRun)
     mErrors.clear();
     mCurrentStep = -1;
     mStopRequested = false;
+    mElapsedTime = 0;
 
     if (!dummyRun) {
         mRunStatus = Running;
@@ -331,6 +334,8 @@ void RoutineController::run(bool dummyRun)
                 setCurrentStep(mCurrentStep+1);
                 // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
                 std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
+                mElapsedTime += time;
+                emit elapsedTimeChanged(mElapsedTime);
             }
         }
 

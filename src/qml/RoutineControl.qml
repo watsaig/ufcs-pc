@@ -74,21 +74,17 @@ Item {
         }
 
         Label {
-            id: runTime
+            id: totalRunTime
             visible: false
             Layout.alignment: Qt.AlignHCenter
             text: "Estimated run time: " + formatTime(RoutineController.totalRunTime);
-            function formatTime(seconds) {
-                var hours = Math.floor(seconds/3600);
-                var minutes = Math.floor((seconds%3600)/60);
-                var modulo = seconds%60;
-                if (hours !== 0)
-                    return hours + "h " + minutes + "min " + modulo + "s";
-                if (minutes !== 0)
-                    return minutes + "min " + modulo + "s";
-                else
-                    return seconds + "s";
-            }
+        }
+
+        Label {
+            id: runTimeLeft
+            visible: false
+            Layout.alignment: Qt.AlignHCenter
+            text: "Run time left: " + formatTime(RoutineController.totalRunTime - RoutineController.elapsedTime);
         }
 
 
@@ -201,7 +197,7 @@ Item {
                 text: "No"
             }
         }
-}
+    }
 
 DSM.StateMachine {
     id: stateMachine
@@ -264,7 +260,7 @@ DSM.StateMachine {
             console.log("Routine UI: Entered state 'routineLoadedSuccessfully'")
             title.text = "Routine loaded"
             description.text = "The routine was loaded successfully. Click below to launch it."
-            runTime.visible = true
+            totalRunTime.visible = true
             listViewBackground.visible = true
             stepsList.visible = true
 
@@ -274,7 +270,7 @@ DSM.StateMachine {
         }
 
         onExited: {
-            runTime.visible = false
+            totalRunTime.visible = false
             listViewBackground.visible = false
             stepsList.visible = false
             yesNoButtons.visible = false
@@ -372,6 +368,7 @@ DSM.StateMachine {
             stepsList.visible = true
             runForeverSwitch.visible = true
             stopAndPauseButtons.visible = true
+            runTimeLeft.visible = true
         }
 
         onExited: {
@@ -379,6 +376,7 @@ DSM.StateMachine {
             runForeverSwitch.visible = false
             stopAndPauseButtons.visible = false
             stopAndPauseButtons.enabled = true
+            runTimeLeft.visible = false
         }
 
         DSM.State {
@@ -509,4 +507,15 @@ DSM.StateMachine {
         signal fileOpened ()
     }
 
+    function formatTime(seconds) {
+        var hours = Math.floor(seconds/3600);
+        var minutes = Math.floor((seconds%3600)/60);
+        var modulo = seconds%60;
+        if (hours !== 0)
+            return hours + "h " + minutes + "min " + modulo + "s";
+        if (minutes !== 0)
+            return minutes + "min " + modulo + "s";
+        else
+            return seconds + "s";
+    }
 }

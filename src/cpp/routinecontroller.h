@@ -59,6 +59,7 @@ class RoutineController : public QObject
     Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
     Q_PROPERTY(QStringList stepsList READ steps NOTIFY stepsListChanged)
     Q_PROPERTY(long totalRunTime READ totalRunTime NOTIFY totalRunTimeChanged)
+    Q_PROPERTY(long elapsedTime READ elapsedTime NOTIFY elapsedTimeChanged)
 
 public:
     enum RunStatus {
@@ -92,6 +93,7 @@ public:
 
     Q_INVOKABLE QString routineName() { return mRoutineName; }
     Q_INVOKABLE long totalRunTime() { return mTotalWaitTime; }
+    Q_INVOKABLE long elapsedTime() { return mElapsedTime; }
 
 signals:
     /// Emitted when the list of steps is updated
@@ -117,6 +119,9 @@ signals:
 
     /// Emitted when the estimated total run time is updated
     void totalRunTimeChanged(long time);
+
+    /// Emitted when the elapsed run time has changed
+    void elapsedTimeChanged(long time);
 
     void setValve(uint valveNumber, bool open);
     void setPressure(uint controllerNumber, double value);
@@ -162,6 +167,9 @@ private:
 
     /// Estimated run time of the routine (sum of wait times)
     long mTotalWaitTime;
+
+    /// Approximate time elapsed (sum of wait times done)
+    long mElapsedTime;
 
     ApplicationController* appController;
 };
