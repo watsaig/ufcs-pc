@@ -97,6 +97,8 @@ void RoutineController::begin()
 void RoutineController::stop()
 {
     mStopRequested = true;
+    if (status() == Paused)
+        resume();
 }
 
 /**
@@ -371,10 +373,15 @@ void RoutineController::run(bool dummyRun)
 
         if (mPauseRequested) {
             qDebug() << "Pause requested. RoutineController::run is pausing";
+            mRunStatus = Paused;
             emit paused();
             std::unique_lock<std::mutex> lock(mPauseMutex);
             mPauseConditionVariable.wait(lock, [this]{return !mPauseRequested;});
+            if (mStopRequested) {
+                break;
+            }
             qDebug() << "RoutineController::run is resuming";
+            mRunStatus = Running;
             emit resumed();
         }
     }

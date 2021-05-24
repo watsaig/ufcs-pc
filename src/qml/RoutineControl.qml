@@ -162,21 +162,17 @@ Item {
                 id: pauseButton
                 text: "Pause routine"
             }
-
+            Button {
+                id: resumeButton
+                text: "Resume"
+                visible: false
+            }
             Button {
                 id: stopButton
                 text: "Stop routine"
             }
+
         }
-
-        Button {
-            id: resumeButton
-            text: "Resume"
-            visible: false
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-
 
         Row {
             id: yesNoButtons
@@ -418,6 +414,8 @@ DSM.StateMachine {
             console.log("Routine UI: Entered state 'routinePaused'");
             title.text = "Routine paused"
             description.text = "Routine execution paused by user"
+            stopAndPauseButtons.visible = true
+            pauseButton.visible = false
             resumeButton.visible = true
         }
 
@@ -428,6 +426,11 @@ DSM.StateMachine {
                 RoutineController.resume()
                 resumeButton.visible = false
             }
+        }
+
+        DSM.SignalTransition {
+            targetState: stopRequested
+            signal: stopButton.clicked
         }
 
         DSM.SignalTransition {
