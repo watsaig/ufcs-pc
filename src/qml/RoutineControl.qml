@@ -77,7 +77,18 @@ Item {
             id: runTime
             visible: false
             Layout.alignment: Qt.AlignHCenter
-            text: "Estimated run time: " + RoutineController.totalRunTime + " seconds";
+            text: "Estimated run time: " + formatTime(RoutineController.totalRunTime);
+            function formatTime(seconds) {
+                var hours = Math.floor(seconds/3600);
+                var minutes = Math.floor((seconds%3600)/60);
+                var modulo = seconds%60;
+                if (hours !== 0)
+                    return hours + "h " + minutes + "min " + modulo + "s";
+                if (minutes !== 0)
+                    return minutes + "min " + modulo + "s";
+                else
+                    return seconds + "s";
+            }
         }
 
 
