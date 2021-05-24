@@ -79,6 +79,7 @@ public:
     Q_INVOKABLE void stop();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void resume();
+    Q_INVOKABLE void wake();
 
     RunStatus status();
 
@@ -149,6 +150,12 @@ private:
 
     /// Condition variable used by pause functionality
     std::condition_variable mPauseConditionVariable;
+
+    /// Mutex used by waking functionality (to wake thread when it is in a wait command)
+    std::mutex mWakeMutex;
+
+    /// Condition variable used by waking functionality (to wake thread when it is in a wait command)
+    std::condition_variable mWakeConditionVariable;
 
     /// The raw contents of the routine file, including empty lines and comments
     QStringList mLines;

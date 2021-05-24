@@ -101,6 +101,7 @@ void RoutineController::stop()
     mStopRequested = true;
     if (status() == Paused)
         resume();
+    wake();
 }
 
 /**
@@ -109,6 +110,7 @@ void RoutineController::stop()
 void RoutineController::pause()
 {
     mPauseRequested = true;
+    wake();
 }
 
 /**
@@ -119,6 +121,15 @@ void RoutineController::resume()
     std::lock_guard<std::mutex> lockGuard(mPauseMutex); // Not sure this is necessary given that mPauseRequested is atomic.
     mPauseRequested = false;
     mPauseConditionVariable.notify_one();
+}
+
+/**
+ * @brief Wake up the routine if it is currently in a 'wait' command
+ */
+void RoutineController::wake()
+{
+    std::lock_guard<std::mutex> lockGuard(mWakeMutex);
+    mWakeConditionVariable.notify_one();
 }
 
 RoutineController::RunStatus RoutineController::status()
@@ -332,8 +343,8 @@ void RoutineController::run(bool dummyRun)
 
             else {
                 setCurrentStep(mCurrentStep+1);
-                // TODO: instead of sleep_for, use a condition so that the wait can be paused or canceled.
-                std::this_thread::sleep_for(std::chrono::milliseconds(uint64_t(time*1000)));
+                std::unique_lock<std::mutex> lock(mWakeMutex);
+                mWakeConditionVariable.wait_for(lock, std::chrono::milliseconds(uint64_t(time*1000)));
                 mElapsedTime += time;
                 emit elapsedTimeChanged(mElapsedTime);
             }
