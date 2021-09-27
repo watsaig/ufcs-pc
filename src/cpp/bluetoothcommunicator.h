@@ -27,7 +27,7 @@ class BluetoothCommunicator : public Communicator
     Q_OBJECT
 
 public:
-    BluetoothCommunicator();
+    BluetoothCommunicator(ApplicationController* applicationController);
     ~BluetoothCommunicator();
 
 public slots:
@@ -35,8 +35,6 @@ public slots:
     void connect(const QBluetoothServiceInfo &serviceInfo);
     void connect(const QBluetoothAddress &address, quint16 port);
     void connect(const QBluetoothAddress &address, const QBluetoothUuid& uuid);
-
-    void refreshAll();
 
 private slots:
     void onSocketReady();
@@ -53,7 +51,8 @@ private slots:
     void onDeviceDiscoveryFinished();
 
 protected:
-    void setComponentState(Component c, int val);
+    //void setComponentState(Component c, int val);
+    void sendMessage(QByteArray message);
 
 private:
     void initSocket();

@@ -1,36 +1,42 @@
 #include "guihelper.h"
 #include "applicationcontroller.h"
 
-/**
- * @brief Set the controller's number
- * @param controllerNumber This should correspond to the pins that the actual (physical) pressure controller is plugged into, on the PCB.
- */
-void PCHelper::setControllerNumber(int controllerNumber)
-{
-    mControllerNumber = controllerNumber;
-    ApplicationController::appController()->registerPCHelper(controllerNumber, this);
-}
+PCHelper::PCHelper()
+    : mSetPoint(0)
+    , mMeasuredValue(0)
+    , mMinPressure(0)
+    , mMaxPressure(0)
+{}
 
 /**
- * @brief Return the value in PSI of the controller's setpoint, rounded to 1 decimal place
+ * @brief Return the value in PSI of the controller's setpoint, rounded to 1 or 2 decimal places
  */
 double PCHelper::setPointInPsi() const
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
 
-    return round(10.0*(mSetPoint*(max-min) + min))/10.0;
+    // Number of decimal points displayed. Since there are only 255 steps, it doesn't make
+    // sense to display 2 decimal points for pressure regulators with more than  25.5 PSI range.
+
+    int decimals = 1;
+    if ((mMaxPressure - mMinPressure) < 25.5)
+        decimals = 2;
+    double precision = pow(10, decimals);
+
+    return round(precision*(mSetPoint*(mMaxPressure - mMinPressure) + mMinPressure))/precision;
 }
 
 /**
- * @brief Return the value in PSI of the controller's measured pressure, rounded to 1 decimal place
+ * @brief Return the value in PSI of the controller's measured pressure, rounded to 1 or 2 decimal places
  */
 double PCHelper::measuredValueInPsi() const
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
+    // Number of decimal points displayed
+    int decimals = 1;
+    if ((mMaxPressure - mMinPressure) < 25.5)
+        decimals = 2;
+    double precision = pow(10, decimals);
 
-    return round(10.0*(mMeasuredValue*(max-min) + min))/10.0;
+    return round(precision*(mMeasuredValue*(mMaxPressure - mMinPressure) + mMinPressure))/precision;
 }
 
 /**
@@ -41,7 +47,7 @@ double PCHelper::measuredValueInPsi() const
  */
 void PCHelper::setSetPoint(double val)
 {
-    qDebug() << "PCHelper: Setting pressure to " << val;
+    //qDebug() << "PCHelper: Setting pressure to " << val;
     mSetPoint = val;
     emit setPointChanged(val);
 }
@@ -52,15 +58,12 @@ void PCHelper::setSetPoint(double val)
  */
 void PCHelper::setSetPointInPsi(double val)
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
-
-    if (val > max || val < min) {
+    if (val > mMaxPressure || val < mMinPressure) {
         qDebug() << "PCHelper::setSetPointInPsi: value out of bounds";
         return;
     }
 
-    double setPoint = (val - min)/(max - min);
+    double setPoint = (val - mMinPressure)/(mMaxPressure - mMinPressure);
     this->setSetPoint(setPoint);
 }
 
@@ -84,22 +87,13 @@ void PCHelper::setMeasuredValue(double val)
  */
 void PCHelper::setMeasuredValueInPsi(double val)
 {
-    double max = ApplicationController::appController()->maxPressure(mControllerNumber);
-    double min = ApplicationController::appController()->minPressure(mControllerNumber);
-
-    if (val > max || val < min) {
+    if (val > mMaxPressure || val < mMinPressure) {
         qDebug() << "PCHelper::setMeasuredValueInPsi: value out of bounds";
         return;
     }
 
-    double setPoint = (val - min)/(max - min);
-    this->setMeasuredValue(setPoint);
-}
-
-void ValveSwitchHelper::setValveNumber(int valveNumber)
-{
-    mValveNumber = valveNumber;
-    ApplicationController::appController()->registerValveSwitchHelper(valveNumber, this);
+    double pv = (val - mMinPressure)/(mMaxPressure - mMinPressure);
+    this->setMeasuredValue(pv);
 }
 
 void ValveSwitchHelper::setState(bool newState)
@@ -108,12 +102,6 @@ void ValveSwitchHelper::setState(bool newState)
         mState = newState;
         emit stateChanged(newState);
     }
-}
-
-void PumpSwitchHelper::setPumpNumber(int pumpNumber)
-{
-    mPumpNumber = pumpNumber;
-    ApplicationController::appController()->registerPumpSwitchHelper(pumpNumber, this);
 }
 
 void PumpSwitchHelper::setState(bool newState)

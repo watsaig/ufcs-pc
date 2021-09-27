@@ -2,8 +2,8 @@
 #include "applicationcontroller.h"
 
 
-BluetoothCommunicator::BluetoothCommunicator()
-    : Communicator()
+BluetoothCommunicator::BluetoothCommunicator(ApplicationController *applicationController)
+    : Communicator(applicationController)
     , mSocket(NULL)
     , mServiceDiscoveryAgent(NULL)
     , mDeviceDiscoveryAgent(NULL)
@@ -19,13 +19,6 @@ BluetoothCommunicator::~BluetoothCommunicator()
     // TODO: close and kill socket, if necessary
 }
 
-
-void BluetoothCommunicator::refreshAll()
-{
-    char toSend[2] = {(uint8_t)STATUS, (uint8_t)ALL_COMPONENTS};
-    mSocket->write(toSend, 2);
-}
-
 /**
  * @brief Connect to the ESP32, if it's available
  *
@@ -35,7 +28,7 @@ void BluetoothCommunicator::connect()
 {
     setConnectionStatus(Connecting);
 
-    QSettings* settings = ApplicationController::appController()->settings();
+    QSettings* settings = appController->settings();
 
     if (settings->contains("controllerUuid") && settings->contains("controllerAddress")
             && !mFailedToConnectToSavedDevice)
@@ -128,8 +121,13 @@ void BluetoothCommunicator::onSocketReady()
 {
     //qDebug() << "Received" << mSocket->bytesAvailable() << "bytes on serial port";
 
-    QByteArray buffer = mSocket->readAll();
-    parseBuffer(buffer);
+    mBuffer.append(mSocket->readAll());
+
+    while (mBuffer.size() >= 4) {
+        QByteArray b = decodeBuffer();
+        if (b.length() > 0)
+            parseDecodedBuffer(b);
+    }
 }
 
 void BluetoothCommunicator::onSocketError(QBluetoothSocket::SocketError error)
@@ -169,8 +167,8 @@ void BluetoothCommunicator::onSocketConnected()
 
         qDebug() << "Device UUID and address:" << uuid.toString() << ";" << address.toString();
 
-        ApplicationController::appController()->settings()->setValue("controllerUuid", uuid);
-        ApplicationController::appController()->settings()->setValue("controllerAddress", address.toString());
+        appController->settings()->setValue("controllerUuid", uuid);
+        appController->settings()->setValue("controllerAddress", address.toString());
     }
 
     mConnectingToSavedDevice = false;
@@ -262,16 +260,9 @@ void BluetoothCommunicator::onDeviceDiscoveryFinished()
 
 }
 
-void BluetoothCommunicator::setComponentState(Component c, int val)
+void BluetoothCommunicator::sendMessage(QByteArray message)
 {
-    if (mConnectionStatus == Disconnected) {
-        qWarning() << "Can't set requested component state: device is disconnected";
-        return; // TODO: (?) throw exception
-    }
-    //qDebug() << "setComponentState: setting component" << c << "to" << val;
-
-    char toSend[2] = {(uint8_t)c, (uint8_t)val};
-    mSocket->write(toSend, 2);
+    mSocket->write(message);
 }
 
 /**

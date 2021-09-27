@@ -12,22 +12,19 @@ class SerialCommunicator : public Communicator
     Q_OBJECT
 
 public:
-    SerialCommunicator();
+    SerialCommunicator(ApplicationController* applicationController);
     virtual ~SerialCommunicator();
 
     void connect();
 
     QString devicePort() const;
 
-public slots:
-    void refreshAll();
-
 private slots:
     void handleSerialError(QSerialPort::SerialPortError error);
     void onSerialReady();
 
 protected:
-    void setComponentState(Component c, int val);
+    void sendMessage(QByteArray message);
 
 private:
     void initSerialPort();

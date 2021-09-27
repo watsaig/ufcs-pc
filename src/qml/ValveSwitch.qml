@@ -1,23 +1,26 @@
-import QtQuick 2.9
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
 import org.example.ufcs 1.0
 
 Item {
     property int valveNumber
 
-    Layout.preferredHeight: button.height
-    Layout.preferredWidth: button.width
+    implicitHeight: height
+    implicitWidth: Style.valveSwitch.defaultWidth
+    height: width * Style.valveSwitch.widthToHeightRatio
+    Layout.fillWidth: true
+    Layout.maximumWidth: Style.valveSwitch.maximumWidth
 
     Button {
         id: button
         text: valveNumber
 
-        height: 50
-        width: 1.2*height
+        anchors.fill: parent
 
         checkable: true
+        enabled: Backend.connectionStatus == "Connected"
 
         onClicked: {
             Backend.setValve(valveNumber, checked);
@@ -29,6 +32,6 @@ Item {
         onStateChanged: button.checked = state
     }
 
-    Component.onCompleted: helper.valveNumber = valveNumber
+    Component.onCompleted: Backend.registerValveSwitchHelper(valveNumber, helper)
 
 }

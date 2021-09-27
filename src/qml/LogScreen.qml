@@ -1,6 +1,9 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
+
+
+import QtQuick.Controls.Material 2.12
 import org.example.ufcs 1.0 // for the Style singleton
 
 Item {
@@ -8,7 +11,7 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 50
-        anchors.leftMargin: 40
+        anchors.leftMargin: Style.view.margin
         anchors.rightMargin: anchors.leftMargin
 
         ListView {
@@ -35,11 +38,11 @@ Item {
                     var text = modelData[1]
                     switch(text) {
                         case "Debug":
-                            return "gray"
+                            return mainWindow.darkMode ? "#B0BEC5" : "#607D8B" // Material.BlueGrey
                         case "Warning":
-                            return "orange"
+                            return mainWindow.darkMode ? "#FFCC80" : "#FF9800" // Material.Orange
                         case "Info":
-                            return "blue"
+                            return mainWindow.darkMode ? "#90CAF9" : "#2196F3" // Material.Blue
                         default:
                             return "red"
                     }
@@ -50,14 +53,14 @@ Item {
 
                     Text {
                         id: timestamp
-                        font.pointSize: 10
-                        color: "gray"
+                        font.pointSize: Style.text.fontSize
+                        color: mainWindow.darkMode ? "#EEEEEE" : "#9E9E9E" // Material.Grey
                         text: modelData[0] + " "
                     }
 
                     Text {
                         id: messageType
-                        font.pointSize: 10
+                        font.pointSize: Style.text.fontSize
                         font.bold: true
                         text: modelData[1] + ": "
                         color: messageTypeColor()
@@ -65,10 +68,11 @@ Item {
 
                     Text {
                         id: messageText
-                        font.pointSize: 10
+                        font.pointSize: Style.text.fontSize
                         text: modelData[2]
                         wrapMode: Text.Wrap
                         width: parent.width - timestamp.width - messageType.width
+                        color: Material.foreground
                     }
 
                 }

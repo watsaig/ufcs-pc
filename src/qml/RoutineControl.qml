@@ -1,9 +1,10 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Material 2.12
 
-import QtQml.StateMachine 1.0
+import QtQml.StateMachine 1.0 as DSM
 
 import org.example.ufcs 1.0 // for the Style singleton
 
@@ -24,25 +25,37 @@ import org.example.ufcs 1.0 // for the Style singleton
 Item {
     ColumnLayout {
         anchors.fill: parent
+        anchors.margins: Style.view.margin
         anchors.topMargin: 50
-        anchors.leftMargin: 40
-        anchors.rightMargin: anchors.leftMargin
 
-        Label {
-            id: title
-            visible: false
-            text: qsTr("Title")
-            Layout.alignment: Qt.AlignHCenter
+        Column {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            Layout.fillWidth: true
+            Label {
+                id: title
+                visible: true
+                text: qsTr("Title")
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: Style.heading1.fontSize
 
-            font.pointSize: Style.title.fontSize
-            padding: Style.title.padding
-        }
+                anchors.left: parent.left
+                anchors.right: parent.right
+                padding: Style.heading1.padding
+                leftPadding: 0
+                rightPadding: 0
+            }
 
-        Label {
-            id: description
-            visible: false
-            text: qsTr("This description field gives more information to the user about the current state of execution.")
-            Layout.alignment: Qt.AlignHCenter
+            Label {
+                id: description
+                visible: true
+                text: qsTr("This description field gives more information to the user about the current state of execution.")
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                horizontalAlignment: Text.AlignHCenter
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+            }
         }
 
         Switch {
@@ -60,147 +73,158 @@ Item {
             text : "Step " +  (RoutineController.currentStep + 1 ) + " of " + RoutineController.numberOfSteps()
         }
 
-
-    // add a scrolling text box, to show the current step (and previous and following 1-2 steps)
-
-        ListView {
-            id: stepsList
+        Label {
+            id: totalRunTime
             visible: false
-            width: parent.width
-            height: 400
             Layout.alignment: Qt.AlignHCenter
-            model: RoutineController.stepsList
-            currentIndex: RoutineController.currentStep
+            text: "Estimated run time: " + formatTime(RoutineController.totalRunTime);
+        }
 
-            delegate: Rectangle {
-                height: delegateText.contentHeight
-                width: parent.width
-                color: "transparent"
+        Label {
+            id: runTimeLeft
+            visible: false
+            Layout.alignment: Qt.AlignHCenter
+            text: "Run time left: " + formatTime(RoutineController.totalRunTime - RoutineController.elapsedTime);
+        }
 
-                Text {
+
+        Rectangle {
+            id: listViewBackground
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.topMargin: 10
+            color: Material.dialogColor
+            visible: false
+
+            ListView {
+                id: stepsList
+                visible: false
+                anchors.fill: parent
+                anchors.margins: 20
+                model: RoutineController.stepsList
+                currentIndex: RoutineController.currentStep
+
+                delegate: Text {
                     id: delegateText
                     text: modelData
 
-                    font.pointSize: 10
+                    font.pointSize: Style.text.fontSize
                     font.bold: RoutineController.currentStep == index
-                    color: RoutineController.currentStep == index ? "black" : "gray"
+                    color: RoutineController.currentStep == index ? Material.foreground : "gray"
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                 }
-            }
-        }
 
-        ListView {
-            id: errorList
-            visible: false
-            width: parent.width
-            height: 400
-            model: RoutineController.errorList
-            delegate: Rectangle {
-                height: 25
-                width: 100
-                Text { text: modelData }
+                ScrollBar.vertical: ScrollBar {}
             }
 
-            Layout.alignment: Qt.AlignHCenter
+            ListView {
+                id: errorList
+                visible: false
+                anchors.fill: parent
+                anchors.margins: 20
 
-            /*
-            Connections {
-                target: RoutineController
-                onError: {
-                    errorList.model = RoutineController.errorList
-                    console.log("New error received")
+                model: RoutineController.errorList
+                delegate: Text {
+                    id: errorText
+                    text: modelData
+                    bottomPadding: 3
+
+                    font.pointSize: Style.text.fontSize
+                    color: Material.foreground
+
+                    wrapMode: Text.WordWrap
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                 }
+
+                /*
+                Connections {
+                    target: RoutineController
+                    onError: {
+                        errorList.model = RoutineController.errorList
+                        console.log("New error received")
+                    }
+                }
+                */
             }
-            */
         }
 
         Button {
             id: browseButton
             visible: false
             text: "Browse"
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
             onClicked: fileDialog.open()
         }
 
-        Button {
-            id: returnToHomeButton
+        Row {
+            id: stopAndPauseButtons
             visible: false
-            text: "OK"
             Layout.alignment: Qt.AlignHCenter
-        }
+            spacing: 10
 
-        Button {
-            id: runButton
-            visible: false
-            text: "Run routine"
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-		Button {
-		    id: stopButton
-			visible: false
-			text: "Stop routine"
-			Layout.alignment: Qt.AlignHCenter
-		}
-
-        ColumnLayout {
-            id: runYesNoButtons
-            visible: false
-
-            Layout.alignment: Qt.AlignHCenter
-
-            Label {
-                text: "Would you still like to run the routine?"
+            Button {
+                id: pauseButton
+                text: "Pause routine"
+            }
+            Button {
+                id: resumeButton
+                text: "Resume"
+                visible: false
+            }
+            Button {
+                id: stopButton
+                text: "Stop routine"
             }
 
-            RowLayout {
+        }
 
-                Button {
-                    id: yes
-                    text: "Yes"
-                    padding: 12
-                }
+        Row {
+            id: yesNoButtons
+            visible: false
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 10
 
-                Button {
-                    id: no
-                    text: "No"
-                    padding: 12
-                }
+            Button {
+                id: yesButton
+                text: "Yes"
+            }
+
+            Button {
+                id: noButton
+                text: "No"
             }
         }
-}
+    }
 
-StateMachine {
+DSM.StateMachine {
     id: stateMachine
     initialState: noFileLoaded
     running: true
 
-    State {
+    DSM.State {
         id: noFileLoaded
         onEntered: {
             console.log("Routine UI: Entered state 'noFileLoaded'")
             title.text = "Load routine"
             description.text = "Choose a file to run"
-            title.visible = true
-            description.visible = true
             browseButton.visible = true
         }
 
         onExited: {
-            title.text = ""
-            title.visible = false
-            description.text = ""
-            description.visible = false
             browseButton.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: checkingRoutine
             signal: fileDialog.fileOpened
         }
 
     }
 
-    State {
+    DSM.State {
         id: checkingRoutine
         property int nErrors
 
@@ -210,7 +234,6 @@ StateMachine {
         onEntered: {
             console.log("Routine UI: Entered state 'checkingRoutine'")
             description.text = "Checking routine for errors..."
-            description.visible = true
 
             if (RoutineController.verify() > 0)
                 errorsFound()
@@ -218,123 +241,215 @@ StateMachine {
                 noErrorsFound()
         }
 
-        onExited: {
-            description.text = ""
-            description.visible = false
-        }
-
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: routineLoadedSuccessfully
             signal: checkingRoutine.noErrorsFound
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: routineLoadedWithErrors
             signal: checkingRoutine.errorsFound
         }
 
     }
 
-    State {
+    DSM.State {
         id: routineLoadedSuccessfully
 
         onEntered: {
             console.log("Routine UI: Entered state 'routineLoadedSuccessfully'")
             title.text = "Routine loaded"
-            title.visible = true
             description.text = "The routine was loaded successfully. Click below to launch it."
-            description.visible = true
-            runButton.visible = true
+            totalRunTime.visible = true
+            listViewBackground.visible = true
+            stepsList.visible = true
+
+            yesNoButtons.visible = true
+            yesButton.text = "Run"
+            noButton.text = "Cancel"
         }
 
         onExited: {
-            description.visible = false
-            runButton.visible = false
+            totalRunTime.visible = false
+            listViewBackground.visible = false
+            stepsList.visible = false
+            yesNoButtons.visible = false
         }
 
-        SignalTransition {
-            targetState: runningRoutine
-            signal: runButton.clicked
+        DSM.SignalTransition {
+            targetState: beginRoutine
+            signal: yesButton.clicked
+        }
+
+        DSM.SignalTransition {
+            targetState: noFileLoaded
+            signal: noButton.clicked
         }
     }
 
-    State {
+    DSM.State {
         id: routineLoadedWithErrors
 
         onEntered: {
             console.log("Routine UI: Entered state 'routineLoadedWithErrors'")
 
             title.text = RoutineController.numberOfErrors() + " errors found"
-            title.visible = true
-
             description.text = "The routine was loaded, but some errors were detected:"
-            description.visible = true
 
+            listViewBackground.visible = true
             errorList.visible = true
-            runYesNoButtons.visible = true
+            yesNoButtons.visible = true
+            yesButton.text = "Run routine anyway"
+            noButton.text = "Cancel"
         }
         onExited: {
-            title.visible = false
-            description.visible = false
+            listViewBackground.visible = false
             errorList.visible = false
-            runYesNoButtons.visible = false
+            yesNoButtons.visible = false
         }
 
-        SignalTransition {
-            targetState: runningRoutine
-            signal: yes.clicked
+        DSM.SignalTransition {
+            targetState: beginRoutine
+            signal: yesButton.clicked
         }
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: noFileLoaded
-            signal: no.clicked
+            signal: noButton.clicked
         }
     }
 
-    State {
-        id: runningRoutine
-
-
+    DSM.State {
+        id: beginRoutine
+        // This state simply starts the routine then switches to "runningRoutine"
+        signal routineStarted
         onEntered: {
-            console.log("Routine UI: Entered state 'routineRunning'")
-            // get name of routine from backend
-            title.text = "Running routine: " + RoutineController.routineName()
-            title.visible = true
-            stepCounter.visible = true
-            stepsList.visible = true
-            runForeverSwitch.visible = true
-            stopButton.visible = true
+            console.log("Routine UI: Entered state 'beginRoutine'")
+
             RoutineController.begin()
+            routineStarted();
         }
 
-        onExited: {
-            title.visible = false
-            description.visible = false
-            stepCounter.visible = false
-            runForeverSwitch.visible = false
-            stopButton.visible = false
+        DSM.SignalTransition {
+            targetState: runningRoutine
+            signal: beginRoutine.routineStarted
         }
+    }
 
-        SignalTransition {
+    DSM.State {
+        // The routine can be running normally, or running while
+        // waiting to either pause or stop at the end of the current step
+        id: runningRoutine
+        initialState: activelyRunning
+
+
+        DSM.SignalTransition {
             targetState: finishedRunning
             signal: RoutineController.finished
         }
 
-        Connections {
-            target: stopButton
-            onClicked: {
+        DSM.SignalTransition {
+            targetState: routinePaused
+            signal: RoutineController.paused
+        }
+
+        DSM.SignalTransition {
+            targetState: stopRequested
+            signal: stopButton.clicked
+        }
+
+        DSM.SignalTransition {
+            targetState: pauseRequested
+            signal: pauseButton.clicked
+        }
+
+        onEntered: {
+            stepCounter.visible = true
+            listViewBackground.visible = true
+            stepsList.visible = true
+            runForeverSwitch.visible = true
+            stopAndPauseButtons.visible = true
+            runTimeLeft.visible = true
+        }
+
+        onExited: {
+            stepCounter.visible = false
+            runForeverSwitch.visible = false
+            stopAndPauseButtons.visible = false
+            stopAndPauseButtons.enabled = true
+            runTimeLeft.visible = false
+        }
+
+        DSM.State {
+            id: activelyRunning
+            onEntered: {
+                console.log("Routine UI: Entered state 'activelyRunning'")
+                title.text = "Running routine"
+                description.text = RoutineController.routineName()
+                stepsList.positionViewAtBeginning()
+            }
+        }
+
+        DSM.State {
+            id: stopRequested
+            onEntered: {
                 console.log("Routine UI: stop requested")
                 title.text = "Stop requested"
-                description.visible = true
                 description.text = "Routine will end after current step"
+                runForeverSwitch.checked = false
                 runForeverSwitch.visible = false
-                stopButton.visible = false
-                // RoutineController then emits finished signal, to transition to next state
+                stopAndPauseButtons.enabled = false
+
+                // RoutineController then emits finished signal after the current step
+                // to transition to next state (this may take some time)
                 RoutineController.stop()
+            }
+        }
+
+        DSM.State {
+            id: pauseRequested
+            onEntered: {
+                console.log("Routine UI: pause requested")
+                title.text = "Pause requested"
+                description.text = "Routine will pause after the current step"
+                RoutineController.pause()
+                stopAndPauseButtons.enabled = false
             }
         }
     }
 
-    State {
+    DSM.State {
+        id: routinePaused
+        onEntered: {
+            console.log("Routine UI: Entered state 'routinePaused'");
+            title.text = "Routine paused"
+            description.text = "Routine execution paused by user"
+            stopAndPauseButtons.visible = true
+            pauseButton.visible = false
+            resumeButton.visible = true
+        }
+
+        Connections {
+            target: resumeButton
+            onClicked: {
+                console.log("Routine UI: resume requested")
+                RoutineController.resume()
+                resumeButton.visible = false
+            }
+        }
+
+        DSM.SignalTransition {
+            targetState: stopRequested
+            signal: stopButton.clicked
+        }
+
+        DSM.SignalTransition {
+            targetState: runningRoutine
+            signal: RoutineController.resumed
+        }
+
+    }
+
+    DSM.State {
         id: finishedRunning
         signal restartRoutine
 
@@ -346,34 +461,29 @@ StateMachine {
 
             console.log("Routine UI: Entered state 'finishedRunning'")
             title.text = "Finished"
-            title.visible = true
             description.text = "The execution of the routine has ended."
-            description.visible = true
-            returnToHomeButton.visible = true
-            runButton.visible = true
-            runButton.text = "Re-run"
+            yesNoButtons.visible = true
+            yesButton.text = "Re-run"
+            noButton.text = "Done"
         }
 
         onExited: {
-            title.visible = false
-            description.visible = false
-            returnToHomeButton.visible = false
-            runButton.visible = false
+            yesNoButtons.visible = false
             stepsList.visible = false
         }
 
-        SignalTransition {
+        DSM.SignalTransition {
             targetState: noFileLoaded
-            signal: returnToHomeButton.clicked
+            signal: noButton.clicked
         }
 
-        SignalTransition {
-            targetState: runningRoutine
-            signal: runButton.clicked
+        DSM.SignalTransition {
+            targetState: beginRoutine
+            signal: yesButton.clicked
         }
 
-        SignalTransition {
-            targetState: runningRoutine
+        DSM.SignalTransition {
+            targetState: beginRoutine
             signal: finishedRunning.restartRoutine
         }
     }
@@ -382,10 +492,11 @@ StateMachine {
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
-        folder: shortcuts.home
+        folder: Backend.routineFolder()
         selectMultiple: false
         visible: false
         onAccepted: {
+            Backend.setRoutineFolder(folder)
             if (RoutineController.loadFile(fileUrl))
                 fileOpened()
             else {
@@ -396,4 +507,15 @@ StateMachine {
         signal fileOpened ()
     }
 
+    function formatTime(seconds) {
+        var hours = Math.floor(seconds/3600);
+        var minutes = Math.floor((seconds%3600)/60);
+        var modulo = seconds%60;
+        if (hours !== 0)
+            return hours + "h " + minutes + "min " + modulo + "s";
+        if (minutes !== 0)
+            return minutes + "min " + modulo + "s";
+        else
+            return seconds + "s";
+    }
 }

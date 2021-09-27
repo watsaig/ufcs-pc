@@ -1,7 +1,8 @@
 #include "serialcommunicator.h"
+#include "applicationcontroller.h"
 
-SerialCommunicator::SerialCommunicator()
-    : Communicator()
+SerialCommunicator::SerialCommunicator(ApplicationController *applicationController)
+    : Communicator(applicationController)
     , mSerialPort(NULL)
 {
 
@@ -46,7 +47,8 @@ void SerialCommunicator::connect()
         qDebug().noquote() << s;
 
         // The following line may need to be customized depending on your specific ESP32 board.
-        if((info.description().contains("UART Bridge") || info.description().contains("USB Serial Port") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
+        if((info.description().contains("UART Bridge") || info.description().contains("USB Serial Port")
+            || info.description().contains("FT231X") || info.manufacturer().contains("Silicon Labs")) && !info.isBusy()) {
             portToUse = info;
             break;
         }
@@ -58,8 +60,11 @@ void SerialCommunicator::connect()
         return;
     }
 
+    qint32 baudRate = appController->serialBaudRate();
+    qDebug() << "Serial communicator baud rate set to" << baudRate;
+
     mSerialPort->setPortName(portToUse.portName());
-    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setBaudRate(baudRate);
     mSerialPort->setDataBits(QSerialPort::Data8);
     mSerialPort->setParity(QSerialPort::NoParity);
     mSerialPort->setStopBits(QSerialPort::OneStop);
@@ -87,13 +92,6 @@ void SerialCommunicator::connect()
 QString SerialCommunicator::devicePort() const
 {
     return mSerialPort->portName();
-}
-
-void SerialCommunicator::refreshAll()
-{
-    qDebug() << "Requesting status of all components";
-    char toSend[2] = {(uint8_t)STATUS, (uint8_t)ALL_COMPONENTS};
-    mSerialPort->write(toSend, 2);
 }
 
 void SerialCommunicator::handleSerialError(QSerialPort::SerialPortError error)
@@ -126,24 +124,23 @@ void SerialCommunicator::handleSerialError(QSerialPort::SerialPortError error)
  */
 void SerialCommunicator::onSerialReady()
 {
-    QByteArray buffer = mSerialPort->readAll();
+    mBuffer.append(mSerialPort->readAll());
 
-    if (buffer.size() >= 4)
-        parseBuffer(buffer);
-}
-
-void SerialCommunicator::setComponentState(Component c, int val)
-{
-    if (mConnectionStatus == Disconnected) {
-        qWarning() << "Can't set requested component state: device is disconnected";
-        return; // TODO: (?) throw exception
+    while (mBuffer.size() > 0) {
+        QByteArray b = decodeBuffer();
+        if (b.length() > 0)
+            parseDecodedBuffer(b);
     }
-    //qDebug() << "setComponentState: setting component" << c << "to" << val;
-
-    char toSend[2] = {(uint8_t)c, (uint8_t)val};
-    mSerialPort->write(toSend, 2);
 }
 
+void SerialCommunicator::sendMessage(QByteArray message)
+{
+    if (mConnectionStatus == Disconnected)
+        qWarning() << "Can't send message: microcontroller is not connected";
+
+    else if (mSerialPort)
+        mSerialPort->write(message);
+}
 
 void SerialCommunicator::initSerialPort()
 {

@@ -8,7 +8,7 @@
 #include <QtCore>
 #include <QStringList>
 
-#include "communicator.h"
+class ApplicationController;
 
 /**
  * @brief The RoutineController class loads and runs routines, i.e pre-programmed sequences of actions.
@@ -24,7 +24,31 @@
  * You can then safely call begin() to run the routine. It is run in a separate thread to prevent blocking. Status
  * can be checked with the status() and currentStep() functions. When execution is over, the finished() signal is emitted.
  *
- * TODO: documentation on syntax
+ * Supported syntax
+ * ---------------------
+ *
+ * valve X [open/close]
+ *      Open or close valve X, where X is a number between 1 and appController->nValves(),
+ *      or "all", to toggle all valves at once.
+ *
+ *      Example: valve 12 open
+ *
+ * pressure X Y
+ *      Set pressure regulator X to a pressure of Y PSI.
+ *
+ *      Example: pressure 1 4.5
+ *
+ * wait X Y
+ *      Pause for some time X. Y defines the units, can be milliseconds, seconds, minutes or hours.
+ *      Default is seconds, in case Y is ommitted or does not match any other unit.
+ *      See run function for complete list of supported unit formats.
+ *
+ *      Example: wait 2 minutes
+ *
+ *
+ * multiplexer X
+ *      Open multiplexer to channel X, where X is 1-8 or "all".
+ *
  */
 class RoutineController : public QObject
 {
@@ -33,23 +57,29 @@ class RoutineController : public QObject
     Q_PROPERTY(int currentStep READ currentStep NOTIFY currentStepChanged)
     Q_PROPERTY(RunStatus runStatus READ status NOTIFY runStatusChanged)
     Q_PROPERTY(QStringList errorList READ errors NOTIFY error)
-    Q_PROPERTY(QStringList stepsList READ steps NOTIFY currentStepChanged)
+    Q_PROPERTY(QStringList stepsList READ steps NOTIFY stepsListChanged)
+    Q_PROPERTY(long totalRunTime READ totalRunTime NOTIFY totalRunTimeChanged)
+    Q_PROPERTY(long elapsedTime READ elapsedTime NOTIFY elapsedTimeChanged)
 
 public:
     enum RunStatus {
         NotReady,
         Ready,
         Running,
-        Finished
+        Finished,
+        Paused
     }; Q_ENUM(RunStatus)
 
-    RoutineController(Communicator *communicator); // TODO: make this private (=> singleton). The parameter can be passed to the "getInstance" function.
+    RoutineController(ApplicationController* applicationController);
     virtual ~RoutineController() {}
 
     Q_INVOKABLE bool loadFile(QString fileUrl);
     Q_INVOKABLE int verify();
     Q_INVOKABLE void begin();
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void pause();
+    Q_INVOKABLE void resume();
+    Q_INVOKABLE void wake();
 
     RunStatus status();
 
@@ -63,8 +93,13 @@ public:
     const QStringList& errors();
 
     Q_INVOKABLE QString routineName() { return mRoutineName; }
+    Q_INVOKABLE long totalRunTime() { return mTotalWaitTime; }
+    Q_INVOKABLE long elapsedTime() { return mElapsedTime; }
 
 signals:
+    /// Emitted when the list of steps is updated
+    void stepsListChanged();
+
     /// Emitted whenever an error is encountered
     void error(QString errorString);
 
@@ -77,9 +112,22 @@ signals:
     /// Emitted when the routine is finished
     void finished();
 
+    /// Emitted when the routine is paused
+    void paused();
 
-    void setValve(int valveNumber, bool open);
-    void setPressure(int controllerNumber, double value);
+    /// Emitted when the routine is resumed
+    void resumed();
+
+    /// Emitted when the estimated total run time is updated
+    void totalRunTimeChanged(long time);
+
+    /// Emitted when the elapsed run time has changed
+    void elapsedTimeChanged(long time);
+
+    void setValve(uint valveNumber, bool open);
+    void setPressure(uint controllerNumber, double value);
+    void setMultiplexer(QString label);
+    void setInputMultiplexer(QString label);
 
 private:
     void reset();
@@ -87,15 +135,27 @@ private:
     void reportError(const QString& errorString);
     void setCurrentStep(int stepNumber);
 
-    /// The serial port interface
-    Communicator * mCommunicator;
-
     std::atomic<RunStatus> mRunStatus;
     std::atomic<int> mCurrentStep;
     std::atomic<int> mErrorCount;
 
     /// If true, routine execution stops after the current step
     std::atomic<bool> mStopRequested;
+
+    /// If true, routine execution is paused after the current step
+    std::atomic<bool> mPauseRequested;
+
+    /// Mutex used by pause functionality
+    std::mutex mPauseMutex;
+
+    /// Condition variable used by pause functionality
+    std::condition_variable mPauseConditionVariable;
+
+    /// Mutex used by waking functionality (to wake thread when it is in a wait command)
+    std::mutex mWakeMutex;
+
+    /// Condition variable used by waking functionality (to wake thread when it is in a wait command)
+    std::condition_variable mWakeConditionVariable;
 
     /// The raw contents of the routine file, including empty lines and comments
     QStringList mLines;
@@ -111,6 +171,14 @@ private:
 
     /// The routine name (derived from the file name)
     QString mRoutineName;
+
+    /// Estimated run time of the routine (sum of wait times)
+    long mTotalWaitTime;
+
+    /// Approximate time elapsed (sum of wait times done)
+    long mElapsedTime;
+
+    ApplicationController* appController;
 };
 
 #endif // ROUTINECONTROLLER_H

@@ -12,8 +12,6 @@
  * and should be instantiated within the actual graphical element it supports.
  */
 
-class ApplicationController;
-
 /**
  * @brief Backend for pressure controller GUI elements
  */
@@ -23,17 +21,19 @@ class PCHelper : public QObject
 
     Q_PROPERTY(double setPoint MEMBER mSetPoint NOTIFY setPointChanged)
     Q_PROPERTY(double measuredValue READ measuredValue WRITE setMeasuredValue NOTIFY measuredValueChanged)
-    Q_PROPERTY(int controllerNumber MEMBER mControllerNumber WRITE setControllerNumber)
-    Q_PROPERTY(double setPointInPsi READ setPointInPsi)
-    Q_PROPERTY(double measuredValueInPsi READ measuredValueInPsi)
+    Q_PROPERTY(double setPointInPsi READ setPointInPsi NOTIFY setPointChanged)
+    Q_PROPERTY(double measuredValueInPsi READ measuredValueInPsi NOTIFY measuredValueChanged)
+    Q_PROPERTY(double minPressure MEMBER mMinPressure);
+    Q_PROPERTY(double maxPressure MEMBER mMaxPressure);
 
 public:
+    PCHelper();
     double setPoint() const { return mSetPoint ; }
     double measuredValue() const { return mMeasuredValue; }
     double setPointInPsi() const;
     double measuredValueInPsi() const;
-
-    void setControllerNumber(int controllerNumber);
+    double minPressure() const { return mMinPressure; };
+    double maxPressure() const { return mMaxPressure; };
 
 public slots:
     void setSetPoint(double val);
@@ -48,7 +48,10 @@ signals:
 private:
     double mSetPoint;
     double mMeasuredValue;
-    int mControllerNumber;
+
+    // Min and max pressure in PSI
+    double mMinPressure;
+    double mMaxPressure;
 };
 
 
@@ -57,11 +60,9 @@ class ValveSwitchHelper : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool state READ state WRITE setState NOTIFY stateChanged)
-    Q_PROPERTY(int valveNumber MEMBER mValveNumber WRITE setValveNumber)
 
 public:
     bool state() { return mState; }
-    void setValveNumber(int valveNumber);
 
 public slots:
     void setState(bool newState);
@@ -71,7 +72,6 @@ signals:
 
 private:
     bool mState; // true: open. false: closed
-    int mValveNumber;
 };
 
 class PumpSwitchHelper : public QObject
@@ -79,11 +79,9 @@ class PumpSwitchHelper : public QObject
     Q_OBJECT
 
     Q_PROPERTY(bool state READ state WRITE setState NOTIFY stateChanged)
-    Q_PROPERTY(int pumpNumber MEMBER mPumpNumber WRITE setPumpNumber)
 
 public:
     bool state() { return mState; }
-    void setPumpNumber(int pumpNumber);
 
 public slots:
     void setState(bool newState);
@@ -93,7 +91,6 @@ signals:
 
 private:
     bool mState; // true: on. false: off
-    int mPumpNumber;
 };
 
 #endif // GUIHELPER_H

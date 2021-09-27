@@ -10,12 +10,14 @@ HEADERS += \
     src/cpp/communicator.h \
     src/cpp/constants.h \
     src/cpp/applicationcontroller.h \
+    src/cpp/logger.h \
     src/cpp/routinecontroller.h \
     src/cpp/guihelper.h \
     src/cpp/bluetoothcommunicator.h \
     src/cpp/serialcommunicator.h
 
 SOURCES += \
+    src/cpp/logger.cpp \
     src/cpp/main.cpp \
     src/cpp/communicator.cpp \
     src/cpp/applicationcontroller.cpp \
@@ -24,11 +26,11 @@ SOURCES += \
     src/cpp/bluetoothcommunicator.cpp \
     src/cpp/serialcommunicator.cpp
 
-RESOURCES += \
-    res/qml.qrc
+RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH = C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2
+QML_IMPORT_PATH += $$PWD/src/qml
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 #QML_DESIGNER_IMPORT_PATH += C:/Qt/5.10.1/msvc2017_64/qml/QtQuick/Controls.2/designer
@@ -50,18 +52,30 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    src/qml/qtquickcontrols2.conf \
+    src/qml/GraphicalChipControl.qml \
+    src/qml/GraphicalChipControlv5.qml \
+    src/qml/GraphicalControl.qml \
+    src/qml/GraphicalControlv5Chip.qml \
+    src/qml/LabeledValveSwitch.qml \
+    src/qml/GraphicalValveSwitch.qml \
+    src/qml/SettingsLabel.qml \
     src/qml/main.qml \
     res/qtquickcontrols2.conf \
     src/qml/ManualControl.qml \
     src/qml/PressureController.qml \
+    src/qml/PressureControlPane.qml \
     src/qml/ValveSwitch.qml \
+    src/qml/Settings.qml \
     src/qml/Style.qml \
     src/qml/RoutineControl.qml \
     src/qml/LogScreen.qml \
-    src/qml/PumpSwitch.qml
+    src/qml/PumpSwitch.qml \
+    src/qml/MultiplexerControl.qml
 
+RC_ICONS = res/icons/icon.ico
 
 GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
 GIT_VERSION ~= s/g/"" # Remove the "g" which is prepended to the hash
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+
+#DEFINES += LOG_TO_TERMINAL # Write logs to terminal as well as to a file and to the application
