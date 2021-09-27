@@ -303,6 +303,7 @@ QMap<QString, QUrl> ApplicationController::graphicalControlScreenSources()
     // Default values, in case no sources are specified
     if (sources.isEmpty()) {
         sources["Co-culture chip v4"] = "qrc:/src/qml/GraphicalControl.qml";
+        sources["Co-culture chip v5"] = "qrc:/src/qml/GraphicalControlv5Chip.qml";
         setGraphicalControlScreenSources(sources);
     }
 
