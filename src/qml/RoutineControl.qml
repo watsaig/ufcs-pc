@@ -368,6 +368,8 @@ DSM.StateMachine {
             stepsList.visible = true
             runForeverSwitch.visible = true
             stopAndPauseButtons.visible = true
+            stopButton.visible = true
+            pauseButton.visible = true
             runTimeLeft.visible = true
         }
 
