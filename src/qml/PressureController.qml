@@ -11,6 +11,7 @@ Item {
     // To do Qt6: make these properties required
     property double minPressure
     property double maxPressure
+    property string unitLabel: "PSI"
 
     width: grid1.implicitWidth
     height: grid1.implicitHeight
@@ -38,13 +39,13 @@ Item {
             }
             onValueChanged: {
                 helper.setPoint = value
-                setPointLabel.text = helper.setPointInPsi + " PSI"
+                setPointLabel.text = helper.setPointInPsi + " " + unitLabel
             }
         }
 
         Label {
             id: setPointLabel
-            text: "0 PSI"
+            text: minPressure + " " + unitLabel
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
             //anchors.horizontalCenter: slider.horizontalCenter
@@ -70,7 +71,7 @@ Item {
 
         Label {
             id: measuredValueLabel
-            text: helper.measuredValueInPsi + " PSI"
+            text: helper.measuredValueInPsi + " " + unitLabel
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter
@@ -87,7 +88,7 @@ Item {
         }
 
         onMeasuredValueChanged: {
-            measuredValueLabel.text = measuredValueInPsi + " PSI"
+            measuredValueLabel.text = measuredValueInPsi + " " + unitLabel
             //console.log("Updating measured value to " + measuredValueLabel.text)
         }
     }
