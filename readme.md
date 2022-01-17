@@ -76,12 +76,13 @@ Valve Switches are buttons that make it possible to turn valves on and off, and 
 
 (See `ManualControl.qml`). If you wish to add or remove valves, simply edit these lines. You only need to specify a valve here for it to be available to the rest of the program. 
 
-Pressure controllers are defined similarly, and also include a minimum and maximum pressure in PSI:
+Pressure controllers are defined similarly, and also include a minimum and maximum pressure in PSI (or any other unit):
 
     PressureController {
         controllerNumber: 1
         minPressure: 0
         maxPressure: 29.5
+        unitLabel: "kPa" // Optional, defaults to "PSI"
     }
 
 The pressure defined here is used in the user interface, and in RoutineController's error-checking code. Behind the scenes, only values between 0 and 255 are sent to and from the microcontroller. The controller number, however, should match the one defined in the microcontroller code.
