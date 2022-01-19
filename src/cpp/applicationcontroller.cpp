@@ -304,6 +304,7 @@ QMap<QString, QUrl> ApplicationController::graphicalControlScreenSources()
     if (sources.isEmpty()) {
         sources["Co-culture chip v4"] = "qrc:/src/qml/GraphicalControl.qml";
         sources["Co-culture chip v5"] = "qrc:/src/qml/GraphicalControlv5Chip.qml";
+        sources["Droplet Generator"] = "qrc:/src/qml/GraphicalControlDropletGenerator.qml";
         setGraphicalControlScreenSources(sources);
     }
 
