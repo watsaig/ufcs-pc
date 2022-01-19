@@ -12,6 +12,8 @@ Item {
     property double minPressure
     property double maxPressure
     property string unitLabel: "PSI"
+    property int sliderHeight: 200
+    property bool largeHandle: false
 
     width: grid1.implicitWidth
     height: grid1.implicitHeight
@@ -33,6 +35,7 @@ Item {
             orientation: Qt.Vertical
             live: true
             stepSize: 1./256.
+            background.implicitHeight: control.sliderHeight
 
             onMoved: {
                 Backend.setPressure(controllerNumber, value);
@@ -40,6 +43,12 @@ Item {
             onValueChanged: {
                 helper.setPoint = value
                 setPointLabel.text = helper.setPointInPsi + " " + unitLabel
+            }
+            Component.onCompleted: {
+                if (control.largeHandle) {
+                    handle.implicitHeight = 25
+                    handle.implicitWidth = 25
+                }
             }
         }
 
