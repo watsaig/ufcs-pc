@@ -1,0 +1,20 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: μFCS-PC
+message: >-
+  Please cite this software using the metadata from
+  'preferred-citation'.
+type: software
+authors:
+  - given-names: Craig
+    family-names: Watson
+    email: craig.watson@case.edu
+    affiliation: Case Western Reserve University
+    orcid: 'https://orcid.org/0000-0002-2621-8724'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.6349671
+    description: DOI for version 2.1
+license: MIT
