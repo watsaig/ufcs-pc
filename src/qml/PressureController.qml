@@ -11,6 +11,9 @@ Item {
     // To do Qt6: make these properties required
     property double minPressure
     property double maxPressure
+    property string unitLabel: "PSI"
+    property int sliderHeight: 200
+    property bool largeHandle: false
 
     width: grid1.implicitWidth
     height: grid1.implicitHeight
@@ -32,19 +35,26 @@ Item {
             orientation: Qt.Vertical
             live: true
             stepSize: 1./256.
+            background.implicitHeight: control.sliderHeight
 
             onMoved: {
                 Backend.setPressure(controllerNumber, value);
             }
             onValueChanged: {
                 helper.setPoint = value
-                setPointLabel.text = helper.setPointInPsi + " PSI"
+                setPointLabel.text = helper.setPointInPsi + " " + unitLabel
+            }
+            Component.onCompleted: {
+                if (control.largeHandle) {
+                    handle.implicitHeight = 25
+                    handle.implicitWidth = 25
+                }
             }
         }
 
         Label {
             id: setPointLabel
-            text: "0 PSI"
+            text: minPressure + " " + unitLabel
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
             //anchors.horizontalCenter: slider.horizontalCenter
@@ -70,7 +80,7 @@ Item {
 
         Label {
             id: measuredValueLabel
-            text: helper.measuredValueInPsi + " PSI"
+            text: helper.measuredValueInPsi + " " + unitLabel
             Layout.maximumWidth: 45
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter
@@ -87,7 +97,7 @@ Item {
         }
 
         onMeasuredValueChanged: {
-            measuredValueLabel.text = measuredValueInPsi + " PSI"
+            measuredValueLabel.text = measuredValueInPsi + " " + unitLabel
             //console.log("Updating measured value to " + measuredValueLabel.text)
         }
     }

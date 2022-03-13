@@ -4,13 +4,19 @@ Part of the microfluidics control system. See the [Hackaday.io page](https://hac
 
 ![Screenshot](./res/images/screenshots.png)
 
+## Installation and use
+
+An installer provided here (in the [release page](/releases)) for Windows; see the build instructions below for other platforms. The ESP32 code is available [here](https://github.com/watsaig/ufcs-esp32). For more details, please refer to the HardwareX article linked bove, which includes complete instructions on setting up both the microcontroller and PC code.
+
+*A note on versions:* make sure to match versions on both sides. If you get the latest version of the PC software from this repository, also get the latest version of the [ESP32 code](https://github.com/watsaig/ufcs-esp32). The communication protocol was rewritten between v1 (published in the article) and v2, so v2 of the PC app will not work with v1 of the ESP32 code.
+
 ## Supported platforms
 
 This application is intended to be cross-platform and compatible with Windows, Linux, macOS, Android and iOS. It makes heavy use of Qt libraries to do so.
 
-Unfortunately, some aspects of Qt are not fully cross-platform. The serial communication libraries, for example, are not compatible with "normal" (un-rooted) versions of Android, and the Bluetooth libraries do not work with Windows. Therefore, full compatibility with all platforms is not guaranteed. 
+Unfortunately, some aspects of Qt are not fully cross-platform. The serial communication libraries, for example, are not compatible with "normal" (un-rooted) versions of Android, and the Bluetooth libraries did not work with Windows when this application was first developed. Therefore, full compatibility with all platforms is not guaranteed. 
 
-So far, the application has been used on Windows and Linux with the microcontroller connected via USB. Some brief tests have been done on Linux and Android to verify that bluetooth worked there.
+So far, the application has been used on Windows and Linux with the microcontroller connected via USB. Some brief tests have also been done on Linux and Android to verify that bluetooth worked there.
 
 
 ## Building
@@ -76,12 +82,13 @@ Valve Switches are buttons that make it possible to turn valves on and off, and 
 
 (See `ManualControl.qml`). If you wish to add or remove valves, simply edit these lines. You only need to specify a valve here for it to be available to the rest of the program. 
 
-Pressure controllers are defined similarly, and also include a minimum and maximum pressure in PSI:
+Pressure controllers are defined similarly, and also include a minimum and maximum pressure in PSI (or any other unit):
 
     PressureController {
         controllerNumber: 1
         minPressure: 0
         maxPressure: 29.5
+        unitLabel: "kPa" // Optional, defaults to "PSI"
     }
 
 The pressure defined here is used in the user interface, and in RoutineController's error-checking code. Behind the scenes, only values between 0 and 255 are sent to and from the microcontroller. The controller number, however, should match the one defined in the microcontroller code.

@@ -55,6 +55,7 @@ DISTFILES += \
     src/qml/GraphicalChipControl.qml \
     src/qml/GraphicalChipControlv5.qml \
     src/qml/GraphicalControl.qml \
+    src/qml/GraphicalControlDropletGenerator.qml \
     src/qml/GraphicalControlv5Chip.qml \
     src/qml/LabeledValveSwitch.qml \
     src/qml/GraphicalValveSwitch.qml \
@@ -74,8 +75,20 @@ DISTFILES += \
 
 RC_ICONS = res/icons/icon.ico
 
-GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
-GIT_VERSION ~= s/g/"" # Remove the "g" which is prepended to the hash
-DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+# Use git to obtain the version number, so that it can be displayed within the application at run-time
+win32 {
+    GIT_BIN = $$system(where git)
+}
+unix|mac {
+    GIT_BIN = $$system(which git)
+}
+isEmpty(GIT_BIN) {
+    warning("Git not found. Version number will be missing from application. Add git to PATH to resolve this.")
+    DEFINES += GIT_VERSION=\\\"UNKNOWN\\\"
+} else {
+   GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
+   GIT_VERSION ~= s/g/"" # Remove the "g" which is prepended to the hash
+   DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+}
 
 #DEFINES += LOG_TO_TERMINAL # Write logs to terminal as well as to a file and to the application
