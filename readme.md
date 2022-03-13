@@ -6,7 +6,7 @@ Part of the microfluidics control system. See the [Hackaday.io page](https://hac
 
 ## Installation and use
 
-An installer provided here (in the [release page](/releases)) for Windows; see the build instructions below for other platforms. The ESP32 code is available [here](https://github.com/watsaig/ufcs-esp32). For more details, please refer to the HardwareX article linked bove, which includes complete instructions on setting up both the microcontroller and PC code.
+An installer provided here (in the [releases page](https://github.com/watsaig/ufcs-pc/releases)) for Windows; see the build instructions below for other platforms. The ESP32 code is available [here](https://github.com/watsaig/ufcs-esp32). For more details, please refer to the HardwareX article linked bove, which includes complete instructions on setting up both the microcontroller and PC code.
 
 *A note on versions:* make sure to match versions on both sides. If you get the latest version of the PC software from this repository, also get the latest version of the [ESP32 code](https://github.com/watsaig/ufcs-esp32). The communication protocol was rewritten between v1 (published in the article) and v2, so v2 of the PC app will not work with v1 of the ESP32 code.
 
